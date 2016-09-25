@@ -1,6 +1,7 @@
 package com.pekingopera.oa;
 
 import android.content.Context;
+import android.media.Image;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -17,12 +18,15 @@ public class MainFragment extends Fragment {
         lock, unlock, inquiry, signIn, aboutMe, more
     }
 
-    private ImageButton mLockImageButton;
-    private ImageButton mUnlockImageButton;
-    private ImageButton mInquiryImageButton;
-    private ImageButton mSigninImageButton;
-    private ImageButton mAboutMeImageButton;
-    private ImageButton mMoreImageButton;
+    private ImageButton mFlowImageButton;
+    private ImageButton mDocImageButton;
+    private ImageButton mCalendarImageButton;
+    private ImageButton mFlowInquiryImageButton;
+    private ImageButton mFlow2InquiryImageButton;
+    private ImageButton mDocInquiryImageButton;
+    private ImageButton mNoticeImageButton;
+    private ImageButton mMailImageButton;
+    private ImageButton mSetupImageButton;
 
     private OnFragmentInteractionListener mListener;
 
@@ -32,18 +36,15 @@ public class MainFragment extends Fragment {
 
         View v = inflater.inflate(R.layout.fragment_main, parent, false);
 
-        mLockImageButton = (ImageButton) v
-                .findViewById(R.id.main_flowImageButton);
-        mUnlockImageButton = (ImageButton) v
-                .findViewById(R.id.main_docImageButton);
-        mInquiryImageButton = (ImageButton) v
-                .findViewById(R.id.main_flowInquiryImageButton);
-        mSigninImageButton = (ImageButton) v
-                .findViewById(R.id.main_flow2InquiryImageButton);
-        mAboutMeImageButton = (ImageButton) v
-                .findViewById(R.id.main_noticeImageButton);
-        mMoreImageButton = (ImageButton) v
-                .findViewById(R.id.main_mailImageButton);
+        mFlowImageButton = (ImageButton) v.findViewById(R.id.main_flowImageButton);
+        mDocImageButton = (ImageButton) v.findViewById(R.id.main_docImageButton);
+        mCalendarImageButton = (ImageButton) v.findViewById(R.id.main_calendarImageButton);
+        mFlowInquiryImageButton = (ImageButton) v.findViewById(R.id.main_flowInquiryImageButton);
+        mFlow2InquiryImageButton = (ImageButton) v.findViewById(R.id.main_flow2InquiryImageButton);
+        mDocInquiryImageButton = (ImageButton) v.findViewById(R.id.main_docInquiryImageButton);
+        mNoticeImageButton = (ImageButton) v.findViewById(R.id.main_noticeImageButton);
+        mMailImageButton = (ImageButton) v.findViewById(R.id.main_mailImageButton);
+        mSetupImageButton = (ImageButton) v.findViewById(R.id.main_setupImageButton);
 
         View.OnClickListener inActionListener = new View.OnClickListener() {
             @Override
@@ -52,12 +53,15 @@ public class MainFragment extends Fragment {
             }
         };
 
-        mLockImageButton.setOnClickListener(inActionListener);
-        mUnlockImageButton.setOnClickListener(inActionListener);
-        mInquiryImageButton.setOnClickListener(inActionListener);
-        mSigninImageButton.setOnClickListener(inActionListener);
-        mAboutMeImageButton.setOnClickListener(inActionListener);
-        mMoreImageButton.setOnClickListener(inActionListener);
+        mFlowImageButton.setOnClickListener(inActionListener);
+        mDocImageButton.setOnClickListener(inActionListener);
+        mCalendarImageButton.setOnClickListener(inActionListener);
+        mFlowInquiryImageButton.setOnClickListener(inActionListener);
+        mFlow2InquiryImageButton.setOnClickListener(inActionListener);
+        mDocInquiryImageButton.setOnClickListener(inActionListener);
+        mNoticeImageButton.setOnClickListener(inActionListener);
+        mMailImageButton.setOnClickListener(inActionListener);
+        mSetupImageButton.setOnClickListener(inActionListener);
 
         return v;
     }
@@ -68,8 +72,7 @@ public class MainFragment extends Fragment {
 
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
-        }
-        else {
+        } else {
             throw new RuntimeException(context.toString() + " must implement OnFragmentInteractionListener.");
         }
     }
