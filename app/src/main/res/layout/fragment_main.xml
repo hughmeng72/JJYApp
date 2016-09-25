@@ -6,146 +6,216 @@
     >
 
     <ImageButton
-        android:id="@+id/fragment_main_lockImageButton"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
+        android:id="@+id/main_flowImageButton"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:layout_marginLeft="68dp"
-        android:layout_marginTop="30dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginTop="96dp"
         android:background="@null"
         android:scaleType="fitCenter"
-        android:src="@drawable/ic_lock"
-        android:tag="lock" />
+        android:src="@drawable/ic_flow"
+        android:tag="flow" />
 
     <TextView
-        android:id="@+id/fragment_main_lockImageTextView"
+        android:id="@+id/main_flowTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/fragment_main_lockImageButton"
-        android:layout_alignRight="@+id/fragment_main_lockImageButton"
-        android:layout_below="@+id/fragment_main_lockImageButton"
+        android:layout_alignLeft="@+id/main_flowImageButton"
+        android:layout_alignRight="@+id/main_flowImageButton"
+        android:layout_below="@+id/main_flowImageButton"
         android:layout_marginTop="4dp"
         android:gravity="center_horizontal"
-        android:text="@string/main_lock"
-        android:textSize="18sp" />
+        android:text="@string/main_flow"
+        android:textSize="16sp" />
 
     <ImageButton
-        android:id="@+id/fragment_main_unlockImageButton"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:layout_alignTop="@+id/fragment_main_lockImageButton"
+        android:id="@+id/main_docImageButton"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_alignTop="@+id/main_flowImageButton"
         android:layout_marginLeft="67dp"
-        android:layout_toRightOf="@+id/fragment_main_lockImageButton"
+        android:layout_toRightOf="@+id/main_flowImageButton"
         android:background="@null"
         android:scaleType="fitCenter"
-        android:src="@drawable/ic_unlock"
-        android:tag="unlock" />
+        android:src="@drawable/ic_calendar"
+        android:tag="doc" />
 
     <TextView
-        android:id="@+id/fragment_main_unlockImageTextView"
+        android:id="@+id/main_docTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/fragment_main_lockImageTextView"
-        android:layout_alignBottom="@+id/fragment_main_lockImageTextView"
-        android:layout_alignLeft="@+id/fragment_main_unlockImageButton"
-        android:layout_alignRight="@+id/fragment_main_unlockImageButton"
+        android:layout_alignBaseline="@+id/main_flowTextView"
+        android:layout_alignBottom="@+id/main_flowTextView"
+        android:layout_alignLeft="@+id/main_docImageButton"
+        android:layout_alignRight="@+id/main_docImageButton"
         android:gravity="center_horizontal"
-        android:text="@string/main_unlock"
-        android:textSize="17sp" />
+        android:text="@string/main_doc"
+        android:textSize="16sp" />
 
     <ImageButton
-        android:id="@+id/fragment_main_inquiryImageButton"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:layout_alignLeft="@+id/fragment_main_lockImageTextView"
-        android:layout_below="@+id/fragment_main_lockImageTextView"
+        android:id="@+id/main_calendarImageButton"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_alignTop="@+id/main_flowImageButton"
+        android:layout_marginLeft="67dp"
+        android:layout_toRightOf="@+id/main_docImageButton"
+        android:background="@null"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_calendar"
+        android:tag="calendar" />
+
+    <TextView
+        android:id="@+id/main_calendarTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/main_flowTextView"
+        android:layout_alignBottom="@+id/main_flowTextView"
+        android:layout_alignLeft="@+id/main_calendarImageButton"
+        android:layout_alignRight="@+id/main_calendarImageButton"
+        android:gravity="center_horizontal"
+        android:text="@string/main_calendar"
+        android:textSize="16sp" />
+
+    <ImageButton
+        android:id="@+id/main_flowInquiryImageButton"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_alignLeft="@+id/main_flowTextView"
+        android:layout_below="@+id/main_flowTextView"
         android:layout_marginTop="50dp"
         android:background="@null"
         android:scaleType="fitCenter"
-        android:src="@drawable/ic_inquiry"
-        android:tag="inquiry" />
+        android:src="@drawable/ic_flow_inquiry"
+        android:tag="flowInquiry" />
 
     <TextView
-        android:id="@+id/fragment_main_InquiryTextView"
+        android:id="@+id/main_flowInquiryTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/fragment_main_inquiryImageButton"
-        android:layout_alignRight="@+id/fragment_main_inquiryImageButton"
-        android:layout_below="@+id/fragment_main_inquiryImageButton"
+        android:layout_alignLeft="@+id/main_flowInquiryImageButton"
+        android:layout_alignRight="@+id/main_flowInquiryImageButton"
+        android:layout_below="@+id/main_flowInquiryImageButton"
         android:layout_marginTop="4dp"
         android:gravity="center_horizontal"
-        android:text="@string/main_inquiry"
-        android:textSize="18sp" />
+        android:text="@string/main_flowInquiry"
+        android:textSize="16sp" />
 
     <ImageButton
-        android:id="@+id/fragment_main_signinImageButton"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:layout_alignLeft="@+id/fragment_main_unlockImageTextView"
-        android:layout_alignTop="@+id/fragment_main_inquiryImageButton"
+        android:id="@+id/main_flow2InquiryImageButton"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_alignLeft="@+id/main_docTextView"
+        android:layout_alignTop="@+id/main_flowInquiryImageButton"
         android:background="@null"
         android:scaleType="fitCenter"
-        android:src="@drawable/ic_signin2"
-        android:tag="signIn" />
+        android:src="@drawable/ic_flow2_inquiry"
+        android:tag="flow2Inquiry" />
 
     <TextView
-        android:id="@+id/fragment_main_signinTextView"
+        android:id="@+id/main_flow2InquiryTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/fragment_main_InquiryTextView"
-        android:layout_alignBottom="@+id/fragment_main_InquiryTextView"
-        android:layout_alignLeft="@+id/fragment_main_signinImageButton"
-        android:layout_alignRight="@+id/fragment_main_signinImageButton"
+        android:layout_alignBaseline="@+id/main_flowInquiryTextView"
+        android:layout_alignBottom="@+id/main_flowInquiryTextView"
+        android:layout_alignLeft="@+id/main_flow2InquiryImageButton"
+        android:layout_alignRight="@+id/main_flow2InquiryImageButton"
         android:gravity="center_horizontal"
-        android:text="@string/main_signin"
-        android:textSize="18sp" />
+        android:text="@string/main_flow2Inquiry"
+        android:textSize="16sp" />
 
     <ImageButton
-        android:id="@+id/fragment_main_aboutMeImageButton"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:layout_alignLeft="@+id/fragment_main_InquiryTextView"
-        android:layout_below="@+id/fragment_main_InquiryTextView"
+        android:id="@+id/main_docInquiryImageButton"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_alignLeft="@+id/main_calendarTextView"
+        android:layout_alignTop="@+id/main_flowInquiryImageButton"
+        android:background="@null"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_flow2_inquiry"
+        android:tag="docInquiry" />
+
+    <TextView
+        android:id="@+id/main_docInquiryTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/main_flowInquiryTextView"
+        android:layout_alignBottom="@+id/main_flowInquiryTextView"
+        android:layout_alignLeft="@+id/main_docInquiryImageButton"
+        android:layout_alignRight="@+id/main_docInquiryImageButton"
+        android:gravity="center_horizontal"
+        android:text="@string/main_docInquiry"
+        android:textSize="16sp" />
+
+    <ImageButton
+        android:id="@+id/main_noticeImageButton"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_alignLeft="@+id/main_flowInquiryTextView"
+        android:layout_below="@+id/main_flowInquiryTextView"
         android:layout_marginTop="40dp"
         android:background="@null"
         android:scaleType="fitCenter"
-        android:src="@drawable/ic_aboutme"
-        android:tag="aboutMe" />
+        android:src="@drawable/ic_notice"
+        android:tag="notice" />
 
     <TextView
-        android:id="@+id/fragment_main_aboutMeTextView"
+        android:id="@+id/main_noticeTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/fragment_main_aboutMeImageButton"
-        android:layout_alignRight="@+id/fragment_main_aboutMeImageButton"
-        android:layout_below="@+id/fragment_main_aboutMeImageButton"
+        android:layout_alignLeft="@+id/main_noticeImageButton"
+        android:layout_alignRight="@+id/main_noticeImageButton"
+        android:layout_below="@+id/main_noticeImageButton"
         android:layout_marginTop="4dp"
         android:gravity="center_horizontal"
-        android:text="@string/main_aboutMe"
-        android:textSize="18sp" />
+        android:text="@string/main_notice"
+        android:textSize="16sp" />
 
     <ImageButton
-        android:id="@+id/fragment_main_moreImageButton"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:layout_alignLeft="@+id/fragment_main_signinTextView"
-        android:layout_alignTop="@+id/fragment_main_aboutMeImageButton"
+        android:id="@+id/main_mailImageButton"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_alignLeft="@+id/main_flow2InquiryTextView"
+        android:layout_alignTop="@+id/main_noticeImageButton"
         android:background="@null"
         android:scaleType="fitCenter"
-        android:src="@drawable/ic_more"
-        android:tag="more" />
+        android:src="@drawable/ic_setup"
+        android:tag="mail" />
 
     <TextView
-        android:id="@+id/fragment_main_moreTextView"
+        android:id="@+id/main_mailTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/fragment_main_aboutMeTextView"
-        android:layout_alignBottom="@+id/fragment_main_aboutMeTextView"
-        android:layout_alignLeft="@+id/fragment_main_moreImageButton"
-        android:layout_alignRight="@+id/fragment_main_moreImageButton"
+        android:layout_alignBaseline="@+id/main_noticeTextView"
+        android:layout_alignBottom="@+id/main_noticeTextView"
+        android:layout_alignLeft="@+id/main_mailImageButton"
+        android:layout_alignRight="@+id/main_mailImageButton"
         android:gravity="center_horizontal"
-        android:text="@string/main_more"
-        android:textSize="18sp" />
+        android:text="@string/main_mail"
+        android:textSize="16sp" />
+
+    <ImageButton
+        android:id="@+id/main_setupImageButton"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_alignLeft="@+id/main_docInquiryTextView"
+        android:layout_alignTop="@+id/main_noticeImageButton"
+        android:background="@null"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_setup"
+        android:tag="setup" />
+
+    <TextView
+        android:id="@+id/main_setupTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/main_noticeTextView"
+        android:layout_alignBottom="@+id/main_noticeTextView"
+        android:layout_alignLeft="@+id/main_setupImageButton"
+        android:layout_alignRight="@+id/main_setupImageButton"
+        android:gravity="center_horizontal"
+        android:text="@string/main_setup"
+        android:textSize="16sp" />
 
 </RelativeLayout>

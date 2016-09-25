@@ -7,11 +7,14 @@
     <string name="prompt_internet_connection_broken">无法访问互联网，请检查网络连接。</string>
     <string name="prompt_system_error">系统错误，请稍后再试。</string>
     <string name="login_failed">账号或密码错误，请重试。</string>
-    <string name="main_lock">上封</string>
-    <string name="main_unlock">拆封</string>
-    <string name="main_inquiry">查询</string>
-    <string name="main_signin">签到</string>
-    <string name="main_aboutMe">我</string>
-    <string name="main_more">更多</string>
+    <string name="main_flow">待审批\n申请单</string>
+    <string name="main_doc">待处理\n公文</string>
+    <string name="main_calendar">日程表</string>
+    <string name="main_flowInquiry">一般\n申请单</string>
+    <string name="main_flow2Inquiry">财务\n申请单</string>
+    <string name="main_docInquiry">公文</string>
+    <string name="main_notice">资讯</string>
+    <string name="main_mail">邮件</string>
+    <string name="main_setup">设置</string>
 
 </resources>

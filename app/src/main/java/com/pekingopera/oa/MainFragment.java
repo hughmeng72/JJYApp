@@ -33,17 +33,17 @@ public class MainFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_main, parent, false);
 
         mLockImageButton = (ImageButton) v
-                .findViewById(R.id.fragment_main_lockImageButton);
+                .findViewById(R.id.main_flowImageButton);
         mUnlockImageButton = (ImageButton) v
-                .findViewById(R.id.fragment_main_unlockImageButton);
+                .findViewById(R.id.main_docImageButton);
         mInquiryImageButton = (ImageButton) v
-                .findViewById(R.id.fragment_main_inquiryImageButton);
+                .findViewById(R.id.main_flowInquiryImageButton);
         mSigninImageButton = (ImageButton) v
-                .findViewById(R.id.fragment_main_signinImageButton);
+                .findViewById(R.id.main_flow2InquiryImageButton);
         mAboutMeImageButton = (ImageButton) v
-                .findViewById(R.id.fragment_main_aboutMeImageButton);
+                .findViewById(R.id.main_noticeImageButton);
         mMoreImageButton = (ImageButton) v
-                .findViewById(R.id.fragment_main_moreImageButton);
+                .findViewById(R.id.main_mailImageButton);
 
         View.OnClickListener inActionListener = new View.OnClickListener() {
             @Override
