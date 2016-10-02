@@ -2,7 +2,7 @@
 <manifest package="com.pekingopera.oa"
           xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
     <application
@@ -18,10 +18,9 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".NoticeListActivity">
-        </activity>
-        <activity android:name=".WebPageActivity">
-        </activity>
+        <activity android:name=".NoticeListActivity" />
+        <!--<activity android:name=".WebPageActivity" />-->
+        <activity android:name=".WebPagerActivity" />
     </application>
 
 </manifest>

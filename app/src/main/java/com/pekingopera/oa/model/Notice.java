@@ -2,11 +2,14 @@ package com.pekingopera.oa.model;
 
 import android.net.Uri;
 
+import com.pekingopera.oa.common.IPager;
+
 /**
  * Created by wayne on 10/2/2016.
  */
 
-public class Notice {
+public class Notice implements IPager {
+    private int id;
     private String TypeName;
     private String Title;
     private String FilePath;
@@ -14,6 +17,11 @@ public class Notice {
     private String Creator;
     private String AddTime;
     private String url;
+
+    @Override
+    public int getId() {
+        return id;
+    }
 
     public String getTypeName() {
         return TypeName;
@@ -39,6 +47,7 @@ public class Notice {
         return AddTime;
     }
 
+    @Override
     public Uri getUri() {
         return Uri.parse(url);
     }

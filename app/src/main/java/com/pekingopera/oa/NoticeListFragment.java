@@ -15,9 +15,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import com.pekingopera.oa.common.PagerItemLab;
 import com.pekingopera.oa.common.Utils;
 import com.pekingopera.oa.model.Notice;
 import com.pekingopera.oa.model.ResponseResult;
@@ -111,9 +111,8 @@ public class NoticeListFragment extends Fragment {
 
         @Override
         public void onClick(View v) {
-//            Toast.makeText(getActivity(), mNotice.getTitle() + " clicked.", Toast.LENGTH_SHORT).show();
-
-            Intent i = WebPageActivity.newIntent(getActivity(), mNotice.getUri());
+//            Intent i = WebPageActivity.newIntent(getActivity(), mNotice.getUri());
+            Intent i = WebPagerActivity.newIntent(getActivity(), mNotice.getId());
             startActivity(i);
         }
     }
@@ -181,7 +180,7 @@ public class NoticeListFragment extends Fragment {
             }
 
             if (responseResult == null || responseResult.getError() == null) {
-                Toast toast = Toast.makeText(getActivity(), R.string.login_failed, Toast.LENGTH_LONG);
+                Toast toast = Toast.makeText(getActivity(), R.string.prompt_system_error, Toast.LENGTH_LONG);
                 toast.setGravity(Gravity.CENTER, 0, 0);
                 toast.show();
 
@@ -197,9 +196,10 @@ public class NoticeListFragment extends Fragment {
             }
 
             mNotices = responseResult.getList();
+            PagerItemLab.get(getActivity()).setItems(mNotices);
 
             if (mNotices == null) {
-                Toast toast = Toast.makeText(getActivity(), R.string.login_failed, Toast.LENGTH_LONG);
+                Toast toast = Toast.makeText(getActivity(), R.string.prompt_system_error, Toast.LENGTH_LONG);
                 toast.setGravity(Gravity.CENTER, 0, 0);
                 toast.show();
 
