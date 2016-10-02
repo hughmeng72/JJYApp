@@ -1,5 +1,6 @@
 package com.pekingopera.oa;
 
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -31,6 +32,14 @@ public class MainActivity extends BaseActivity implements LoginFragment.OnFragme
 
     @Override
     public void inAction(View v) {
-        Toast.makeText(this, v.getTag().toString() + " clicked.", Toast.LENGTH_SHORT).show();
+
+        switch (v.getTag().toString()) {
+            case "notice":
+                Intent intent = new Intent(this, NoticeListActivity.class);
+                startActivity(intent);
+                break;
+            default:
+                Toast.makeText(this, v.getTag().toString() + " clicked.", Toast.LENGTH_SHORT).show();
+        }
     }
 }

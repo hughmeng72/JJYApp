@@ -53,13 +53,14 @@ public class MainFragment extends Fragment {
             }
         };
 
+        mNoticeImageButton.setOnClickListener(inActionListener);
+
         mFlowImageButton.setOnClickListener(inActionListener);
         mDocImageButton.setOnClickListener(inActionListener);
         mCalendarImageButton.setOnClickListener(inActionListener);
         mFlowInquiryImageButton.setOnClickListener(inActionListener);
         mFlow2InquiryImageButton.setOnClickListener(inActionListener);
         mDocInquiryImageButton.setOnClickListener(inActionListener);
-        mNoticeImageButton.setOnClickListener(inActionListener);
         mMailImageButton.setOnClickListener(inActionListener);
         mSetupImageButton.setOnClickListener(inActionListener);
 

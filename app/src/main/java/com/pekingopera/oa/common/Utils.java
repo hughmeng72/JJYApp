@@ -33,18 +33,22 @@ public class Utils {
     }
 
     public static String getWsNamespace() {
-        return "http://192.168.10.103/";
+        return "http://192.168.10.107/";
     }
 
     public static String getWsUrl() {
-        return "http://192.168.10.103/WebUI/WebService/Perkingopera.asmx";
+        return getWsNamespace() + "WebUI/WebService/Perkingopera.asmx";
     }
 
     public static String getWsSoapAction() {
-        return "http://192.168.10.103/";
+        return getWsNamespace();
     }
 
     public static String getWsMethodOfUserAuthentication() {
         return "GetTokenByUserNameAndPassword";
+    }
+
+    public static String getWsMethodOfNoticeList() {
+        return "GetNoticeList";
     }
 }
