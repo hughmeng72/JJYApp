@@ -1,5 +1,7 @@
 package com.pekingopera.oa.model;
 
+import android.net.Uri;
+
 /**
  * Created by wayne on 10/2/2016.
  */
@@ -11,6 +13,7 @@ public class Notice {
     private String Notes;
     private String Creator;
     private String AddTime;
+    private String url;
 
     public String getTypeName() {
         return TypeName;
@@ -34,5 +37,9 @@ public class Notice {
 
     public String getAddTime() {
         return AddTime;
+    }
+
+    public Uri getUri() {
+        return Uri.parse(url);
     }
 }

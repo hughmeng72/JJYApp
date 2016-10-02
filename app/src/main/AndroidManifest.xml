@@ -20,6 +20,8 @@
         </activity>
         <activity android:name=".NoticeListActivity">
         </activity>
+        <activity android:name=".WebPageActivity">
+        </activity>
     </application>
 
 </manifest>

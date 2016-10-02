@@ -1,5 +1,6 @@
 package com.pekingopera.oa;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -71,6 +72,10 @@ public class NoticeListFragment extends Fragment {
 //    }
 
     private void updateUI() {
+        if (mNotices == null || mRecyclerView == null) {
+            return;
+        }
+
         if (mAdapter == null) {
             mAdapter = new NoticeAdapter(mNotices);
             mRecyclerView.setAdapter(mAdapter);
@@ -106,8 +111,10 @@ public class NoticeListFragment extends Fragment {
 
         @Override
         public void onClick(View v) {
-//            startActivity(CrimePagerActivity.newIntent(getActivity(), mNotice.getId()));
-            Toast.makeText(getActivity(), mNotice.getTitle() + " clicked.", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(getActivity(), mNotice.getTitle() + " clicked.", Toast.LENGTH_SHORT).show();
+
+            Intent i = WebPageActivity.newIntent(getActivity(), mNotice.getUri());
+            startActivity(i);
         }
     }
 
