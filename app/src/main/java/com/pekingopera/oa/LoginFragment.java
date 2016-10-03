@@ -16,6 +16,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.pekingopera.oa.common.SoapHelper;
 import com.pekingopera.oa.common.Utils;
 import com.pekingopera.oa.model.User;
 
@@ -214,7 +215,7 @@ public class LoginFragment extends Fragment {
         // Method which invoke web method
         private String performLoginTask(String userName, String password) {
             // Create request
-            SoapObject request = new SoapObject(Utils.getWsNamespace(), Utils.getWsMethodOfUserAuthentication());
+            SoapObject request = new SoapObject(SoapHelper.getWsNamespace(), SoapHelper.getWsMethodOfUserAuthentication());
 
             request.addProperty(Utils.newPropertyInstance("userName", userName, String.class));
             request.addProperty(Utils.newPropertyInstance("password", password, String.class));
@@ -227,13 +228,13 @@ public class LoginFragment extends Fragment {
             envelope.setOutputSoapObject(request);
 
             // Create HTTP call object
-            HttpTransportSE androidHttpTransport = new HttpTransportSE(Utils.getWsUrl());
+            HttpTransportSE androidHttpTransport = new HttpTransportSE(SoapHelper.getWsUrl());
 
             String responseJSON = null;
 
             try {
                 // Invoke web service
-                androidHttpTransport.call(Utils.getWsSoapAction() + Utils.getWsMethodOfUserAuthentication(), envelope);
+                androidHttpTransport.call(SoapHelper.getWsSoapAction() + SoapHelper.getWsMethodOfUserAuthentication(), envelope);
 
                 // Get the response
                 SoapPrimitive response = (SoapPrimitive) envelope.getResponse();

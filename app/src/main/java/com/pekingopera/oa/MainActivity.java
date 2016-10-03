@@ -32,10 +32,15 @@ public class MainActivity extends BaseActivity implements LoginFragment.OnFragme
 
     @Override
     public void inAction(View v) {
+        Intent intent;
 
         switch (v.getTag().toString()) {
             case "notice":
-                Intent intent = new Intent(this, NoticeListActivity.class);
+                intent = new Intent(this, NoticeListActivity.class);
+                startActivity(intent);
+                break;
+            case "mail":
+                intent = new Intent(this, MailListActivity.class);
                 startActivity(intent);
                 break;
             default:

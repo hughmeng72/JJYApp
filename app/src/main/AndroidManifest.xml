@@ -19,6 +19,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".NoticeListActivity" />
+        <activity android:name=".MailListActivity" />
         <!--<activity android:name=".WebPageActivity" />-->
         <activity android:name=".WebPagerActivity" />
     </application>
