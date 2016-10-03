@@ -28,4 +28,8 @@ public class SoapHelper {
     public static String getWsMethodOfMailList() {
         return "GetMailList";
     }
+
+    public static String getWsMethodOfCalendarList() {
+        return "GetCalendarList";
+    }
 }

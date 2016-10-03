@@ -19,6 +19,7 @@ import com.google.gson.reflect.TypeToken;
 import com.pekingopera.oa.common.PagerItemLab;
 import com.pekingopera.oa.common.SoapHelper;
 import com.pekingopera.oa.common.Utils;
+import com.pekingopera.oa.model.Calendar;
 import com.pekingopera.oa.model.Mail;
 import com.pekingopera.oa.model.ResponseResult;
 import com.pekingopera.oa.model.User;
@@ -32,18 +33,16 @@ import org.ksoap2.transport.HttpTransportSE;
 import java.lang.reflect.Type;
 import java.util.List;
 
-
-public class MailListFragment extends Fragment {
-    private static final String TAG = "MailListFragment";
+/**
+ * Created by wayne on 10/3/2016.
+ */
+public class CalendarListFragment extends Fragment {
+    private static final String TAG = "CalendarListFragment";
 
     private RecyclerView mRecyclerView;
-    private MailAdapter mAdapter;
+    private CalendarAdapter mAdapter;
 
-    private List<Mail> mMails = null;
-
-
-    public MailListFragment() {
-    }
+    private List<Calendar> mCalendars = null;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -65,12 +64,12 @@ public class MailListFragment extends Fragment {
     }
 
     private void updateUI() {
-        if (mMails == null || mRecyclerView == null) {
+        if (mCalendars == null || mRecyclerView == null) {
             return;
         }
 
         if (mAdapter == null) {
-            mAdapter = new MailAdapter(mMails);
+            mAdapter = new CalendarAdapter(mCalendars);
             mRecyclerView.setAdapter(mAdapter);
         }
         else {
@@ -78,67 +77,67 @@ public class MailListFragment extends Fragment {
         }
     }
 
+    private class CalendarHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        private Calendar mCalendar;
 
-    private class MailHoder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        private Mail mMail;
-
-        private TextView mSubjectTextView;
-        private TextView mSenderTextView;
+        private TextView mTitleTextView;
+        private TextView mDepTextView;
         private TextView mDateTextView;
 
-        public MailHoder(View itemView) {
+        public CalendarHolder(View itemView) {
             super(itemView);
             itemView.setOnClickListener(this);
 
-            mSubjectTextView = (TextView) itemView.findViewById(R.id.item_calendar_title);
-            mSenderTextView = (TextView) itemView.findViewById(R.id.item_mail_sender);
-            mDateTextView = (TextView) itemView.findViewById(R.id.item_mail_time);
+            mTitleTextView = (TextView) itemView.findViewById(R.id.item_calendar_title);
+            mDepTextView = (TextView) itemView.findViewById(R.id.item_calendar_dep);
+            mDateTextView = (TextView) itemView.findViewById(R.id.item_calendar_time);
         }
 
-        public void bindMail(Mail mail) {
-            mMail = mail;
+        public void bindCalendar(Calendar calendar) {
+            mCalendar = calendar;
 
-            mSubjectTextView.setText(mMail.getSubject());
-            mSenderTextView.setText(mMail.getCreator());
-            mDateTextView.setText(mMail.getSendTime());
+            mTitleTextView.setText(mCalendar.getTitle());
+            mDepTextView.setText(mCalendar.getDepName());
+            mDateTextView.setText(mCalendar.getCreateTime());
         }
 
         @Override
         public void onClick(View v) {
-//            Intent i = WebPageActivity.newIntent(getActivity(), mMail.getUri());
-            Intent i = WebPagerActivity.newIntent(getActivity(), mMail.getId());
+//            Intent i = WebPageActivity.newIntent(getActivity(), mCalendar.getUri());
+            Intent i = WebPagerActivity.newIntent(getActivity(), mCalendar.getId());
             startActivity(i);
         }
     }
 
 
-    private class MailAdapter extends RecyclerView.Adapter<MailHoder> {
+    private class CalendarAdapter extends RecyclerView.Adapter<CalendarHolder> {
 
-        private List<Mail> mMails;
+        private List<Calendar> mCalendars;
 
-        public MailAdapter(List<Mail> mails) {
-            mMails = mails;
+        public CalendarAdapter(List<Calendar> calendars) {
+            mCalendars = calendars;
         }
 
         @Override
-        public MailHoder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public CalendarHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
-            View view = layoutInflater.inflate(R.layout.list_item_mail, parent, false);
+            View view = layoutInflater.inflate(R.layout.list_item_calendar, parent, false);
 
-            return new MailHoder(view);
+            return new CalendarHolder(view);
         }
 
         @Override
-        public void onBindViewHolder(MailHoder holder, int position) {
-            Mail mail = mMails.get(position);
-            holder.bindMail(mail);
+        public void onBindViewHolder(CalendarHolder holder, int position) {
+            Calendar calendar = mCalendars.get(position);
+            holder.bindCalendar(calendar);
         }
 
         @Override
         public int getItemCount() {
-            return mMails.size();
+            return mCalendars.size();
         }
     }
+
 
     // AsynTask class to handle Load Web Service call as separate UI Thread
     private class LoadTask extends AsyncTask<String, Void, String> {
@@ -162,11 +161,11 @@ public class MailListFragment extends Fragment {
                 return;
             }
 
-            ResponseResult<Mail> responseResult;
+            ResponseResult<Calendar> responseResult;
 
             try {
                 GsonBuilder gson = new GsonBuilder();
-                Type resultType = new TypeToken<ResponseResult<Mail>>() {}.getType();
+                Type resultType = new TypeToken<ResponseResult<Calendar>>() {}.getType();
 
                 responseResult = gson.create().fromJson(result, resultType);
             } catch (Exception e) {
@@ -190,10 +189,10 @@ public class MailListFragment extends Fragment {
                 return;
             }
 
-            mMails = responseResult.getList();
-            PagerItemLab.get(getActivity()).setItems(mMails);
+            mCalendars = responseResult.getList();
+            PagerItemLab.get(getActivity()).setItems(mCalendars);
 
-            if (mMails == null) {
+            if (mCalendars == null) {
                 Toast toast = Toast.makeText(getActivity(), R.string.prompt_system_error, Toast.LENGTH_LONG);
                 toast.setGravity(Gravity.CENTER, 0, 0);
                 toast.show();
@@ -216,7 +215,7 @@ public class MailListFragment extends Fragment {
         // Method which invoke web method
         private String performLoadTask(String token) {
             // Create request
-            SoapObject request = new SoapObject(SoapHelper.getWsNamespace(), SoapHelper.getWsMethodOfMailList());
+            SoapObject request = new SoapObject(SoapHelper.getWsNamespace(), SoapHelper.getWsMethodOfCalendarList());
 
             request.addProperty(Utils.newPropertyInstance("token", token, String.class));
 
@@ -234,7 +233,7 @@ public class MailListFragment extends Fragment {
 
             try {
                 // Invoke web service
-                androidHttpTransport.call(SoapHelper.getWsSoapAction() + SoapHelper.getWsMethodOfMailList(), envelope);
+                androidHttpTransport.call(SoapHelper.getWsSoapAction() + SoapHelper.getWsMethodOfCalendarList(), envelope);
 
                 // Get the response
                 SoapPrimitive response = (SoapPrimitive) envelope.getResponse();

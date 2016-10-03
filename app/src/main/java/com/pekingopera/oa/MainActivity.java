@@ -35,6 +35,10 @@ public class MainActivity extends BaseActivity implements LoginFragment.OnFragme
         Intent intent;
 
         switch (v.getTag().toString()) {
+            case "calendar":
+                intent = new Intent(this, CalendarListActivity.class);
+                startActivity(intent);
+                break;
             case "notice":
                 intent = new Intent(this, NoticeListActivity.class);
                 startActivity(intent);
