@@ -1,6 +1,5 @@
 package com.pekingopera.oa;
 
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -19,7 +18,7 @@ import com.google.gson.reflect.TypeToken;
 import com.pekingopera.oa.common.PagerItemLab;
 import com.pekingopera.oa.common.SoapHelper;
 import com.pekingopera.oa.common.Utils;
-import com.pekingopera.oa.model.Mail;
+import com.pekingopera.oa.model.Flow;
 import com.pekingopera.oa.model.ResponseResult;
 import com.pekingopera.oa.model.User;
 
@@ -32,18 +31,16 @@ import org.ksoap2.transport.HttpTransportSE;
 import java.lang.reflect.Type;
 import java.util.List;
 
-
-public class MailListFragment extends Fragment {
-    private static final String TAG = "MailListFragment";
+/**
+ * Created by wayne on 10/5/2016.
+ */
+public class ApprovalFlowListFragment extends Fragment {
+    private static final String TAG = "aplFlowListFragment";
 
     private RecyclerView mRecyclerView;
-    private MailAdapter mAdapter;
+    private FlowAdapter mAdapter;
 
-    private List<Mail> mMails = null;
-
-
-    public MailListFragment() {
-    }
+    private List<Flow> mFlows = null;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -65,12 +62,12 @@ public class MailListFragment extends Fragment {
     }
 
     private void updateUI() {
-        if (mMails == null || mRecyclerView == null) {
+        if (mFlows == null || mRecyclerView == null) {
             return;
         }
 
         if (mAdapter == null) {
-            mAdapter = new MailAdapter(mMails);
+            mAdapter = new FlowAdapter(mFlows);
             mRecyclerView.setAdapter(mAdapter);
         }
         else {
@@ -79,66 +76,73 @@ public class MailListFragment extends Fragment {
     }
 
 
-    private class MailHoder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        private Mail mMail;
+    private class FlowHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        private Flow mFlow;
 
-        private TextView mSubjectTextView;
-        private TextView mSenderTextView;
+        private TextView mFlowNameTextView;
+        private TextView mCreatorTextView;
+        private TextView mAmountTextView;
         private TextView mDateTextView;
 
-        public MailHoder(View itemView) {
+        public FlowHolder(View itemView) {
             super(itemView);
             itemView.setOnClickListener(this);
 
-            mSubjectTextView = (TextView) itemView.findViewById(R.id.item_mail_subject);
-            mSenderTextView = (TextView) itemView.findViewById(R.id.item_mail_sender);
-            mDateTextView = (TextView) itemView.findViewById(R.id.item_mail_time);
+            mFlowNameTextView = (TextView) itemView.findViewById(R.id.item_approval_flow_name);
+            mCreatorTextView = (TextView) itemView.findViewById(R.id.item_approval_flow_creator);
+            mAmountTextView = (TextView) itemView.findViewById(R.id.item_approval_flow_amount);
+            mDateTextView = (TextView) itemView.findViewById(R.id.item_approval_flow_time);
         }
 
-        public void bindMail(Mail mail) {
-            mMail = mail;
+        public void bindItemView(Flow flow) {
+            mFlow = flow;
 
-            mSubjectTextView.setText(mMail.getSubject());
-            mSenderTextView.setText(mMail.getCreator());
-            mDateTextView.setText(mMail.getSendTime());
+            mFlowNameTextView.setText(mFlow.getFlowName());
+            mCreatorTextView.setText(mFlow.getCreator());
+            if (mFlow.getAmount() == 0) {
+                mAmountTextView.setText("");
+            }
+            else {
+                mAmountTextView.setText(String.format("%.2f", mFlow.getAmount()));
+            }
+            mDateTextView.setText(mFlow.getCreateTime());
         }
 
         @Override
         public void onClick(View v) {
-//            Intent i = WebPageActivity.newIntent(getActivity(), mMail.getUri());
-            Intent i = WebPagerActivity.newIntent(getActivity(), mMail.getId());
-            startActivity(i);
+//            Intent i = WebPagerActivity.newIntent(getActivity(), mFlow.getId());
+//            startActivity(i);
         }
     }
 
 
-    private class MailAdapter extends RecyclerView.Adapter<MailHoder> {
+    private class FlowAdapter extends RecyclerView.Adapter<FlowHolder> {
+        private List<Flow> mFlows;
 
-        private List<Mail> mMails;
-
-        public MailAdapter(List<Mail> mails) {
-            mMails = mails;
+        public FlowAdapter(List<Flow> flows) {
+            mFlows = flows;
         }
 
         @Override
-        public MailHoder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public FlowHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
-            View view = layoutInflater.inflate(R.layout.list_item_mail, parent, false);
+            View view = layoutInflater.inflate(R.layout.list_item_approval_flow, parent, false);
 
-            return new MailHoder(view);
+            return new FlowHolder(view);
         }
 
         @Override
-        public void onBindViewHolder(MailHoder holder, int position) {
-            Mail mail = mMails.get(position);
-            holder.bindMail(mail);
+        public void onBindViewHolder(FlowHolder holder, int position) {
+            Flow flow = mFlows.get(position);
+            holder.bindItemView(flow);
         }
 
         @Override
         public int getItemCount() {
-            return mMails.size();
+            return mFlows.size();
         }
     }
+
 
     // AsynTask class to handle Load Web Service call as separate UI Thread
     private class LoadTask extends AsyncTask<String, Void, String> {
@@ -162,11 +166,11 @@ public class MailListFragment extends Fragment {
                 return;
             }
 
-            ResponseResult<Mail> responseResult;
+            ResponseResult<Flow> responseResult;
 
             try {
                 GsonBuilder gson = new GsonBuilder();
-                Type resultType = new TypeToken<ResponseResult<Mail>>() {}.getType();
+                Type resultType = new TypeToken<ResponseResult<Flow>>() {}.getType();
 
                 responseResult = gson.create().fromJson(result, resultType);
             } catch (Exception e) {
@@ -190,10 +194,10 @@ public class MailListFragment extends Fragment {
                 return;
             }
 
-            mMails = responseResult.getList();
-            PagerItemLab.get(getActivity()).setItems(mMails);
+            mFlows = responseResult.getList();
+            PagerItemLab.get(getActivity()).setItems(mFlows);
 
-            if (mMails == null) {
+            if (mFlows == null) {
                 Toast toast = Toast.makeText(getActivity(), R.string.prompt_system_error, Toast.LENGTH_LONG);
                 toast.setGravity(Gravity.CENTER, 0, 0);
                 toast.show();
@@ -216,7 +220,7 @@ public class MailListFragment extends Fragment {
         // Method which invoke web method
         private String performLoadTask(String token) {
             // Create request
-            SoapObject request = new SoapObject(SoapHelper.getWsNamespace(), SoapHelper.getWsMethodOfMailList());
+            SoapObject request = new SoapObject(SoapHelper.getWsNamespace(), SoapHelper.getWsMethodOfApprovalFlowList());
 
             request.addProperty(Utils.newPropertyInstance("token", token, String.class));
 
@@ -234,7 +238,7 @@ public class MailListFragment extends Fragment {
 
             try {
                 // Invoke web service
-                androidHttpTransport.call(SoapHelper.getWsSoapAction() + SoapHelper.getWsMethodOfMailList(), envelope);
+                androidHttpTransport.call(SoapHelper.getWsSoapAction() + SoapHelper.getWsMethodOfApprovalFlowList(), envelope);
 
                 // Get the response
                 SoapPrimitive response = (SoapPrimitive) envelope.getResponse();
@@ -246,6 +250,5 @@ public class MailListFragment extends Fragment {
 
             return responseJSON;
         }
-
     }
 }

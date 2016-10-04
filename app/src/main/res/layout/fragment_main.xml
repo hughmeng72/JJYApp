@@ -14,8 +14,7 @@
         android:background="@null"
         android:scaleType="fitCenter"
         android:src="@drawable/ic_calendar"
-        android:tag="flow2Inquiry"
-        />
+        android:tag="flow2Inquiry" />
 
     <TextView
         android:id="@+id/main_flow2InquiryTextView"
@@ -176,8 +175,7 @@
         android:background="@null"
         android:scaleType="fitCenter"
         android:src="@drawable/ic_setup"
-        android:tag="mail"
-        />
+        android:tag="mail" />
 
     <TextView
         android:id="@+id/main_mailTextView"
@@ -199,8 +197,7 @@
         android:background="@null"
         android:scaleType="fitCenter"
         android:src="@drawable/ic_setup"
-        android:tag="setup"
-        />
+        android:tag="setup" />
 
     <TextView
         android:id="@+id/main_setupTextView"
@@ -211,6 +208,6 @@
         android:layout_alignRight="@id/main_setupImageButton"
         android:gravity="center_horizontal"
         android:text="@string/main_setup"
-        android:textSize="16sp"/>
+        android:textSize="16sp" />
 
 </RelativeLayout>

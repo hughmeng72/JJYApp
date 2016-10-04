@@ -32,4 +32,8 @@ public class SoapHelper {
     public static String getWsMethodOfCalendarList() {
         return "GetCalendarList";
     }
+
+    public static String getWsMethodOfApprovalFlowList() {
+        return "GetApprovalFlowList";
+    }
 }

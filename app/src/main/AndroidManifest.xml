@@ -18,6 +18,7 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+        <activity android:name=".ApprovalFlowListActivity" />
         <activity android:name=".CalendarListActivity" />
         <activity android:name=".NoticeListActivity" />
         <activity android:name=".MailListActivity" />
