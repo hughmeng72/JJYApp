@@ -4,25 +4,26 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="#F5F5F5">
+
     <ImageButton
         android:id="@+id/main_flow2InquiryImageButton"
         android:layout_width="48dp"
         android:layout_height="48dp"
-        android:layout_marginTop="64dp"
         android:layout_centerHorizontal="true"
+        android:layout_marginTop="64dp"
+        android:background="@null"
         android:scaleType="fitCenter"
         android:src="@drawable/ic_calendar"
-        android:background="@null"
-        android:tag="doc"
+        android:tag="flow2Inquiry"
         />
 
     <TextView
         android:id="@+id/main_flow2InquiryTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/main_flow2InquiryImageButton"
         android:layout_alignLeft="@id/main_flow2InquiryImageButton"
         android:layout_alignRight="@id/main_flow2InquiryImageButton"
+        android:layout_below="@id/main_flow2InquiryImageButton"
         android:layout_marginTop="4dp"
         android:gravity="center_horizontal"
         android:text="@string/main_flow2Inquiry"
@@ -32,8 +33,8 @@
         android:id="@+id/main_flowImageButton"
         android:layout_width="48dp"
         android:layout_height="48dp"
-        android:layout_alignTop="@id/main_flow2InquiryImageButton"
         android:layout_alignParentLeft="true"
+        android:layout_alignTop="@id/main_flow2InquiryImageButton"
         android:layout_marginLeft="40dp"
         android:background="@null"
         android:scaleType="fitCenter"
@@ -44,9 +45,9 @@
         android:id="@+id/main_flowTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignBaseline="@id/main_flow2InquiryTextView"
         android:layout_alignLeft="@id/main_flowImageButton"
         android:layout_alignRight="@id/main_flowImageButton"
-        android:layout_alignBaseline="@id/main_flow2InquiryTextView"
         android:gravity="center_horizontal"
         android:text="@string/main_flow"
         android:textSize="16sp"/>
@@ -55,14 +56,13 @@
         android:id="@+id/main_flowInquiryImageButton"
         android:layout_width="48dp"
         android:layout_height="48dp"
-        android:layout_alignTop="@id/main_flow2InquiryImageButton"
         android:layout_alignParentRight="true"
+        android:layout_alignTop="@id/main_flow2InquiryImageButton"
         android:layout_marginRight="40dp"
         android:background="@null"
         android:scaleType="fitCenter"
         android:src="@drawable/ic_calendar"
-        android:tag="calendar"
-        />
+        android:tag="flowInquiry" />
 
     <TextView
         android:id="@+id/main_flowInquiryTextView"
@@ -85,7 +85,7 @@
         android:background="@null"
         android:scaleType="fitCenter"
         android:src="@drawable/ic_flow_inquiry"
-        android:tag="flowInquiry"/>
+        android:tag="doc"/>
 
     <TextView
         android:id="@+id/main_docTextView"
@@ -108,7 +108,7 @@
         android:background="@null"
         android:scaleType="fitCenter"
         android:src="@drawable/ic_flow2_inquiry"
-        android:tag="flow2Inquiry"/>
+        android:tag="docInquiry"/>
 
     <TextView
         android:id="@+id/main_docInquiryTextView"
@@ -130,7 +130,7 @@
         android:background="@null"
         android:scaleType="fitCenter"
         android:src="@drawable/ic_flow2_inquiry"
-        android:tag="docInquiry"/>
+        android:tag="calendar"/>
 
     <TextView
         android:id="@+id/main_calendarTextView"
@@ -147,7 +147,7 @@
         android:id="@+id/main_noticeImageButton"
         android:layout_width="48dp"
         android:layout_height="48dp"
-        android:layout_alignLeft="@id/main_docImageButton"
+        android:layout_alignLeft="@id/main_docTextView"
         android:layout_below="@id/main_docImageButton"
         android:layout_marginTop="96dp"
         android:background="@null"
@@ -171,8 +171,8 @@
         android:id="@+id/main_mailImageButton"
         android:layout_width="48dp"
         android:layout_height="48dp"
-        android:layout_alignTop="@id/main_noticeImageButton"
         android:layout_alignLeft="@id/main_docInquiryImageButton"
+        android:layout_alignTop="@id/main_noticeImageButton"
         android:background="@null"
         android:scaleType="fitCenter"
         android:src="@drawable/ic_setup"
@@ -183,9 +183,9 @@
         android:id="@+id/main_mailTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignBaseline="@id/main_noticeTextView"
         android:layout_alignLeft="@id/main_mailImageButton"
         android:layout_alignRight="@id/main_mailImageButton"
-        android:layout_alignBaseline="@id/main_noticeTextView"
         android:gravity="center_horizontal"
         android:text="@string/main_mail"
         android:textSize="16sp"/>
@@ -194,8 +194,8 @@
         android:id="@+id/main_setupImageButton"
         android:layout_width="48dp"
         android:layout_height="48dp"
-        android:layout_alignTop="@+id/main_noticeImageButton"
-        android:layout_alignLeft="@+id/main_calendarImageButton"
+        android:layout_alignLeft="@id/main_calendarImageButton"
+        android:layout_alignTop="@id/main_noticeImageButton"
         android:background="@null"
         android:scaleType="fitCenter"
         android:src="@drawable/ic_setup"
@@ -206,9 +206,9 @@
         android:id="@+id/main_setupTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignBaseline="@id/main_noticeTextView"
         android:layout_alignLeft="@id/main_setupImageButton"
         android:layout_alignRight="@id/main_setupImageButton"
-        android:layout_alignBaseline="@id/main_noticeTextView"
         android:gravity="center_horizontal"
         android:text="@string/main_setup"
         android:textSize="16sp"/>
