@@ -29,7 +29,7 @@
         android:textSize="16sp"/>
 
     <ImageButton
-        android:id="@+id/main_docImageButton"
+        android:id="@+id/main_flow2InquiryImageButton"
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_alignTop="@id/main_flowImageButton"
@@ -41,43 +41,43 @@
         android:tag="doc"/>
 
     <TextView
-        android:id="@+id/main_docTextView"
+        android:id="@+id/main_flow2InquiryTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@id/main_flowTextView"
         android:layout_alignBottom="@id/main_flowTextView"
-        android:layout_alignLeft="@id/main_docImageButton"
-        android:layout_alignRight="@id/main_docImageButton"
+        android:layout_alignLeft="@id/main_flow2InquiryImageButton"
+        android:layout_alignRight="@id/main_flow2InquiryImageButton"
         android:gravity="center_horizontal"
         android:text="@string/main_flow2Inquiry"
         android:textSize="16sp"/>
 
     <ImageButton
-        android:id="@+id/main_calendarImageButton"
+        android:id="@+id/main_flowInquiryImageButton"
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_alignTop="@id/main_flowImageButton"
         android:layout_marginLeft="67dp"
-        android:layout_toRightOf="@id/main_docImageButton"
+        android:layout_toRightOf="@id/main_flow2InquiryImageButton"
         android:background="@null"
         android:scaleType="fitCenter"
         android:src="@drawable/ic_calendar"
         android:tag="calendar"/>
 
     <TextView
-        android:id="@+id/main_calendarTextView"
+        android:id="@+id/main_flowInquiryTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@id/main_flowTextView"
         android:layout_alignBottom="@id/main_flowTextView"
-        android:layout_alignLeft="@id/main_calendarImageButton"
-        android:layout_alignRight="@id/main_calendarImageButton"
+        android:layout_alignLeft="@id/main_flowInquiryImageButton"
+        android:layout_alignRight="@id/main_flowInquiryImageButton"
         android:gravity="center_horizontal"
         android:text="@string/main_flowInquiry"
         android:textSize="16sp"/>
 
     <ImageButton
-        android:id="@+id/main_flowInquiryImageButton"
+        android:id="@+id/main_docImageButton"
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_alignLeft="@id/main_flowTextView"
@@ -89,59 +89,59 @@
         android:tag="flowInquiry"/>
 
     <TextView
-        android:id="@+id/main_flowInquiryTextView"
+        android:id="@+id/main_docTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@id/main_flowInquiryImageButton"
-        android:layout_alignRight="@id/main_flowInquiryImageButton"
-        android:layout_below="@id/main_flowInquiryImageButton"
+        android:layout_alignLeft="@id/main_docImageButton"
+        android:layout_alignRight="@id/main_docImageButton"
+        android:layout_below="@id/main_docImageButton"
         android:layout_marginTop="4dp"
         android:gravity="center_horizontal"
         android:text="@string/main_doc"
         android:textSize="16sp"/>
 
     <ImageButton
-        android:id="@+id/main_flow2InquiryImageButton"
+        android:id="@+id/main_docInquiryImageButton"
         android:layout_width="48dp"
         android:layout_height="48dp"
-        android:layout_alignLeft="@id/main_docTextView"
-        android:layout_alignTop="@id/main_flowInquiryImageButton"
+        android:layout_alignLeft="@id/main_flow2InquiryTextView"
+        android:layout_alignTop="@id/main_docImageButton"
         android:background="@null"
         android:scaleType="fitCenter"
         android:src="@drawable/ic_flow2_inquiry"
         android:tag="flow2Inquiry"/>
 
     <TextView
-        android:id="@+id/main_flow2InquiryTextView"
+        android:id="@+id/main_docInquiryTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@id/main_flowInquiryTextView"
-        android:layout_alignBottom="@id/main_flowInquiryTextView"
-        android:layout_alignLeft="@id/main_flow2InquiryImageButton"
-        android:layout_alignRight="@id/main_flow2InquiryImageButton"
+        android:layout_alignBaseline="@id/main_docTextView"
+        android:layout_alignBottom="@id/main_docTextView"
+        android:layout_alignLeft="@id/main_docInquiryImageButton"
+        android:layout_alignRight="@id/main_docInquiryImageButton"
         android:gravity="center_horizontal"
         android:text="@string/main_docInquiry"
         android:textSize="16sp"/>
 
     <ImageButton
-        android:id="@+id/main_docInquiryImageButton"
+        android:id="@+id/main_calendarImageButton"
         android:layout_width="48dp"
         android:layout_height="48dp"
-        android:layout_alignLeft="@id/main_calendarTextView"
-        android:layout_alignTop="@id/main_flowInquiryImageButton"
+        android:layout_alignLeft="@id/main_flowInquiryTextView"
+        android:layout_alignTop="@id/main_docImageButton"
         android:background="@null"
         android:scaleType="fitCenter"
         android:src="@drawable/ic_flow2_inquiry"
         android:tag="docInquiry"/>
 
     <TextView
-        android:id="@+id/main_docInquiryTextView"
+        android:id="@+id/main_calendarTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@id/main_flowInquiryTextView"
-        android:layout_alignBottom="@id/main_flowInquiryTextView"
-        android:layout_alignLeft="@id/main_docInquiryImageButton"
-        android:layout_alignRight="@id/main_docInquiryImageButton"
+        android:layout_alignBaseline="@id/main_docTextView"
+        android:layout_alignBottom="@id/main_docTextView"
+        android:layout_alignLeft="@id/main_calendarImageButton"
+        android:layout_alignRight="@id/main_calendarImageButton"
         android:gravity="center_horizontal"
         android:text="@string/main_calendar"
         android:textSize="16sp"/>
@@ -150,8 +150,8 @@
         android:id="@+id/main_noticeImageButton"
         android:layout_width="48dp"
         android:layout_height="48dp"
-        android:layout_alignLeft="@id/main_flowInquiryTextView"
-        android:layout_below="@id/main_flowInquiryTextView"
+        android:layout_alignLeft="@id/main_docTextView"
+        android:layout_below="@id/main_docTextView"
         android:layout_marginTop="40dp"
         android:background="@null"
         android:scaleType="fitCenter"
@@ -174,12 +174,13 @@
         android:id="@+id/main_mailImageButton"
         android:layout_width="48dp"
         android:layout_height="48dp"
-        android:layout_alignLeft="@id/main_flow2InquiryTextView"
-        android:layout_alignTop="@id/main_noticeImageButton"
         android:background="@null"
         android:scaleType="fitCenter"
         android:src="@drawable/ic_setup"
-        android:tag="mail"/>
+        android:tag="mail"
+        android:layout_alignTop="@id/main_noticeImageButton"
+        android:layout_alignLeft="@id/main_docInquiryTextView"
+        android:layout_alignStart="@id/main_docInquiryTextView"/>
 
     <TextView
         android:id="@+id/main_mailTextView"
@@ -197,12 +198,13 @@
         android:id="@+id/main_setupImageButton"
         android:layout_width="48dp"
         android:layout_height="48dp"
-        android:layout_alignLeft="@id/main_docInquiryTextView"
-        android:layout_alignTop="@id/main_noticeImageButton"
         android:background="@null"
         android:scaleType="fitCenter"
         android:src="@drawable/ic_setup"
-        android:tag="setup"/>
+        android:tag="setup"
+        android:layout_alignTop="@+id/main_mailImageButton"
+        android:layout_alignLeft="@+id/main_calendarTextView"
+        android:layout_alignStart="@+id/main_calendarTextView"/>
 
     <TextView
         android:id="@+id/main_setupTextView"
