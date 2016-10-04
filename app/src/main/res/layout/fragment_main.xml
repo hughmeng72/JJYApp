@@ -2,9 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="#F5F5F5"
-    >
-
+                android:background="#F5F5F5">
     <ImageButton
         android:id="@+id/main_flowImageButton"
         android:layout_width="48dp"
@@ -12,11 +10,11 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:layout_marginLeft="40dp"
-        android:layout_marginTop="96dp"
+        android:layout_marginTop="64dp"
         android:background="@null"
         android:scaleType="fitCenter"
         android:src="@drawable/ic_flow"
-        android:tag="flow" />
+        android:tag="flow"/>
 
     <TextView
         android:id="@+id/main_flowTextView"
@@ -28,7 +26,7 @@
         android:layout_marginTop="4dp"
         android:gravity="center_horizontal"
         android:text="@string/main_flow"
-        android:textSize="16sp" />
+        android:textSize="16sp"/>
 
     <ImageButton
         android:id="@+id/main_docImageButton"
@@ -40,7 +38,7 @@
         android:background="@null"
         android:scaleType="fitCenter"
         android:src="@drawable/ic_calendar"
-        android:tag="doc" />
+        android:tag="doc"/>
 
     <TextView
         android:id="@+id/main_docTextView"
@@ -52,7 +50,7 @@
         android:layout_alignRight="@+id/main_docImageButton"
         android:gravity="center_horizontal"
         android:text="@string/main_doc"
-        android:textSize="16sp" />
+        android:textSize="16sp"/>
 
     <ImageButton
         android:id="@+id/main_calendarImageButton"
@@ -64,7 +62,7 @@
         android:background="@null"
         android:scaleType="fitCenter"
         android:src="@drawable/ic_calendar"
-        android:tag="calendar" />
+        android:tag="calendar"/>
 
     <TextView
         android:id="@+id/main_calendarTextView"
@@ -76,7 +74,7 @@
         android:layout_alignRight="@+id/main_calendarImageButton"
         android:gravity="center_horizontal"
         android:text="@string/main_calendar"
-        android:textSize="16sp" />
+        android:textSize="16sp"/>
 
     <ImageButton
         android:id="@+id/main_flowInquiryImageButton"
@@ -88,7 +86,7 @@
         android:background="@null"
         android:scaleType="fitCenter"
         android:src="@drawable/ic_flow_inquiry"
-        android:tag="flowInquiry" />
+        android:tag="flowInquiry"/>
 
     <TextView
         android:id="@+id/main_flowInquiryTextView"
@@ -100,7 +98,7 @@
         android:layout_marginTop="4dp"
         android:gravity="center_horizontal"
         android:text="@string/main_flowInquiry"
-        android:textSize="16sp" />
+        android:textSize="16sp"/>
 
     <ImageButton
         android:id="@+id/main_flow2InquiryImageButton"
@@ -111,7 +109,7 @@
         android:background="@null"
         android:scaleType="fitCenter"
         android:src="@drawable/ic_flow2_inquiry"
-        android:tag="flow2Inquiry" />
+        android:tag="flow2Inquiry"/>
 
     <TextView
         android:id="@+id/main_flow2InquiryTextView"
@@ -123,7 +121,7 @@
         android:layout_alignRight="@+id/main_flow2InquiryImageButton"
         android:gravity="center_horizontal"
         android:text="@string/main_flow2Inquiry"
-        android:textSize="16sp" />
+        android:textSize="16sp"/>
 
     <ImageButton
         android:id="@+id/main_docInquiryImageButton"
@@ -134,7 +132,7 @@
         android:background="@null"
         android:scaleType="fitCenter"
         android:src="@drawable/ic_flow2_inquiry"
-        android:tag="docInquiry" />
+        android:tag="docInquiry"/>
 
     <TextView
         android:id="@+id/main_docInquiryTextView"
@@ -146,7 +144,7 @@
         android:layout_alignRight="@+id/main_docInquiryImageButton"
         android:gravity="center_horizontal"
         android:text="@string/main_docInquiry"
-        android:textSize="16sp" />
+        android:textSize="16sp"/>
 
     <ImageButton
         android:id="@+id/main_noticeImageButton"
@@ -158,7 +156,7 @@
         android:background="@null"
         android:scaleType="fitCenter"
         android:src="@drawable/ic_notice"
-        android:tag="notice" />
+        android:tag="notice"/>
 
     <TextView
         android:id="@+id/main_noticeTextView"
@@ -170,7 +168,7 @@
         android:layout_marginTop="4dp"
         android:gravity="center_horizontal"
         android:text="@string/main_notice"
-        android:textSize="16sp" />
+        android:textSize="16sp"/>
 
     <ImageButton
         android:id="@+id/main_mailImageButton"
@@ -181,7 +179,7 @@
         android:background="@null"
         android:scaleType="fitCenter"
         android:src="@drawable/ic_setup"
-        android:tag="mail" />
+        android:tag="mail"/>
 
     <TextView
         android:id="@+id/main_mailTextView"
@@ -193,7 +191,7 @@
         android:layout_alignRight="@+id/main_mailImageButton"
         android:gravity="center_horizontal"
         android:text="@string/main_mail"
-        android:textSize="16sp" />
+        android:textSize="16sp"/>
 
     <ImageButton
         android:id="@+id/main_setupImageButton"
@@ -204,7 +202,7 @@
         android:background="@null"
         android:scaleType="fitCenter"
         android:src="@drawable/ic_setup"
-        android:tag="setup" />
+        android:tag="setup"/>
 
     <TextView
         android:id="@+id/main_setupTextView"
@@ -216,6 +214,6 @@
         android:layout_alignRight="@+id/main_setupImageButton"
         android:gravity="center_horizontal"
         android:text="@string/main_setup"
-        android:textSize="16sp" />
+        android:textSize="16sp"/>
 
 </RelativeLayout>
