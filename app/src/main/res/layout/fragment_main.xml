@@ -49,7 +49,7 @@
         android:layout_alignLeft="@id/main_docImageButton"
         android:layout_alignRight="@id/main_docImageButton"
         android:gravity="center_horizontal"
-        android:text="@string/main_doc"
+        android:text="@string/main_flow2Inquiry"
         android:textSize="16sp"/>
 
     <ImageButton
@@ -73,7 +73,7 @@
         android:layout_alignLeft="@id/main_calendarImageButton"
         android:layout_alignRight="@id/main_calendarImageButton"
         android:gravity="center_horizontal"
-        android:text="@string/main_calendar"
+        android:text="@string/main_flowInquiry"
         android:textSize="16sp"/>
 
     <ImageButton
@@ -97,7 +97,7 @@
         android:layout_below="@id/main_flowInquiryImageButton"
         android:layout_marginTop="4dp"
         android:gravity="center_horizontal"
-        android:text="@string/main_flowInquiry"
+        android:text="@string/main_doc"
         android:textSize="16sp"/>
 
     <ImageButton
@@ -120,7 +120,7 @@
         android:layout_alignLeft="@id/main_flow2InquiryImageButton"
         android:layout_alignRight="@id/main_flow2InquiryImageButton"
         android:gravity="center_horizontal"
-        android:text="@string/main_flow2Inquiry"
+        android:text="@string/main_docInquiry"
         android:textSize="16sp"/>
 
     <ImageButton
@@ -143,7 +143,7 @@
         android:layout_alignLeft="@id/main_docInquiryImageButton"
         android:layout_alignRight="@id/main_docInquiryImageButton"
         android:gravity="center_horizontal"
-        android:text="@string/main_docInquiry"
+        android:text="@string/main_calendar"
         android:textSize="16sp"/>
 
     <ImageButton
