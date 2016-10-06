@@ -62,6 +62,13 @@ public class ApprovalFlowListFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        updateUI();
+    }
+
     private void updateUI() {
         if (mFlows == null || mRecyclerView == null) {
             return;
@@ -75,7 +82,6 @@ public class ApprovalFlowListFragment extends Fragment {
             mAdapter.notifyDataSetChanged();
         }
     }
-
 
     private class FlowHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private Flow mFlow;

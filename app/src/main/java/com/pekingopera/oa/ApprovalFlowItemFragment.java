@@ -1,5 +1,6 @@
 package com.pekingopera.oa;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -37,12 +38,19 @@ import org.ksoap2.transport.HttpTransportSE;
 import java.lang.reflect.Type;
 import java.util.List;
 
+import static android.app.Activity.RESULT_OK;
+
 /**
  * Created by wayne on 10/5/2016.
  */
 public class ApprovalFlowItemFragment extends Fragment implements View.OnClickListener {
     private static final String TAG = "afItemFragment";
     private static final String ARG_FLOW = "flow_id";
+    private static final String DIALOG_APPROVAL = "DialogConfirm";
+
+    private static final int REQUEST_AGREED = 0;
+    private static final int REQUEST_DISAGREED = 1;
+    private static final int REQUEST_FINALIZED = 2;
 
     private MaterialSheetFab materialSheetFab;
     private int statusBarColor;
@@ -58,6 +66,7 @@ public class ApprovalFlowItemFragment extends Fragment implements View.OnClickLi
 
     private FlowStepAdapter mFlowStepAdapter;
     private FlowAttachmentAdapter mFlowAttachmentAdapter;
+    private Fab mFab;
 
     private int mFlowId;
     private Flow mFlow;
@@ -114,6 +123,8 @@ public class ApprovalFlowItemFragment extends Fragment implements View.OnClickLi
             return;
         }
 
+        mFab.setVisibility(View.VISIBLE);
+
         mFlowNameTextView.setText(mFlow.getFlowName());
         mFlowNoTextView.setText(mFlow.getFlowNo());
         mDepartmentTextView.setText(mFlow.getDepName());
@@ -144,14 +155,14 @@ public class ApprovalFlowItemFragment extends Fragment implements View.OnClickLi
 
     private void setupFab(View v) {
 
-        Fab fab = (Fab) v.findViewById(R.id.fab);
+        mFab = (Fab) v.findViewById(R.id.fab);
         View sheetView = v.findViewById(R.id.fab_sheet);
         View overlay = v.findViewById(R.id.overlay);
         int sheetColor = getResources().getColor(R.color.background_card);
         int fabColor = getResources().getColor(R.color.theme_accent);
 
         // Create material sheet FAB
-        materialSheetFab = new MaterialSheetFab<>(fab, sheetView, overlay, sheetColor, fabColor);
+        materialSheetFab = new MaterialSheetFab<>(mFab, sheetView, overlay, sheetColor, fabColor);
 
         // Set material sheet event listener
         materialSheetFab.setEventListener(new MaterialSheetFabEventListener() {
@@ -174,8 +185,6 @@ public class ApprovalFlowItemFragment extends Fragment implements View.OnClickLi
         v.findViewById(R.id.fab_sheet_item_reminder).setOnClickListener(this);
         v.findViewById(R.id.fab_sheet_item_photo).setOnClickListener(this);
         v.findViewById(R.id.fab_sheet_item_note).setOnClickListener(this);
-
-//        fab.setVisibility(View.VISIBLE);
     }
 
     private int getStatusBarColor() {
@@ -193,8 +202,53 @@ public class ApprovalFlowItemFragment extends Fragment implements View.OnClickLi
 
     @Override
     public void onClick(View v) {
-        Toast.makeText(getActivity(), v.getTag() + " Item pressed", Toast.LENGTH_SHORT).show();
         materialSheetFab.hideSheet();
+
+        FlowApprovalFragment dialog;
+
+        switch (v.getTag().toString()) {
+            case "agree":
+                dialog = FlowApprovalFragment.newInstance("同意");
+                dialog.setTargetFragment(ApprovalFlowItemFragment.this, REQUEST_AGREED);
+                dialog.show(getFragmentManager(), DIALOG_APPROVAL);
+                break;
+            case "disagree":
+                dialog = FlowApprovalFragment.newInstance("不同意");
+                dialog.setTargetFragment(ApprovalFlowItemFragment.this, REQUEST_DISAGREED);
+                dialog.show(getFragmentManager(), DIALOG_APPROVAL);
+                break;
+            case "finalize":
+                dialog = FlowApprovalFragment.newInstance("完结");
+                dialog.setTargetFragment(ApprovalFlowItemFragment.this, REQUEST_FINALIZED);
+                dialog.show(getFragmentManager(), DIALOG_APPROVAL);
+                break;
+            default:
+                Toast.makeText(getActivity(), v.getTag() + " Item pressed", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode != RESULT_OK) {
+            return;
+        }
+
+        String words = data.getStringExtra(FlowApprovalFragment.EXTRA_RESULT);
+
+        if (requestCode == REQUEST_AGREED) {
+            Toast.makeText(getActivity(), "同意啦！" + words, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (requestCode == REQUEST_DISAGREED) {
+            Toast.makeText(getActivity(), "不同意:(" + words, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (requestCode == REQUEST_FINALIZED) {
+            Toast.makeText(getActivity(), "哈哈，完结啦！" + words, Toast.LENGTH_SHORT).show();
+            return;
+        }
     }
 
     private class FlowStepHolder extends RecyclerView.ViewHolder {
