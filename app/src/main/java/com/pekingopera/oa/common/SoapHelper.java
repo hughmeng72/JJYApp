@@ -6,7 +6,7 @@ package com.pekingopera.oa.common;
 
 public class SoapHelper {
     public static String getWsNamespace() {
-        return "http://192.168.10.102/";
+        return "http://192.168.9.31/";
     }
 
     public static String getWsUrl() {
@@ -35,5 +35,9 @@ public class SoapHelper {
 
     public static String getWsMethodOfApprovalFlowList() {
         return "GetApprovalFlowList";
+    }
+
+    public static String getWsMethodOfApprovalFlowDetail() {
+        return "GetApprovalFlowDetail";
     }
 }

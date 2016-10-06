@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <!-- Content -->
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="?android:listSeparatorTextViewStyle"
+                android:padding="4dp">
+
+                <TextView
+                    android:layout_width="60dp"
+                    android:layout_height="wrap_content"
+                    android:text="名称："
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/approval_flow_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="现代戏头套，老旦6500元，常宝6000元" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="?android:listSeparatorTextViewStyle"
+                android:padding="4dp">
+
+                <TextView
+                    android:layout_width="60dp"
+                    android:layout_height="wrap_content"
+                    android:text="编号："
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/approval_flow_no"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="2016-101512" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="?android:listSeparatorTextViewStyle"
+                android:padding="4dp">
+
+                <TextView
+                    android:layout_width="60dp"
+                    android:layout_height="wrap_content"
+                    android:text="部门："
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/approval_flow_department"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="舞美中心" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="?android:listSeparatorTextViewStyle"
+                android:padding="4dp">
+
+                <TextView
+                    android:layout_width="60dp"
+                    android:layout_height="wrap_content"
+                    android:text="申请人："
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/approval_flow_requestor"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="沈金囡" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="?android:listSeparatorTextViewStyle"
+                android:padding="4dp">
+
+                <TextView
+                    android:layout_width="60dp"
+                    android:layout_height="wrap_content"
+                    android:text="日期："
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/approval_flow_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="2016-09-27" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                style="?android:listSeparatorTextViewStyle"
+                android:padding="4dp">
+
+                <TextView
+                    android:layout_width="60dp"
+                    android:layout_height="wrap_content"
+                    android:text="说明："
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/approval_flow_remark"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="现代戏头套，老旦6500元，常宝头套6000元" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                style="?android:listSeparatorTextViewStyle"
+                android:padding="4dp">
+
+                <TextView
+                    android:layout_width="60dp"
+                    android:layout_height="wrap_content"
+                    android:text="附件："
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/approval_flow_attachment"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="现代戏头套，老旦6500元，常宝头套6000元" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                style="?android:listSeparatorTextViewStyle"
+                android:padding="4dp">
+
+                <TextView
+                    android:layout_width="60dp"
+                    android:layout_height="wrap_content"
+                    android:text="进度："
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/approval_flow_step"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="0、申请单申请    沈金囡 在 2016年09月27日 13:23 提交(申请人) " />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Flow Toolbar -->
+        <com.pekingopera.oa.common.Fab
+            android:id="@+id/fab"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="36dp"
+            android:layout_marginRight="24dp"
+            android:visibility="invisible"
+            style="@style/Widget.MaterialSheetFab.Fab" />
+
+        <!-- Overlay that dims the screen -->
+        <com.gordonwong.materialsheetfab.DimOverlayFrameLayout
+            android:id="@+id/overlay"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <!-- Circular reveal container for the sheet -->
+        <io.codetail.widget.RevealLinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="end|bottom"
+            android:orientation="vertical">
+
+            <!-- Sheet that contains your items -->
+            <android.support.v7.widget.CardView
+                android:id="@+id/fab_sheet"
+                style="@style/Widget.MaterialSheetFab.Sheet">
+
+                <!-- Sheet items -->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/fab_sheet_item_reminder"
+                        style="@style/TextAppearance.MaterialSheetFab.Sheet.Item"
+                        android:drawableLeft="@drawable/ic_access_alarms_grey600_24dp"
+                        android:drawableStart="@drawable/ic_access_alarms_grey600_24dp"
+                        android:text="不同意"
+                        android:tag="disagree" />
+
+                    <TextView
+                        android:id="@+id/fab_sheet_item_photo"
+                        style="@style/TextAppearance.MaterialSheetFab.Sheet.Item"
+                        android:drawableLeft="@drawable/ic_photo_camera_grey600_24dp"
+                        android:drawableStart="@drawable/ic_photo_camera_grey600_24dp"
+                        android:text="完结"
+                        android:tag="finalize" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/theme_accent">
+
+                        <TextView
+                            android:id="@+id/fab_sheet_item_note"
+                            style="@style/TextAppearance.MaterialSheetFab.Sheet.Item"
+                            android:drawableLeft="@drawable/ic_create_grey600_24dp"
+                            android:drawableStart="@drawable/ic_create_grey600_24dp"
+                            android:text="同意"
+                            android:tag="agree" />
+                    </LinearLayout>
+
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
+
+        </io.codetail.widget.RevealLinearLayout>
+    </RelativeLayout>
+</LinearLayout>

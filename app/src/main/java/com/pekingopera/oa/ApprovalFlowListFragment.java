@@ -1,5 +1,6 @@
 package com.pekingopera.oa;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -110,8 +111,8 @@ public class ApprovalFlowListFragment extends Fragment {
 
         @Override
         public void onClick(View v) {
-//            Intent i = WebPagerActivity.newIntent(getActivity(), mFlow.getId());
-//            startActivity(i);
+            Intent i = ApprovalFlowItemActivity.newIntent(getActivity(), mFlow.getId());
+            startActivity(i);
         }
     }
 
