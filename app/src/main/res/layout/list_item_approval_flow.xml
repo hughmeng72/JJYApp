@@ -20,7 +20,8 @@
         android:layout_below="@id/item_approval_flow_name"
         android:layout_alignLeft="@id/item_approval_flow_name"
         android:padding="4dp"
-        tools:text="Creator" />
+        tools:text="Creator"
+        tools:ignore="RtlHardcoded"/>
 
     <TextView
         android:id="@+id/item_approval_flow_amount"
@@ -38,6 +39,7 @@
         android:layout_below="@id/item_approval_flow_name"
         android:layout_alignRight="@id/item_approval_flow_name"
         android:padding="4dp"
-        tools:text="Create Time" />
+        tools:text="Create Time"
+        tools:ignore="RtlHardcoded" />
 
 </RelativeLayout>

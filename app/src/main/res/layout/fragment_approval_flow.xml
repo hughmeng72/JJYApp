@@ -140,11 +140,10 @@
                     android:text="附件："
                     android:textStyle="bold" />
 
-                <TextView
-                    android:id="@+id/approval_flow_attachment"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    tools:text="现代戏头套，老旦6500元，常宝头套6000元" />
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/approval_flow_attachments"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
             </LinearLayout>
 
             <LinearLayout
@@ -159,11 +158,10 @@
                     android:text="进度："
                     android:textStyle="bold" />
 
-                <TextView
-                    android:id="@+id/approval_flow_step"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    tools:text="0、申请单申请    沈金囡 在 2016年09月27日 13:23 提交(申请人) " />
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/approval_flow_steps"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
             </LinearLayout>
         </LinearLayout>
 

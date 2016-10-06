@@ -5,6 +5,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -21,6 +23,8 @@ import com.pekingopera.oa.common.Fab;
 import com.pekingopera.oa.common.SoapHelper;
 import com.pekingopera.oa.common.Utils;
 import com.pekingopera.oa.model.Flow;
+import com.pekingopera.oa.model.FlowDoc;
+import com.pekingopera.oa.model.FlowStep;
 import com.pekingopera.oa.model.ResponseResult;
 import com.pekingopera.oa.model.User;
 
@@ -49,6 +53,11 @@ public class ApprovalFlowItemFragment extends Fragment implements View.OnClickLi
     private TextView mRequestorTextView;
     private TextView mRequestTimeTextView;
     private TextView mRemarkTextView;
+    private RecyclerView mFlowStepRecyclerView;
+    private RecyclerView mFlowAttachmentRecyclerView;
+
+    private FlowStepAdapter mFlowStepAdapter;
+    private FlowAttachmentAdapter mFlowAttachmentAdapter;
 
     private int mFlowId;
     private Flow mFlow;
@@ -83,6 +92,12 @@ public class ApprovalFlowItemFragment extends Fragment implements View.OnClickLi
         mRequestTimeTextView = (TextView) v.findViewById(R.id.approval_flow_time);
         mRemarkTextView = (TextView) v.findViewById(R.id.approval_flow_remark);
 
+        mFlowStepRecyclerView = (RecyclerView) v.findViewById(R.id.approval_flow_steps);
+        mFlowStepRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        mFlowAttachmentRecyclerView = (RecyclerView) v.findViewById(R.id.approval_flow_attachments);
+        mFlowAttachmentRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
         if (Utils.isNetworkConnected(getActivity())) {
             LoadTask task = new LoadTask();
             task.execute(User.get().getToken());
@@ -92,6 +107,39 @@ public class ApprovalFlowItemFragment extends Fragment implements View.OnClickLi
         }
 
         return v;
+    }
+
+    private void updateUI() {
+        if (mFlow == null) {
+            return;
+        }
+
+        mFlowNameTextView.setText(mFlow.getFlowName());
+        mFlowNoTextView.setText(mFlow.getFlowNo());
+        mDepartmentTextView.setText(mFlow.getDepName());
+        mRequestorTextView.setText(mFlow.getCreator());
+        mRequestTimeTextView.setText(mFlow.getCreateTime());
+        mRemarkTextView.setText(mFlow.getRemark());
+
+        if (mFlowStepRecyclerView != null) {
+            if (mFlowStepAdapter == null) {
+                mFlowStepAdapter = new FlowStepAdapter(mFlow.getSteps());
+                mFlowStepRecyclerView.setAdapter(mFlowStepAdapter);
+            }
+            else {
+                mFlowStepAdapter.notifyDataSetChanged();
+            }
+        }
+
+        if (mFlowAttachmentRecyclerView != null) {
+            if (mFlowAttachmentAdapter == null) {
+                mFlowAttachmentAdapter = new FlowAttachmentAdapter(mFlow.getAttachments());
+                mFlowAttachmentRecyclerView.setAdapter(mFlowAttachmentAdapter);
+            }
+            else {
+                mFlowAttachmentAdapter.notifyDataSetChanged();
+            }
+        }
     }
 
     private void setupFab(View v) {
@@ -147,6 +195,99 @@ public class ApprovalFlowItemFragment extends Fragment implements View.OnClickLi
     public void onClick(View v) {
         Toast.makeText(getActivity(), v.getTag() + " Item pressed", Toast.LENGTH_SHORT).show();
         materialSheetFab.hideSheet();
+    }
+
+    private class FlowStepHolder extends RecyclerView.ViewHolder {
+        private FlowStep mFlowStep;
+
+        private TextView mStepNameTextView;
+        private TextView mStepDescTextView;
+
+        public FlowStepHolder(View itemView) {
+            super(itemView);
+
+            mStepNameTextView = (TextView) itemView.findViewById(R.id.item_flow_step_name);
+            mStepDescTextView = (TextView) itemView.findViewById(R.id.item_flow_step_desc);
+        }
+
+        public void bindItemView(FlowStep flowStep) {
+            mFlowStep = flowStep;
+
+            mStepNameTextView.setText(mFlowStep.getStepName());
+            mStepDescTextView.setText(mFlowStep.getDescription());
+        }
+    }
+
+    private class FlowStepAdapter extends RecyclerView.Adapter<FlowStepHolder> {
+        private List<FlowStep> mFlowSteps;
+
+        public FlowStepAdapter(List<FlowStep> flowSteps) {
+            mFlowSteps = flowSteps;
+        }
+
+        @Override
+        public FlowStepHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
+            View view = layoutInflater.inflate(R.layout.list_item_flow_step, parent, false);
+
+            return new FlowStepHolder(view);
+        }
+
+        @Override
+        public void onBindViewHolder(FlowStepHolder holder, int position) {
+            FlowStep flowStep = mFlowSteps.get(position);
+            holder.bindItemView(flowStep);
+        }
+
+        @Override
+        public int getItemCount() {
+            return mFlowSteps.size();
+        }
+    }
+
+    private class FlowAttachmentHolder extends RecyclerView.ViewHolder {
+        private FlowDoc mFlowDoc;
+
+        private TextView mFileNameTextView;
+
+        public FlowAttachmentHolder(View itemView) {
+            super(itemView);
+
+            mFileNameTextView = (TextView) itemView.findViewById(R.id.item_flow_attachment_name);
+        }
+
+        public void bindItemView(FlowDoc flowDoc) {
+            mFlowDoc = flowDoc;
+
+            mFileNameTextView.setText(mFlowDoc.getFileName());
+        }
+    }
+
+    private class FlowAttachmentAdapter extends RecyclerView.Adapter<FlowAttachmentHolder> {
+        private List<FlowDoc> mFlowDocs;
+
+        public FlowAttachmentAdapter(List<FlowDoc> flowDocs) {
+            mFlowDocs = flowDocs;
+        }
+
+        @Override
+        public FlowAttachmentHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
+            View view = layoutInflater.inflate(R.layout.list_item_flow_attachment, parent, false);
+
+            return new FlowAttachmentHolder(view);
+        }
+
+        @Override
+        public void onBindViewHolder(FlowAttachmentHolder holder, int position) {
+            FlowDoc flowDoc = mFlowDocs.get(position);
+            holder.bindItemView(flowDoc);
+        }
+
+        @Override
+        public int getItemCount() {
+            return mFlowDocs.size();
+        }
     }
 
     // AsynTask class to handle Load Web Service call as separate UI Thread
@@ -220,15 +361,6 @@ public class ApprovalFlowItemFragment extends Fragment implements View.OnClickLi
             mFlow = flows.get(0);
 
             updateUI();
-        }
-
-        private void updateUI() {
-            mFlowNameTextView.setText(mFlow.getFlowName());
-            mFlowNoTextView.setText(mFlow.getFlowNo());
-            mDepartmentTextView.setText(mFlow.getDepName());
-            mRequestorTextView.setText(mFlow.getCreator());
-            mRequestTimeTextView.setText(mFlow.getCreateTime());
-            mRemarkTextView.setText(mFlow.getRemark());
         }
 
         @Override
