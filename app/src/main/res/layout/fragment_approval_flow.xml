@@ -110,6 +110,26 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/approval_flow_amount_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="?android:listSeparatorTextViewStyle"
+                android:padding="4dp">
+
+                <TextView
+                    android:layout_width="60dp"
+                    android:layout_height="wrap_content"
+                    android:text="金额："
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/approval_flow_amount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="1234.56" />
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="80dp"
                 style="?android:listSeparatorTextViewStyle"

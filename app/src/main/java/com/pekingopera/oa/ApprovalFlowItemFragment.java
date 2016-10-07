@@ -13,6 +13,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -61,6 +62,8 @@ public class ApprovalFlowItemFragment extends Fragment implements View.OnClickLi
     private TextView mRequestorTextView;
     private TextView mRequestTimeTextView;
     private TextView mRemarkTextView;
+    private TextView mAmountTextView;
+    private LinearLayout mAmountLinearLayout;
     private RecyclerView mFlowStepRecyclerView;
     private RecyclerView mFlowAttachmentRecyclerView;
 
@@ -100,7 +103,9 @@ public class ApprovalFlowItemFragment extends Fragment implements View.OnClickLi
         mRequestorTextView = (TextView) v.findViewById(R.id.approval_flow_requestor);
         mRequestTimeTextView = (TextView) v.findViewById(R.id.approval_flow_time);
         mRemarkTextView = (TextView) v.findViewById(R.id.approval_flow_remark);
+        mAmountTextView = (TextView) v.findViewById(R.id.approval_flow_amount);
 
+        mAmountLinearLayout = (LinearLayout) v.findViewById(R.id.approval_flow_amount_container);
         mFlowStepRecyclerView = (RecyclerView) v.findViewById(R.id.approval_flow_steps);
         mFlowStepRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
@@ -131,6 +136,13 @@ public class ApprovalFlowItemFragment extends Fragment implements View.OnClickLi
         mRequestorTextView.setText(mFlow.getCreator());
         mRequestTimeTextView.setText(mFlow.getCreateTime());
         mRemarkTextView.setText(mFlow.getRemark());
+
+        if (mFlow.getAmount() == 0) {
+            mAmountLinearLayout.setVisibility(View.GONE);
+        }
+        else {
+            mAmountTextView.setText(String.format("%.2f", mFlow.getAmount()));
+        }
 
         if (mFlowStepRecyclerView != null) {
             if (mFlowStepAdapter == null) {
