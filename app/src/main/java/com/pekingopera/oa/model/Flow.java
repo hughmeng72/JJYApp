@@ -23,6 +23,16 @@ public class Flow {
     private String Creator;
     private String CreateTime;
 
+    private boolean BudgetInvolved;
+    private String ProjectName;
+    private String ItemName;
+    private double TotalAmount;
+    private double AmountPaidProcurement;
+    private double AmountToBePaidProcurement;
+    private double AmountPaidReimbursement;
+    private double AmountToBePaidReimbursement;
+    private double AmountLeft;
+
     private List<FlowStep> Steps;
     private List<FlowDoc> Attachments;
     private int mFlowNo;
@@ -77,5 +87,41 @@ public class Flow {
 
     public String getFlowNo() {
         return FlowNo;
+    }
+
+    public boolean isBudgetInvolved() {
+        return BudgetInvolved;
+    }
+
+    public String getProjectName() {
+        return ProjectName;
+    }
+
+    public String getItemName() {
+        return ItemName;
+    }
+
+    public double getTotalAmount() {
+        return TotalAmount;
+    }
+
+    public double getAmountPaidProcurement() {
+        return AmountPaidProcurement;
+    }
+
+    public double getAmountToBePaidProcurement() {
+        return AmountToBePaidProcurement;
+    }
+
+    public double getAmountPaidReimbursement() {
+        return AmountPaidReimbursement;
+    }
+
+    public double getAmountToBePaidReimbursement() {
+        return AmountToBePaidReimbursement;
+    }
+
+    public double getAmountLeft() {
+        return AmountLeft;
     }
 }

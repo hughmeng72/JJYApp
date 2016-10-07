@@ -64,6 +64,17 @@ public class ApprovalFlowItemFragment extends Fragment implements View.OnClickLi
     private TextView mRemarkTextView;
     private TextView mAmountTextView;
     private LinearLayout mAmountLinearLayout;
+    private LinearLayout mBudgetLinearLayout;
+
+    private TextView mBudgetItemNameTextView;
+    private TextView mBudgetProjectNameTextView;
+    private TextView mBudgetAmountTotalTextView;
+    private TextView mBudgetAmountLeftTextView;
+    private TextView mBudgetAmountToBePaidProcurementTextView;
+    private TextView mBudgetAmountPaidProcurementTextView;
+    private TextView mBudgetAmountPaidToBeReimbursementTextView;
+    private TextView mBudgetAmountPaidReimbursementTextView;
+
     private RecyclerView mFlowStepRecyclerView;
     private RecyclerView mFlowAttachmentRecyclerView;
 
@@ -106,6 +117,17 @@ public class ApprovalFlowItemFragment extends Fragment implements View.OnClickLi
         mAmountTextView = (TextView) v.findViewById(R.id.approval_flow_amount);
 
         mAmountLinearLayout = (LinearLayout) v.findViewById(R.id.approval_flow_amount_container);
+        mBudgetLinearLayout = (LinearLayout) v.findViewById(R.id.approval_flow_budget_container);
+
+        mBudgetItemNameTextView = (TextView) v.findViewById(R.id.approval_flow_budget_item_name);
+        mBudgetProjectNameTextView = (TextView) v.findViewById(R.id.approval_flow_budget_project_name);
+        mBudgetAmountTotalTextView = (TextView) v.findViewById(R.id.approval_flow_budget_amount_total);
+        mBudgetAmountLeftTextView = (TextView) v.findViewById(R.id.approval_flow_budget_amount_left);
+        mBudgetAmountToBePaidProcurementTextView = (TextView) v.findViewById(R.id.approval_flow_budget_amount_paying_procument);
+        mBudgetAmountPaidProcurementTextView = (TextView) v.findViewById(R.id.approval_flow_budget_amount_paid_procument);
+        mBudgetAmountPaidToBeReimbursementTextView = (TextView) v.findViewById(R.id.approval_flow_budget_amount_paying_reimbursement);
+        mBudgetAmountPaidReimbursementTextView = (TextView) v.findViewById(R.id.approval_flow_budget_amount_paid_reimbursement);
+
         mFlowStepRecyclerView = (RecyclerView) v.findViewById(R.id.approval_flow_steps);
         mFlowStepRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
@@ -137,11 +159,23 @@ public class ApprovalFlowItemFragment extends Fragment implements View.OnClickLi
         mRequestTimeTextView.setText(mFlow.getCreateTime());
         mRemarkTextView.setText(mFlow.getRemark());
 
-        if (mFlow.getAmount() == 0) {
-            mAmountLinearLayout.setVisibility(View.GONE);
-        }
-        else {
+        if (mFlow.getAmount() != 0) {
+            mAmountLinearLayout.setVisibility(View.VISIBLE);
+
             mAmountTextView.setText(String.format("%.2f", mFlow.getAmount()));
+        }
+
+        if (mFlow.isBudgetInvolved()) {
+            mBudgetLinearLayout.setVisibility(View.VISIBLE);
+
+            mBudgetItemNameTextView.setText(mFlow.getItemName());
+            mBudgetProjectNameTextView.setText(mFlow.getProjectName());
+            mBudgetAmountTotalTextView.setText(String.format("%.2f", mFlow.getTotalAmount()));
+            mBudgetAmountLeftTextView.setText(String.format("%1$.2f (%2$.0f%%)", mFlow.getAmountLeft(), 100 * mFlow.getAmountLeft() / mFlow.getTotalAmount()));
+            mBudgetAmountToBePaidProcurementTextView.setText(String.format("%.2f", mFlow.getAmountToBePaidProcurement()));
+            mBudgetAmountPaidProcurementTextView.setText(String.format("%.2f", mFlow.getAmountPaidProcurement()));
+            mBudgetAmountPaidToBeReimbursementTextView.setText(String.format("%.2f", mFlow.getAmountToBePaidReimbursement()));
+            mBudgetAmountPaidReimbursementTextView.setText(String.format("%.2f", mFlow.getAmountPaidReimbursement()));
         }
 
         if (mFlowStepRecyclerView != null) {
