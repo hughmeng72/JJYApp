@@ -48,4 +48,8 @@ public class SoapHelper {
     public static String getWsMethodOfFlowDetail() {
         return "GetFlowDetail";
     }
+
+    public static String getWsMethodOfApprovalGovList() {
+        return "GetApprovalGovList";
+    }
 }

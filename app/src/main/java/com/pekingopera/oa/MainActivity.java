@@ -47,6 +47,14 @@ public class MainActivity extends BaseActivity implements LoginFragment.OnFragme
                 intent = new Intent(this, GeneralFlowListActivity.class);
                 startActivity(intent);
                 break;
+            case "doc":
+                intent = new Intent(this, ApprovalDocListActivity.class);
+                startActivity(intent);
+                break;
+            case "docInquiry":
+//                intent = new Intent(this, ApprovalFlowListActivity.class);
+//                startActivity(intent);
+                break;
             case "calendar":
                 intent = new Intent(this, CalendarListActivity.class);
                 startActivity(intent);

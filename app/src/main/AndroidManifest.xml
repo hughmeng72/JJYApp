@@ -18,15 +18,16 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".ApprovalFlowListActivity" />
-        <activity android:name=".FinancialFlowListActivity" />
-        <activity android:name=".GeneralFlowListActivity" />
-        <activity android:name=".FlowItemActivity" />
-        <activity android:name=".CalendarListActivity" />
-        <activity android:name=".NoticeListActivity" />
-        <activity android:name=".MailListActivity" />
+        <activity android:name=".ApprovalFlowListActivity"/>
+        <activity android:name=".FinancialFlowListActivity"/>
+        <activity android:name=".GeneralFlowListActivity"/>
+        <activity android:name=".FlowItemActivity"/>
+        <activity android:name=".ApprovalDocListActivity"/>
+        <activity android:name=".CalendarListActivity"/>
+        <activity android:name=".NoticeListActivity"/>
+        <activity android:name=".MailListActivity"/>
         <!--<activity android:name=".WebPageActivity" />-->
-        <activity android:name=".WebPagerActivity" />
+        <activity android:name=".WebPagerActivity"/>
     </application>
 
 </manifest>
