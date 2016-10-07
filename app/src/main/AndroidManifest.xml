@@ -23,6 +23,7 @@
         <activity android:name=".GeneralFlowListActivity"/>
         <activity android:name=".FlowItemActivity"/>
         <activity android:name=".ApprovalGovListActivity"/>
+        <activity android:name=".GovListActivity"/>
         <activity android:name=".GovItemActivity"/>
         <activity android:name=".CalendarListActivity"/>
         <activity android:name=".NoticeListActivity"/>

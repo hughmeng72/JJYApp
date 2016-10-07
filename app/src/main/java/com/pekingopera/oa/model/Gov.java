@@ -48,7 +48,13 @@ public class Gov {
             case 0:
                 return "进行中";
             case 1:
-                return "已完成";
+                return "已签发";
+            case 5:
+                return "已归档";
+            case -1:
+                return "已锁定";
+            case -2:
+                return "已退回";
             default:
                 return "其它";
         }
