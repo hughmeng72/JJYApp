@@ -6,6 +6,7 @@ package com.pekingopera.oa.model;
 public class User {
     private ResponseBase error;
     private String token = "";
+    private int userId;
     private String userName;
 
     private static User sUser;
@@ -30,5 +31,9 @@ public class User {
 
     public ResponseBase getError() {
         return error;
+    }
+
+    public int getUserId() {
+        return userId;
     }
 }

@@ -1,6 +1,7 @@
 package com.pekingopera.oa.model;
 
 import android.net.Uri;
+import android.widget.Switch;
 
 import com.pekingopera.oa.common.IPager;
 
@@ -20,6 +21,7 @@ public class Flow {
     private int Status;
     private String DepName;
     private String Remark;
+    private int CreatorId;
     private String Creator;
     private String CreateTime;
 
@@ -59,6 +61,17 @@ public class Flow {
 
     public int getStatus() {
         return Status;
+    }
+
+    public String getStatusDesc() {
+        switch (Status) {
+            case 0:
+                return "审批中";
+            case 1:
+                return "已完成";
+            default:
+                return "其它";
+        }
     }
 
     public String getCreator() {
@@ -123,5 +136,9 @@ public class Flow {
 
     public double getAmountLeft() {
         return AmountLeft;
+    }
+
+    public int getCreatorId() {
+        return CreatorId;
     }
 }

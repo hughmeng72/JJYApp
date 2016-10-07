@@ -1,34 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout style="?android:listSeparatorTextViewStyle"
+                xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:tools="http://schemas.android.com/tools"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content">
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
     <TextView
         android:id="@+id/item_calendar_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textStyle="bold"
         android:padding="4dp"
-        tools:text="Title" />
+        android:textStyle="bold"
+        tools:text="Title"/>
 
     <TextView
         android:id="@+id/item_calendar_dep"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/item_calendar_title"
         android:layout_alignLeft="@id/item_calendar_title"
+        android:layout_below="@id/item_calendar_title"
         android:padding="4dp"
-        tools:text="Dep Name" />
+        tools:text="Dep Name"/>
 
     <TextView
         android:id="@+id/item_calendar_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/item_calendar_title"
         android:layout_alignRight="@id/item_calendar_title"
+        android:layout_below="@id/item_calendar_title"
         android:padding="4dp"
-        tools:text="Create Time" />
+        tools:text="Create Time"/>
 
 </RelativeLayout>

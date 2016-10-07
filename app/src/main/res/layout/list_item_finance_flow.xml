@@ -3,10 +3,11 @@
                 xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                style="?android:listSeparatorTextViewStyle"
                 android:orientation="vertical">
 
     <TextView
-        android:id="@+id/item_approval_flow_name"
+        android:id="@+id/item_finance_flow_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="4dp"
@@ -14,31 +15,30 @@
         tools:text="Flow Name"/>
 
     <TextView
-        android:id="@+id/item_approval_flow_creator"
-        style="?android:listSeparatorTextViewStyle"
+        android:id="@+id/item_finance_flow_creator"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@id/item_approval_flow_name"
-        android:layout_below="@id/item_approval_flow_name"
+        android:layout_alignLeft="@id/item_finance_flow_name"
+        android:layout_below="@id/item_finance_flow_name"
         android:padding="4dp"
         tools:ignore="RtlHardcoded"
         tools:text="Creator"/>
 
     <TextView
-        android:id="@+id/item_approval_flow_amount"
+        android:id="@+id/item_finance_flow_amount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/item_approval_flow_name"
+        android:layout_below="@id/item_finance_flow_name"
         android:layout_centerHorizontal="true"
         android:padding="4dp"
         tools:text="Amount"/>
 
     <TextView
-        android:id="@+id/item_approval_flow_time"
+        android:id="@+id/item_finance_flow_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignRight="@id/item_approval_flow_name"
-        android:layout_below="@id/item_approval_flow_name"
+        android:layout_alignRight="@id/item_finance_flow_name"
+        android:layout_below="@id/item_finance_flow_name"
         android:padding="4dp"
         tools:ignore="RtlHardcoded"
         tools:text="Create Time"/>

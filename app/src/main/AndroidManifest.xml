@@ -19,6 +19,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".ApprovalFlowListActivity" />
+        <activity android:name=".FinancialFlowListActivity" />
         <activity android:name=".ApprovalFlowItemActivity" />
         <activity android:name=".CalendarListActivity" />
         <activity android:name=".NoticeListActivity" />
