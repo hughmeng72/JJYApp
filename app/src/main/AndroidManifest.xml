@@ -20,6 +20,7 @@
         </activity>
         <activity android:name=".ApprovalFlowListActivity" />
         <activity android:name=".FinancialFlowListActivity" />
+        <activity android:name=".GeneralFlowListActivity" />
         <activity android:name=".FlowItemActivity" />
         <activity android:name=".CalendarListActivity" />
         <activity android:name=".NoticeListActivity" />

@@ -41,6 +41,10 @@ public class SoapHelper {
         return "GetFinancialFlowList";
     }
 
+    public static String getWsMethodOfGeneralFlowList() {
+        return "GetGeneralFlowList";
+    }
+
     public static String getWsMethodOfFlowDetail() {
         return "GetFlowDetail";
     }
