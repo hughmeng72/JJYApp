@@ -1,5 +1,6 @@
 package com.pekingopera.oa;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -35,7 +36,7 @@ import java.util.List;
 /**
  * Created by wayne on 10/7/2016.
  */
-public class ApprovalDocListFragment extends Fragment {
+public class ApprovalGovListFragment extends Fragment {
     private static final String TAG = "aDocListFragment";
 
     private RecyclerView mRecyclerView;
@@ -102,8 +103,8 @@ public class ApprovalDocListFragment extends Fragment {
 
         @Override
         public void onClick(View v) {
-//            Intent i = FlowItemActivity.newIntent(getActivity(), mGov.getId());
-//            startActivity(i);
+            Intent i = GovItemActivity.newIntent(getActivity(), mGov.getId());
+            startActivity(i);
         }
     }
 

@@ -22,7 +22,8 @@
         <activity android:name=".FinancialFlowListActivity"/>
         <activity android:name=".GeneralFlowListActivity"/>
         <activity android:name=".FlowItemActivity"/>
-        <activity android:name=".ApprovalDocListActivity"/>
+        <activity android:name=".ApprovalGovListActivity"/>
+        <activity android:name=".GovItemActivity"/>
         <activity android:name=".CalendarListActivity"/>
         <activity android:name=".NoticeListActivity"/>
         <activity android:name=".MailListActivity"/>

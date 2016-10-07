@@ -52,4 +52,8 @@ public class SoapHelper {
     public static String getWsMethodOfApprovalGovList() {
         return "GetApprovalGovList";
     }
+
+    public static String getWsMethodOfGovDetail() {
+        return "GetGovDetail";
+    }
 }
