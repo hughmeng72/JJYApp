@@ -37,12 +37,11 @@ public class SoapHelper {
         return "GetApprovalFlowList";
     }
 
-    public static String getWsMethodOfApprovalFlowDetail() {
-        return "GetApprovalFlowDetail";
-    }
-
     public static String getWsMethodOfFinancialFlowList() {
         return "GetFinancialFlowList";
     }
 
+    public static String getWsMethodOfFlowDetail() {
+        return "GetFlowDetail";
+    }
 }

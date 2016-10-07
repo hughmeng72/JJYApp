@@ -7,11 +7,11 @@ import android.support.v4.app.Fragment;
 /**
  * Created by wayne on 10/5/2016.
  */
-public class ApprovalFlowItemActivity extends BaseActivity {
+public class FlowItemActivity extends BaseActivity {
     private static final String EXTRA_FLOW_ID = "com.pekingopera.oa.flow_id";
 
     public static Intent newIntent(Context context, int flowId) {
-        Intent intent = new Intent(context, ApprovalFlowItemActivity.class);
+        Intent intent = new Intent(context, FlowItemActivity.class);
         intent.putExtra(EXTRA_FLOW_ID, flowId);
         return intent;
     }
@@ -20,6 +20,6 @@ public class ApprovalFlowItemActivity extends BaseActivity {
     protected Fragment createFragment() {
         int flowId = getIntent().getIntExtra(EXTRA_FLOW_ID, -1);
 
-        return ApprovalFlowItemFragment.newInstance(flowId);
+        return FlowItemFragment.newInstance(flowId);
     }
 }

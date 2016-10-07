@@ -118,7 +118,7 @@ public class FinancialFlowListFragment extends Fragment {
 
         @Override
         public void onClick(View v) {
-            Intent i = ApprovalFlowItemActivity.newIntent(getActivity(), mFlow.getId());
+            Intent i = FlowItemActivity.newIntent(getActivity(), mFlow.getId());
             startActivity(i);
         }
     }

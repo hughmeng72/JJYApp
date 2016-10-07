@@ -35,6 +35,9 @@ public class Flow {
     private double AmountToBePaidReimbursement;
     private double AmountLeft;
 
+    private boolean BudgetAuthorized;
+    private boolean ApprovalAuthorized;
+
     private List<FlowStep> Steps;
     private List<FlowDoc> Attachments;
     private int mFlowNo;
@@ -140,5 +143,13 @@ public class Flow {
 
     public int getCreatorId() {
         return CreatorId;
+    }
+
+    public boolean isBudgetAuthorized() {
+        return BudgetAuthorized;
+    }
+
+    public boolean isApprovalAuthorized() {
+        return ApprovalAuthorized;
     }
 }

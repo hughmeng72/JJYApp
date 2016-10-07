@@ -44,7 +44,7 @@ import static android.app.Activity.RESULT_OK;
 /**
  * Created by wayne on 10/5/2016.
  */
-public class ApprovalFlowItemFragment extends Fragment implements View.OnClickListener {
+public class FlowItemFragment extends Fragment implements View.OnClickListener {
     private static final String TAG = "afItemFragment";
     private static final String ARG_FLOW = "flow_id";
     private static final String DIALOG_APPROVAL = "DialogConfirm";
@@ -89,7 +89,7 @@ public class ApprovalFlowItemFragment extends Fragment implements View.OnClickLi
         Bundle args = new Bundle();
         args.putInt(ARG_FLOW, flowId);
 
-        ApprovalFlowItemFragment fragment = new ApprovalFlowItemFragment();
+        FlowItemFragment fragment = new FlowItemFragment();
         fragment.setArguments(args);
         return fragment;
     }
@@ -150,7 +150,9 @@ public class ApprovalFlowItemFragment extends Fragment implements View.OnClickLi
             return;
         }
 
-        mFab.setVisibility(View.VISIBLE);
+        if (mFlow.isApprovalAuthorized()) {
+            mFab.setVisibility(View.VISIBLE);
+        }
 
         mFlowNameTextView.setText(mFlow.getFlowName());
         mFlowNoTextView.setText(mFlow.getFlowNo());
@@ -165,7 +167,7 @@ public class ApprovalFlowItemFragment extends Fragment implements View.OnClickLi
             mAmountTextView.setText(String.format("%.2f", mFlow.getAmount()));
         }
 
-        if (mFlow.isBudgetInvolved()) {
+        if (mFlow.isBudgetInvolved() && mFlow.isBudgetAuthorized()) {
             mBudgetLinearLayout.setVisibility(View.VISIBLE);
 
             mBudgetItemNameTextView.setText(mFlow.getItemName());
@@ -255,17 +257,17 @@ public class ApprovalFlowItemFragment extends Fragment implements View.OnClickLi
         switch (v.getTag().toString()) {
             case "agree":
                 dialog = FlowApprovalFragment.newInstance("同意");
-                dialog.setTargetFragment(ApprovalFlowItemFragment.this, REQUEST_AGREED);
+                dialog.setTargetFragment(FlowItemFragment.this, REQUEST_AGREED);
                 dialog.show(getFragmentManager(), DIALOG_APPROVAL);
                 break;
             case "disagree":
                 dialog = FlowApprovalFragment.newInstance("不同意");
-                dialog.setTargetFragment(ApprovalFlowItemFragment.this, REQUEST_DISAGREED);
+                dialog.setTargetFragment(FlowItemFragment.this, REQUEST_DISAGREED);
                 dialog.show(getFragmentManager(), DIALOG_APPROVAL);
                 break;
             case "finalize":
                 dialog = FlowApprovalFragment.newInstance("完结");
-                dialog.setTargetFragment(ApprovalFlowItemFragment.this, REQUEST_FINALIZED);
+                dialog.setTargetFragment(FlowItemFragment.this, REQUEST_FINALIZED);
                 dialog.show(getFragmentManager(), DIALOG_APPROVAL);
                 break;
             default:
@@ -475,7 +477,7 @@ public class ApprovalFlowItemFragment extends Fragment implements View.OnClickLi
         // Method which invoke web method
         private String performLoadTask(String token) {
             // Create request
-            SoapObject request = new SoapObject(SoapHelper.getWsNamespace(), SoapHelper.getWsMethodOfApprovalFlowDetail());
+            SoapObject request = new SoapObject(SoapHelper.getWsNamespace(), SoapHelper.getWsMethodOfFlowDetail());
 
             request.addProperty(Utils.newPropertyInstance("token", token, String.class));
             request.addProperty(Utils.newPropertyInstance("flowId", mFlowId, int.class));
@@ -494,7 +496,7 @@ public class ApprovalFlowItemFragment extends Fragment implements View.OnClickLi
 
             try {
                 // Invoke web service
-                androidHttpTransport.call(SoapHelper.getWsSoapAction() + SoapHelper.getWsMethodOfApprovalFlowDetail(), envelope);
+                androidHttpTransport.call(SoapHelper.getWsSoapAction() + SoapHelper.getWsMethodOfFlowDetail(), envelope);
 
                 // Get the response
                 SoapPrimitive response = (SoapPrimitive) envelope.getResponse();
