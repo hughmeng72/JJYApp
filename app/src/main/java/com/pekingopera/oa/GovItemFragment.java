@@ -211,12 +211,12 @@ public class GovItemFragment extends Fragment implements View.OnClickListener {
 
         switch (v.getTag().toString()) {
             case "agree":
-                dialog = FlowApprovalFragment.newInstance("同意");
+                dialog = FlowApprovalFragment.newInstance("");
                 dialog.setTargetFragment(GovItemFragment.this, REQUEST_AGREED);
                 dialog.show(getFragmentManager(), DIALOG_APPROVAL);
                 break;
             case "finalize":
-                dialog = FlowApprovalFragment.newInstance("完结");
+                dialog = FlowApprovalFragment.newInstance("");
                 dialog.setTargetFragment(GovItemFragment.this, REQUEST_FINALIZED);
                 dialog.show(getFragmentManager(), DIALOG_APPROVAL);
                 break;
@@ -243,7 +243,11 @@ public class GovItemFragment extends Fragment implements View.OnClickListener {
         }
 
         if (requestCode == REQUEST_FINALIZED) {
-            Toast.makeText(getActivity(), "哈哈，完结啦！" + words, Toast.LENGTH_SHORT).show();
+            mGov.setReviewWords(words);
+
+            FinalizeTask task = new FinalizeTask();
+            task.execute(User.get().getToken());
+
             return;
         }
     }
@@ -556,4 +560,94 @@ public class GovItemFragment extends Fragment implements View.OnClickListener {
         }
     }
 
+    private class FinalizeTask extends AsyncTask<String, Void, String> {
+
+        @Override
+        protected String doInBackground(String... params) {
+            Log.i(TAG, "doInBackground: " + params.toString());
+
+            // Invoke web service
+            return performLoadTask(params[0]);
+        }
+
+        // Method which invoke web method
+        private String performLoadTask(String token) {
+            // Create request
+            SoapObject request = new SoapObject(SoapHelper.getWsNamespace(), SoapHelper.getWsMethodOfGovFinalizeRequest());
+
+            request.addProperty(Utils.newPropertyInstance("token", token, String.class));
+            request.addProperty(Utils.newPropertyInstance("id", mGov.getId(), int.class));
+            request.addProperty(Utils.newPropertyInstance("words", mGov.getReviewWords(), String.class));
+            request.addProperty(Utils.newPropertyInstance("depName", mGov.getDepName(), String.class));
+            request.addProperty(Utils.newPropertyInstance("currentDocPath", mGov.getCurrentDocPath(), String.class));
+
+            // Create envelope
+            SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+            envelope.dotNet = true;
+
+            envelope.addMapping(SoapHelper.getWsNamespace(), "gov", Gov.class);
+
+            // Set output SOAP object
+            envelope.setOutputSoapObject(request);
+
+            // Create HTTP call object
+            HttpTransportSE androidHttpTransport = new HttpTransportSE(SoapHelper.getWsUrl());
+
+            String responseJSON = null;
+
+            try {
+                // Invoke web service
+                androidHttpTransport.call(SoapHelper.getWsSoapAction() + SoapHelper.getWsMethodOfGovFinalizeRequest(), envelope);
+
+                // Get the response
+                SoapPrimitive response = (SoapPrimitive) envelope.getResponse();
+
+                responseJSON = response.toString();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            return responseJSON;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            Log.i(TAG, "onPostExecute: ");
+
+            if (result == null || result.isEmpty()) {
+                Toast.makeText(getActivity(), R.string.prompt_system_error, Toast.LENGTH_SHORT).show();
+
+                return;
+            }
+
+            ResponseBase responseResult;
+
+            try {
+                responseResult = new Gson().fromJson(result, ResponseBase.class);
+            } catch (Exception e) {
+                e.printStackTrace();
+                return;
+            }
+
+            if (responseResult == null) {
+                Toast toast = Toast.makeText(getActivity(), R.string.prompt_system_error, Toast.LENGTH_LONG);
+                toast.setGravity(Gravity.CENTER, 0, 0);
+                toast.show();
+
+                return;
+            }
+
+            if (responseResult.getResult() == 0){
+                Toast toast = Toast.makeText(getActivity(), responseResult.getErrorInfo(), Toast.LENGTH_LONG);
+                toast.setGravity(Gravity.CENTER, 0, 0);
+                toast.show();
+
+                return;
+            }
+
+            PagerItemLab.get(getActivity()).Remove(mGov.getId());
+
+            getActivity().finish();
+        }
+    }
 }

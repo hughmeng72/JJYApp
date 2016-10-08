@@ -48,18 +48,33 @@ public class FlowApprovalFragment extends DialogFragment {
 
         mEditText = (EditText) v.findViewById(R.id.dialog_approval_words);
 
-        return new AlertDialog.Builder(getActivity())
-                .setView(v)
-                .setTitle("审批结果：" + mResult)
-                .setMessage("您确认吗？")
-                .setPositiveButton("确认", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        sendResult(RESULT_OK, mEditText.getText().toString());
-                    }
-                })
-                .setNegativeButton("取消", null)
-                .create();
+        if (mResult.isEmpty()) {
+            return new AlertDialog.Builder(getActivity())
+                    .setView(v)
+                    .setTitle("审批意见")
+                    .setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            sendResult(RESULT_OK, mEditText.getText().toString());
+                        }
+                    })
+                    .setNegativeButton("取消", null)
+                    .create();
+        }
+        else {
+            return new AlertDialog.Builder(getActivity())
+                    .setView(v)
+                    .setTitle("审批结果：" + mResult)
+                    .setMessage("您确认吗？")
+                    .setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            sendResult(RESULT_OK, mEditText.getText().toString());
+                        }
+                    })
+                    .setNegativeButton("取消", null)
+                    .create();
+        }
     }
 
     private void sendResult(int resultCode, String words) {

@@ -64,4 +64,7 @@ public class SoapHelper {
     public static String getWsMethodOfGovRequest() {
         return "SubmitGovRequest";
     }
-}
+
+    public static String getWsMethodOfGovFinalizeRequest() {
+        return "FinalizeGovRequest";
+    }}
