@@ -11,7 +11,7 @@ import java.util.List;
  * Created by wayne on 10/3/2016.
  */
 
-public class Flow {
+public class Flow implements IPager {
     private int Id;
     private String FlowName;
     private String FlowNo;
@@ -41,6 +41,11 @@ public class Flow {
     private List<FlowStep> Steps;
     private List<FlowDoc> Attachments;
     private int mFlowNo;
+
+    @Override
+    public Uri getUri() {
+        return null;
+    }
 
     public int getId() {
         return Id;

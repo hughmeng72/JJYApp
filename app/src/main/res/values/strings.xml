@@ -15,6 +15,6 @@
     <string name="main_docInquiry">公文</string>
     <string name="main_notice">资讯</string>
     <string name="main_mail">邮件</string>
-    <string name="main_setup">设置</string>
+    <string name="main_others">其它</string>
 
 </resources>

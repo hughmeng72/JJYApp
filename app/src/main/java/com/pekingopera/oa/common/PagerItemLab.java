@@ -34,5 +34,12 @@ public class PagerItemLab<T extends IPager> {
         mItems = items;
     }
 
-
+    public void Remove(int id) {
+        for (T item : mItems) {
+            if (item.getId() == id) {
+                mItems.remove(item);
+                break;
+            }
+        }
+    }
 }

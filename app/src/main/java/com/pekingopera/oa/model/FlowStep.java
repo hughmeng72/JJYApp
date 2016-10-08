@@ -1,5 +1,7 @@
 package com.pekingopera.oa.model;
 
+import java.io.Serializable;
+
 public class FlowStep {
     private String StepName;
     private String UserName;

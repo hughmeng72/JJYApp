@@ -8,6 +8,11 @@ public class User {
     private String token = "";
     private int userId;
     private String userName;
+    private String RealName;
+
+    public String getRealName() {
+        return RealName;
+    }
 
     private static User sUser;
 
@@ -35,5 +40,9 @@ public class User {
 
     public int getUserId() {
         return userId;
+    }
+
+    public String getUserName() {
+        return userName;
     }
 }

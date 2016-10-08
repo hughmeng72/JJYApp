@@ -1,12 +1,17 @@
 package com.pekingopera.oa.model;
 
+import android.net.Uri;
+
+import com.pekingopera.oa.common.IPager;
+
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by wayne on 10/3/2016.
  */
 
-public class Gov {
+public class Gov implements IPager {
     private int Id;
     private String FlowName;
     private String ModelName;
@@ -14,14 +19,22 @@ public class Gov {
     private int Status;
     private String DepName;
     private String Remark;
+    private String CurrentDocPath;
+    private String FlowFiles;
     private int CreatorId;
     private String Creator;
     private String CreateTime;
+    private String ReviewWords;
 
     private boolean ApprovalAuthorized;
 
     private List<FlowStep> Steps;
     private List<FlowDoc> Attachments;
+
+    @Override
+    public Uri getUri() {
+        return null;
+    }
 
     public int getId() {
         return Id;
@@ -90,5 +103,21 @@ public class Gov {
 
     public boolean isApprovalAuthorized() {
         return ApprovalAuthorized;
+    }
+
+    public String getCurrentDocPath() {
+        return CurrentDocPath;
+    }
+
+    public String getFlowFiles() {
+        return FlowFiles;
+    }
+
+    public String getReviewWords() {
+        return ReviewWords;
+    }
+
+    public void setReviewWords(String reviewWords) {
+        ReviewWords = reviewWords;
     }
 }

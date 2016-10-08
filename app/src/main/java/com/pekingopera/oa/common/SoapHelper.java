@@ -60,4 +60,8 @@ public class SoapHelper {
     public static String getWsMethodOfGovDetail() {
         return "GetGovDetail";
     }
+
+    public static String getWsMethodOfGovRequest() {
+        return "SubmitGovRequest";
+    }
 }

@@ -61,6 +61,13 @@ public class ApprovalGovListFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        updateUI();
+    }
+
     private void updateUI() {
         if (mGovs == null || mRecyclerView == null) {
             return;
