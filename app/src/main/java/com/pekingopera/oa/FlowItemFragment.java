@@ -17,16 +17,20 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.gordonwong.materialsheetfab.MaterialSheetFab;
 import com.gordonwong.materialsheetfab.MaterialSheetFabEventListener;
 import com.pekingopera.oa.common.Fab;
+import com.pekingopera.oa.common.PagerItemLab;
 import com.pekingopera.oa.common.SoapHelper;
 import com.pekingopera.oa.common.Utils;
 import com.pekingopera.oa.model.Flow;
 import com.pekingopera.oa.model.FlowDoc;
 import com.pekingopera.oa.model.FlowStep;
+import com.pekingopera.oa.model.Gov;
+import com.pekingopera.oa.model.ResponseBase;
 import com.pekingopera.oa.model.ResponseResult;
 import com.pekingopera.oa.model.User;
 
@@ -284,17 +288,29 @@ public class FlowItemFragment extends Fragment implements View.OnClickListener {
         String words = data.getStringExtra(FlowApprovalFragment.EXTRA_RESULT);
 
         if (requestCode == REQUEST_AGREED) {
-            Toast.makeText(getActivity(), "同意啦！" + words, Toast.LENGTH_SHORT).show();
+            mFlow.setReviewWords(words);
+            
+            SubmitTask task = new SubmitTask();
+            task.execute(User.get().getToken());
+
             return;
         }
 
         if (requestCode == REQUEST_DISAGREED) {
-            Toast.makeText(getActivity(), "不同意:(" + words, Toast.LENGTH_SHORT).show();
+            mFlow.setReviewWords(words);
+
+            RejectTask task = new RejectTask();
+            task.execute(User.get().getToken());
+
             return;
         }
 
         if (requestCode == REQUEST_FINALIZED) {
-            Toast.makeText(getActivity(), "哈哈，完结啦！" + words, Toast.LENGTH_SHORT).show();
+            mFlow.setReviewWords(words);
+
+            FinalizeTask task = new FinalizeTask();
+            task.execute(User.get().getToken());
+
             return;
         }
     }
@@ -507,6 +523,284 @@ public class FlowItemFragment extends Fragment implements View.OnClickListener {
             }
 
             return responseJSON;
+        }
+    }
+
+    private class SubmitTask extends AsyncTask<String, Void, String> {
+
+        @Override
+        protected String doInBackground(String... params) {
+            Log.i(TAG, "doInBackground: " + params.toString());
+
+            // Invoke web service
+            return performLoadTask(params[0]);
+        }
+
+        // Method which invoke web method
+        private String performLoadTask(String token) {
+            // Create request
+            SoapObject request = new SoapObject(SoapHelper.getWsNamespace(), SoapHelper.getWsMethodOfFlowRequest());
+
+            request.addProperty(Utils.newPropertyInstance("token", token, String.class));
+            request.addProperty(Utils.newPropertyInstance("id", mFlow.getId(), int.class));
+            request.addProperty(Utils.newPropertyInstance("words", mFlow.getReviewWords(), String.class));
+            request.addProperty(Utils.newPropertyInstance("depName", mFlow.getDepName(), String.class));
+            request.addProperty(Utils.newPropertyInstance("docBody", mFlow.getDocBody(), String.class));
+            request.addProperty(Utils.newPropertyInstance("currentDocPath", mFlow.getCurrentDocPath(), String.class));
+            request.addProperty(Utils.newPropertyInstance("flowFiles", mFlow.getFlowFiles(), String.class));
+
+            // Create envelope
+            SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+            envelope.dotNet = true;
+
+            envelope.addMapping(SoapHelper.getWsNamespace(), "gov", Gov.class);
+
+            // Set output SOAP object
+            envelope.setOutputSoapObject(request);
+
+            // Create HTTP call object
+            HttpTransportSE androidHttpTransport = new HttpTransportSE(SoapHelper.getWsUrl());
+
+            String responseJSON = null;
+
+            try {
+                // Invoke web service
+                androidHttpTransport.call(SoapHelper.getWsSoapAction() + SoapHelper.getWsMethodOfFlowRequest(), envelope);
+
+                // Get the response
+                SoapPrimitive response = (SoapPrimitive) envelope.getResponse();
+
+                responseJSON = response.toString();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            return responseJSON;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            Log.i(TAG, "onPostExecute: ");
+
+            if (result == null || result.isEmpty()) {
+                Toast.makeText(getActivity(), R.string.prompt_system_error, Toast.LENGTH_SHORT).show();
+
+                return;
+            }
+
+            ResponseBase responseResult;
+
+            try {
+                responseResult = new Gson().fromJson(result, ResponseBase.class);
+            } catch (Exception e) {
+                e.printStackTrace();
+                return;
+            }
+
+            if (responseResult == null) {
+                Toast toast = Toast.makeText(getActivity(), R.string.prompt_system_error, Toast.LENGTH_LONG);
+                toast.setGravity(Gravity.CENTER, 0, 0);
+                toast.show();
+
+                return;
+            }
+
+            if (responseResult.getResult() == 0){
+                Toast toast = Toast.makeText(getActivity(), responseResult.getErrorInfo(), Toast.LENGTH_LONG);
+                toast.setGravity(Gravity.CENTER, 0, 0);
+                toast.show();
+
+                return;
+            }
+
+            PagerItemLab.get(getActivity()).Remove(mFlow.getId());
+
+            getActivity().finish();
+        }
+    }
+
+    private class RejectTask extends AsyncTask<String, Void, String> {
+        @Override
+        protected String doInBackground(String... params) {
+            Log.i(TAG, "doInBackground: " + params.toString());
+
+            // Invoke web service
+            return performLoadTask(params[0]);
+        }
+
+        // Method which invoke web method
+        private String performLoadTask(String token) {
+            // Create request
+            SoapObject request = new SoapObject(SoapHelper.getWsNamespace(), SoapHelper.getWsMethodOfFlowRejectRequest());
+
+            request.addProperty(Utils.newPropertyInstance("token", token, String.class));
+            request.addProperty(Utils.newPropertyInstance("id", mFlow.getId(), int.class));
+            request.addProperty(Utils.newPropertyInstance("words", mFlow.getReviewWords(), String.class));
+            request.addProperty(Utils.newPropertyInstance("depName", mFlow.getDepName(), String.class));
+            request.addProperty(Utils.newPropertyInstance("docBody", mFlow.getDocBody(), String.class));
+            request.addProperty(Utils.newPropertyInstance("currentDocPath", mFlow.getCurrentDocPath(), String.class));
+            request.addProperty(Utils.newPropertyInstance("flowFiles", mFlow.getFlowFiles(), String.class));
+
+            // Create envelope
+            SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+            envelope.dotNet = true;
+
+            envelope.addMapping(SoapHelper.getWsNamespace(), "gov", Gov.class);
+
+            // Set output SOAP object
+            envelope.setOutputSoapObject(request);
+
+            // Create HTTP call object
+            HttpTransportSE androidHttpTransport = new HttpTransportSE(SoapHelper.getWsUrl());
+
+            String responseJSON = null;
+
+            try {
+                // Invoke web service
+                androidHttpTransport.call(SoapHelper.getWsSoapAction() + SoapHelper.getWsMethodOfFlowRejectRequest(), envelope);
+
+                // Get the response
+                SoapPrimitive response = (SoapPrimitive) envelope.getResponse();
+
+                responseJSON = response.toString();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            return responseJSON;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            Log.i(TAG, "onPostExecute: ");
+
+            if (result == null || result.isEmpty()) {
+                Toast.makeText(getActivity(), R.string.prompt_system_error, Toast.LENGTH_SHORT).show();
+
+                return;
+            }
+
+            ResponseBase responseResult;
+
+            try {
+                responseResult = new Gson().fromJson(result, ResponseBase.class);
+            } catch (Exception e) {
+                e.printStackTrace();
+                return;
+            }
+
+            if (responseResult == null) {
+                Toast toast = Toast.makeText(getActivity(), R.string.prompt_system_error, Toast.LENGTH_LONG);
+                toast.setGravity(Gravity.CENTER, 0, 0);
+                toast.show();
+
+                return;
+            }
+
+            if (responseResult.getResult() == 0){
+                Toast toast = Toast.makeText(getActivity(), responseResult.getErrorInfo(), Toast.LENGTH_LONG);
+                toast.setGravity(Gravity.CENTER, 0, 0);
+                toast.show();
+
+                return;
+            }
+
+            PagerItemLab.get(getActivity()).Remove(mFlow.getId());
+
+            getActivity().finish();
+        }
+    }
+
+    private class FinalizeTask extends AsyncTask<String, Void, String> {
+
+        @Override
+        protected String doInBackground(String... params) {
+            Log.i(TAG, "doInBackground: " + params.toString());
+
+            // Invoke web service
+            return performLoadTask(params[0]);
+        }
+
+        // Method which invoke web method
+        private String performLoadTask(String token) {
+            // Create request
+            SoapObject request = new SoapObject(SoapHelper.getWsNamespace(), SoapHelper.getWsMethodOfFlowFinalizeRequest());
+
+            request.addProperty(Utils.newPropertyInstance("token", token, String.class));
+            request.addProperty(Utils.newPropertyInstance("id", mFlow.getId(), int.class));
+            request.addProperty(Utils.newPropertyInstance("words", mFlow.getReviewWords(), String.class));
+            request.addProperty(Utils.newPropertyInstance("depName", mFlow.getDepName(), String.class));
+            request.addProperty(Utils.newPropertyInstance("docBody", mFlow.getDocBody(), String.class));
+            request.addProperty(Utils.newPropertyInstance("currentDocPath", mFlow.getCurrentDocPath(), String.class));
+            request.addProperty(Utils.newPropertyInstance("flowFiles", mFlow.getFlowFiles(), String.class));
+
+            // Create envelope
+            SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+            envelope.dotNet = true;
+
+            envelope.addMapping(SoapHelper.getWsNamespace(), "gov", Gov.class);
+
+            // Set output SOAP object
+            envelope.setOutputSoapObject(request);
+
+            // Create HTTP call object
+            HttpTransportSE androidHttpTransport = new HttpTransportSE(SoapHelper.getWsUrl());
+
+            String responseJSON = null;
+
+            try {
+                // Invoke web service
+                androidHttpTransport.call(SoapHelper.getWsSoapAction() + SoapHelper.getWsMethodOfFlowFinalizeRequest(), envelope);
+
+                // Get the response
+                SoapPrimitive response = (SoapPrimitive) envelope.getResponse();
+
+                responseJSON = response.toString();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            return responseJSON;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            Log.i(TAG, "onPostExecute: ");
+
+            if (result == null || result.isEmpty()) {
+                Toast.makeText(getActivity(), R.string.prompt_system_error, Toast.LENGTH_SHORT).show();
+
+                return;
+            }
+
+            ResponseBase responseResult;
+
+            try {
+                responseResult = new Gson().fromJson(result, ResponseBase.class);
+            } catch (Exception e) {
+                e.printStackTrace();
+                return;
+            }
+
+            if (responseResult == null) {
+                Toast toast = Toast.makeText(getActivity(), R.string.prompt_system_error, Toast.LENGTH_LONG);
+                toast.setGravity(Gravity.CENTER, 0, 0);
+                toast.show();
+
+                return;
+            }
+
+            if (responseResult.getResult() == 0){
+                Toast toast = Toast.makeText(getActivity(), responseResult.getErrorInfo(), Toast.LENGTH_LONG);
+                toast.setGravity(Gravity.CENTER, 0, 0);
+                toast.show();
+
+                return;
+            }
+
+            PagerItemLab.get(getActivity()).Remove(mFlow.getId());
+
+            getActivity().finish();
         }
     }
 }

@@ -67,4 +67,17 @@ public class SoapHelper {
 
     public static String getWsMethodOfGovFinalizeRequest() {
         return "FinalizeGovRequest";
-    }}
+    }
+
+    public static String getWsMethodOfFlowRequest() {
+        return "SubmitFlowRequest";
+    }
+
+    public static String getWsMethodOfFlowRejectRequest() {
+        return "RejectFlowRequest";
+    }
+
+    public static String getWsMethodOfFlowFinalizeRequest() {
+        return "FinalizeFlowRequest";
+    }
+}

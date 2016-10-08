@@ -21,9 +21,13 @@ public class Flow implements IPager {
     private int Status;
     private String DepName;
     private String Remark;
+    private String CurrentDocPath;
+    private String FlowFiles;
+    private String DocBody;
     private int CreatorId;
     private String Creator;
     private String CreateTime;
+    private String ReviewWords;
 
     private boolean BudgetInvolved;
     private String ProjectName;
@@ -156,5 +160,25 @@ public class Flow implements IPager {
 
     public boolean isApprovalAuthorized() {
         return ApprovalAuthorized;
+    }
+
+    public String getReviewWords() {
+        return ReviewWords;
+    }
+
+    public void setReviewWords(String reviewWords) {
+        ReviewWords = reviewWords;
+    }
+
+    public String getCurrentDocPath() {
+        return CurrentDocPath;
+    }
+
+    public String getFlowFiles() {
+        return FlowFiles;
+    }
+
+    public String getDocBody() {
+        return DocBody;
     }
 }
