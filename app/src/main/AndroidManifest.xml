@@ -11,25 +11,25 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity android:name=".MainActivity" android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".ApprovalFlowListActivity"/>
-        <activity android:name=".FinancialFlowListActivity"/>
-        <activity android:name=".GeneralFlowListActivity"/>
-        <activity android:name=".FlowItemActivity"/>
-        <activity android:name=".ApprovalGovListActivity"/>
-        <activity android:name=".GovListActivity"/>
-        <activity android:name=".GovItemActivity"/>
-        <activity android:name=".CalendarListActivity"/>
-        <activity android:name=".NoticeListActivity"/>
-        <activity android:name=".MailListActivity"/>
+        <activity android:name=".ApprovalFlowListActivity" android:screenOrientation="portrait" />
+        <activity android:name=".FinancialFlowListActivity" android:screenOrientation="portrait" />
+        <activity android:name=".GeneralFlowListActivity" android:screenOrientation="portrait" />
+        <activity android:name=".FlowItemActivity" android:screenOrientation="portrait" />
+        <activity android:name=".ApprovalGovListActivity" android:screenOrientation="portrait" />
+        <activity android:name=".GovListActivity" android:screenOrientation="portrait" />
+        <activity android:name=".GovItemActivity" android:screenOrientation="portrait" />
+        <activity android:name=".CalendarListActivity" android:screenOrientation="portrait" />
+        <activity android:name=".NoticeListActivity" android:screenOrientation="portrait" />
+        <activity android:name=".MailListActivity" android:screenOrientation="portrait" />
         <!--<activity android:name=".WebPageActivity" />-->
-        <activity android:name=".WebPagerActivity"/>
+        <activity android:name=".WebPagerActivity" android:screenOrientation="portrait" />
     </application>
 
 </manifest>
