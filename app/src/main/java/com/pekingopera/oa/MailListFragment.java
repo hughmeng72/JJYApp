@@ -20,7 +20,7 @@ import com.pekingopera.oa.common.PagerItemLab;
 import com.pekingopera.oa.common.SoapHelper;
 import com.pekingopera.oa.common.Utils;
 import com.pekingopera.oa.model.Mail;
-import com.pekingopera.oa.model.ResponseResult;
+import com.pekingopera.oa.model.ResponseResults;
 import com.pekingopera.oa.model.User;
 
 import org.ksoap2.SoapEnvelope;
@@ -162,19 +162,19 @@ public class MailListFragment extends Fragment {
                 return;
             }
 
-            ResponseResult<Mail> responseResult;
+            ResponseResults<Mail> responseResults;
 
             try {
                 GsonBuilder gson = new GsonBuilder();
-                Type resultType = new TypeToken<ResponseResult<Mail>>() {}.getType();
+                Type resultType = new TypeToken<ResponseResults<Mail>>() {}.getType();
 
-                responseResult = gson.create().fromJson(result, resultType);
+                responseResults = gson.create().fromJson(result, resultType);
             } catch (Exception e) {
                 e.printStackTrace();
                 return;
             }
 
-            if (responseResult == null || responseResult.getError() == null) {
+            if (responseResults == null || responseResults.getError() == null) {
                 Toast toast = Toast.makeText(getActivity(), R.string.prompt_system_error, Toast.LENGTH_LONG);
                 toast.setGravity(Gravity.CENTER, 0, 0);
                 toast.show();
@@ -182,15 +182,15 @@ public class MailListFragment extends Fragment {
                 return;
             }
 
-            if (responseResult.getError().getResult() == 0){
-                Toast toast = Toast.makeText(getActivity(), responseResult.getError().getErrorInfo(), Toast.LENGTH_LONG);
+            if (responseResults.getError().getResult() == 0){
+                Toast toast = Toast.makeText(getActivity(), responseResults.getError().getErrorInfo(), Toast.LENGTH_LONG);
                 toast.setGravity(Gravity.CENTER, 0, 0);
                 toast.show();
 
                 return;
             }
 
-            mMails = responseResult.getList();
+            mMails = responseResults.getList();
             PagerItemLab.get(getActivity()).setItems(mMails);
 
             if (mMails == null) {

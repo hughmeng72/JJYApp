@@ -19,9 +19,8 @@ import com.google.gson.reflect.TypeToken;
 import com.pekingopera.oa.common.PagerItemLab;
 import com.pekingopera.oa.common.SoapHelper;
 import com.pekingopera.oa.common.Utils;
-import com.pekingopera.oa.model.Flow;
 import com.pekingopera.oa.model.Gov;
-import com.pekingopera.oa.model.ResponseResult;
+import com.pekingopera.oa.model.ResponseResults;
 import com.pekingopera.oa.model.User;
 
 import org.ksoap2.SoapEnvelope;
@@ -198,20 +197,20 @@ public class ApprovalGovListFragment extends Fragment {
                 return;
             }
 
-            ResponseResult<Gov> responseResult;
+            ResponseResults<Gov> responseResults;
 
             try {
                 GsonBuilder gson = new GsonBuilder();
-                Type resultType = new TypeToken<ResponseResult<Gov>>() {
+                Type resultType = new TypeToken<ResponseResults<Gov>>() {
                 }.getType();
 
-                responseResult = gson.create().fromJson(result, resultType);
+                responseResults = gson.create().fromJson(result, resultType);
             } catch (Exception e) {
                 e.printStackTrace();
                 return;
             }
 
-            if (responseResult == null || responseResult.getError() == null) {
+            if (responseResults == null || responseResults.getError() == null) {
                 Toast toast = Toast.makeText(getActivity(), R.string.prompt_system_error, Toast.LENGTH_LONG);
                 toast.setGravity(Gravity.CENTER, 0, 0);
                 toast.show();
@@ -219,15 +218,15 @@ public class ApprovalGovListFragment extends Fragment {
                 return;
             }
 
-            if (responseResult.getError().getResult() == 0) {
-                Toast toast = Toast.makeText(getActivity(), responseResult.getError().getErrorInfo(), Toast.LENGTH_LONG);
+            if (responseResults.getError().getResult() == 0) {
+                Toast toast = Toast.makeText(getActivity(), responseResults.getError().getErrorInfo(), Toast.LENGTH_LONG);
                 toast.setGravity(Gravity.CENTER, 0, 0);
                 toast.show();
 
                 return;
             }
 
-            mGovs = responseResult.getList();
+            mGovs = responseResults.getList();
             PagerItemLab.get(getActivity()).setItems(mGovs);
 
             if (mGovs == null) {

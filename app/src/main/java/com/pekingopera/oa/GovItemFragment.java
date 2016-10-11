@@ -25,12 +25,11 @@ import com.pekingopera.oa.common.Fab;
 import com.pekingopera.oa.common.PagerItemLab;
 import com.pekingopera.oa.common.SoapHelper;
 import com.pekingopera.oa.common.Utils;
-import com.pekingopera.oa.model.Flow;
 import com.pekingopera.oa.model.FlowDoc;
 import com.pekingopera.oa.model.FlowStep;
 import com.pekingopera.oa.model.Gov;
 import com.pekingopera.oa.model.ResponseBase;
-import com.pekingopera.oa.model.ResponseResult;
+import com.pekingopera.oa.model.ResponseResults;
 import com.pekingopera.oa.model.User;
 
 import org.ksoap2.SoapEnvelope;
@@ -407,19 +406,19 @@ public class GovItemFragment extends Fragment implements View.OnClickListener {
                 return;
             }
 
-            ResponseResult<Gov> responseResult;
+            ResponseResults<Gov> responseResults;
 
             try {
                 GsonBuilder gson = new GsonBuilder();
-                Type resultType = new TypeToken<ResponseResult<Gov>>() {}.getType();
+                Type resultType = new TypeToken<ResponseResults<Gov>>() {}.getType();
 
-                responseResult = gson.create().fromJson(result, resultType);
+                responseResults = gson.create().fromJson(result, resultType);
             } catch (Exception e) {
                 e.printStackTrace();
                 return;
             }
 
-            if (responseResult == null || responseResult.getError() == null) {
+            if (responseResults == null || responseResults.getError() == null) {
                 Toast toast = Toast.makeText(getActivity(), R.string.prompt_system_error, Toast.LENGTH_LONG);
                 toast.setGravity(Gravity.CENTER, 0, 0);
                 toast.show();
@@ -427,15 +426,15 @@ public class GovItemFragment extends Fragment implements View.OnClickListener {
                 return;
             }
 
-            if (responseResult.getError().getResult() == 0){
-                Toast toast = Toast.makeText(getActivity(), responseResult.getError().getErrorInfo(), Toast.LENGTH_LONG);
+            if (responseResults.getError().getResult() == 0){
+                Toast toast = Toast.makeText(getActivity(), responseResults.getError().getErrorInfo(), Toast.LENGTH_LONG);
                 toast.setGravity(Gravity.CENTER, 0, 0);
                 toast.show();
 
                 return;
             }
 
-            List<Gov> govs = responseResult.getList();
+            List<Gov> govs = responseResults.getList();
 
             if (govs == null) {
                 Toast toast = Toast.makeText(getActivity(), R.string.prompt_system_error, Toast.LENGTH_LONG);

@@ -6,7 +6,7 @@ import java.util.List;
  * Created by wayne on 10/2/2016.
  */
 
-public class ResponseResult<T> {
+public class ResponseResults<T> {
     private List<T> list;
 
     private ResponseBase error;

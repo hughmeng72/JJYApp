@@ -31,7 +31,7 @@ import com.pekingopera.oa.model.FlowDoc;
 import com.pekingopera.oa.model.FlowStep;
 import com.pekingopera.oa.model.Gov;
 import com.pekingopera.oa.model.ResponseBase;
-import com.pekingopera.oa.model.ResponseResult;
+import com.pekingopera.oa.model.ResponseResults;
 import com.pekingopera.oa.model.User;
 
 import org.ksoap2.SoapEnvelope;
@@ -430,19 +430,19 @@ public class FlowItemFragment extends Fragment implements View.OnClickListener {
                 return;
             }
 
-            ResponseResult<Flow> responseResult;
+            ResponseResults<Flow> responseResults;
 
             try {
                 GsonBuilder gson = new GsonBuilder();
-                Type resultType = new TypeToken<ResponseResult<Flow>>() {}.getType();
+                Type resultType = new TypeToken<ResponseResults<Flow>>() {}.getType();
 
-                responseResult = gson.create().fromJson(result, resultType);
+                responseResults = gson.create().fromJson(result, resultType);
             } catch (Exception e) {
                 e.printStackTrace();
                 return;
             }
 
-            if (responseResult == null || responseResult.getError() == null) {
+            if (responseResults == null || responseResults.getError() == null) {
                 Toast toast = Toast.makeText(getActivity(), R.string.prompt_system_error, Toast.LENGTH_LONG);
                 toast.setGravity(Gravity.CENTER, 0, 0);
                 toast.show();
@@ -450,15 +450,15 @@ public class FlowItemFragment extends Fragment implements View.OnClickListener {
                 return;
             }
 
-            if (responseResult.getError().getResult() == 0){
-                Toast toast = Toast.makeText(getActivity(), responseResult.getError().getErrorInfo(), Toast.LENGTH_LONG);
+            if (responseResults.getError().getResult() == 0){
+                Toast toast = Toast.makeText(getActivity(), responseResults.getError().getErrorInfo(), Toast.LENGTH_LONG);
                 toast.setGravity(Gravity.CENTER, 0, 0);
                 toast.show();
 
                 return;
             }
 
-            List<Flow> flows = responseResult.getList();
+            List<Flow> flows = responseResults.getList();
 
             if (flows == null) {
                 Toast toast = Toast.makeText(getActivity(), R.string.prompt_system_error, Toast.LENGTH_LONG);
