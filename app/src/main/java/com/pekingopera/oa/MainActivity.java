@@ -1,14 +1,17 @@
 package com.pekingopera.oa;
 
 import android.content.Intent;
+import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.widget.Toast;
 
-public class MainActivity extends BaseActivity implements LoginFragment.OnFragmentInteractionListener, MainFragment.OnFragmentInteractionListener {
+import com.dou361.update.UpdateHelper;
 
+public class MainActivity extends BaseActivity implements LoginFragment.OnFragmentInteractionListener, MainFragment.OnFragmentInteractionListener {
     @Override
     protected Fragment createFragment() {
         return new LoginFragment();
