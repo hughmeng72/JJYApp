@@ -8,7 +8,8 @@ public class SoapHelper {
     public static String getWsNamespace() {
 //        return "http://www.jjyoa.com:8000/"; // For JJY production server
 //        return "http://192.168.8.101/"; // For JJY debug
-        return "http://192.168.9.31/"; // For Home CS
+//        return "http://192.168.9.31/"; // For Home CS
+        return "http://192.168.1.2/"; // For Home XB
     }
 
     public static String getWsUrl() {

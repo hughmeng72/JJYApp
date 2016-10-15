@@ -1,9 +1,12 @@
 package com.pekingopera.oa;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -22,7 +25,11 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.gordonwong.materialsheetfab.MaterialSheetFab;
 import com.gordonwong.materialsheetfab.MaterialSheetFabEventListener;
+import com.koushikdutta.async.future.Future;
+import com.koushikdutta.async.future.FutureCallback;
+import com.koushikdutta.ion.Ion;
 import com.pekingopera.oa.common.Fab;
+import com.pekingopera.oa.common.FileHelper;
 import com.pekingopera.oa.common.PagerItemLab;
 import com.pekingopera.oa.common.SoapHelper;
 import com.pekingopera.oa.common.Utils;
@@ -40,6 +47,7 @@ import org.ksoap2.serialization.SoapPrimitive;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.ksoap2.transport.HttpTransportSE;
 
+import java.io.File;
 import java.lang.reflect.Type;
 import java.util.List;
 
@@ -141,8 +149,7 @@ public class FlowItemFragment extends Fragment implements View.OnClickListener {
         if (Utils.isNetworkConnected(getActivity())) {
             LoadTask task = new LoadTask();
             task.execute(User.get().getToken());
-        }
-        else {
+        } else {
             Toast.makeText(getActivity(), R.string.prompt_internet_connection_broken, Toast.LENGTH_SHORT).show();
         }
 
@@ -188,8 +195,7 @@ public class FlowItemFragment extends Fragment implements View.OnClickListener {
             if (mFlowStepAdapter == null) {
                 mFlowStepAdapter = new FlowStepAdapter(mFlow.getSteps());
                 mFlowStepRecyclerView.setAdapter(mFlowStepAdapter);
-            }
-            else {
+            } else {
                 mFlowStepAdapter.notifyDataSetChanged();
             }
         }
@@ -198,8 +204,7 @@ public class FlowItemFragment extends Fragment implements View.OnClickListener {
             if (mFlowAttachmentAdapter == null) {
                 mFlowAttachmentAdapter = new FlowAttachmentAdapter(mFlow.getAttachments());
                 mFlowAttachmentRecyclerView.setAdapter(mFlowAttachmentAdapter);
-            }
-            else {
+            } else {
                 mFlowAttachmentAdapter.notifyDataSetChanged();
             }
         }
@@ -289,7 +294,7 @@ public class FlowItemFragment extends Fragment implements View.OnClickListener {
 
         if (requestCode == REQUEST_AGREED) {
             mFlow.setReviewWords(words);
-            
+
             SubmitTask task = new SubmitTask();
             task.execute(User.get().getToken());
 
@@ -363,13 +368,16 @@ public class FlowItemFragment extends Fragment implements View.OnClickListener {
         }
     }
 
-    private class FlowAttachmentHolder extends RecyclerView.ViewHolder {
+    private class FlowAttachmentHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private FlowDoc mFlowDoc;
-
         private TextView mFileNameTextView;
+
+        private Future<File> downloading;
 
         public FlowAttachmentHolder(View itemView) {
             super(itemView);
+
+            itemView.setOnClickListener(this);
 
             mFileNameTextView = (TextView) itemView.findViewById(R.id.item_flow_attachment_name);
         }
@@ -378,6 +386,83 @@ public class FlowItemFragment extends Fragment implements View.OnClickListener {
             mFlowDoc = flowDoc;
 
             mFileNameTextView.setText(mFlowDoc.getFileName());
+        }
+
+        @Override
+        public void onClick(View v) {
+            if (mFlowDoc.getUri().isEmpty()) {
+                Toast.makeText(getActivity(), "没有附件可以显示", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            if (!FileHelper.isExternalStorageWritable()) {
+                Toast.makeText(getActivity(), "设备没有用来存放文件的公用目录。", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            downloadFile();
+        }
+
+        private void downloadFile() {
+            if (downloading != null && !downloading.isCancelled()) {
+                resetDownload();
+                return;
+            }
+
+            final ProgressDialog dlg = new ProgressDialog(getActivity());
+            dlg.setTitle("正在下载...");
+            dlg.setIndeterminate(false);
+            dlg.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+            dlg.show();
+
+            File docDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS);
+            docDir.mkdir();
+            if (!docDir.exists()) {
+                Toast.makeText(getActivity(), "设备没有创建公共文档的权限。", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            File newFile = new File(docDir, mFlowDoc.getFileName());
+
+            final String mimeType = FileHelper.getMineType(getActivity(), Uri.fromFile(newFile));
+            if (mimeType == null || mimeType.isEmpty()) {
+                Toast.makeText(getActivity(), "文件类型无法识别，不能浏览。", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            downloading = Ion.with(getActivity())
+                    .load(mFlowDoc.getUri())
+                    .progressDialog(dlg)
+                    .setLogging(TAG, Log.DEBUG)
+                    .write(newFile)
+                    .setCallback(new FutureCallback<File>() {
+                        @Override
+                        public void onCompleted(Exception e, File result) {
+                            dlg.cancel();
+                            resetDownload();
+
+                            if (e != null) {
+                                Toast.makeText(getActivity(), "下载出错，请重试。", Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+
+                            vewiFile(result, mimeType);
+                        }
+                    });
+        }
+
+        private void vewiFile(File result, String mimeType) {
+            Intent intent = new Intent("android.intent.action.VIEW");
+            intent.addCategory("android.intent.category.DEFAULT");
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            Uri uri = Uri.fromFile(result);
+            intent.setDataAndType(uri, mimeType);
+
+            startActivity(intent);
+        }
+
+        private void resetDownload() {
+            downloading.cancel();
+            downloading = null;
         }
     }
 
@@ -434,7 +519,8 @@ public class FlowItemFragment extends Fragment implements View.OnClickListener {
 
             try {
                 GsonBuilder gson = new GsonBuilder();
-                Type resultType = new TypeToken<ResponseResults<Flow>>() {}.getType();
+                Type resultType = new TypeToken<ResponseResults<Flow>>() {
+                }.getType();
 
                 responseResults = gson.create().fromJson(result, resultType);
             } catch (Exception e) {
@@ -450,7 +536,7 @@ public class FlowItemFragment extends Fragment implements View.OnClickListener {
                 return;
             }
 
-            if (responseResults.getError().getResult() == 0){
+            if (responseResults.getError().getResult() == 0) {
                 Toast toast = Toast.makeText(getActivity(), responseResults.getError().getErrorInfo(), Toast.LENGTH_LONG);
                 toast.setGravity(Gravity.CENTER, 0, 0);
                 toast.show();
@@ -605,7 +691,7 @@ public class FlowItemFragment extends Fragment implements View.OnClickListener {
                 return;
             }
 
-            if (responseResult.getResult() == 0){
+            if (responseResult.getResult() == 0) {
                 Toast toast = Toast.makeText(getActivity(), responseResult.getErrorInfo(), Toast.LENGTH_LONG);
                 toast.setGravity(Gravity.CENTER, 0, 0);
                 toast.show();
@@ -697,7 +783,7 @@ public class FlowItemFragment extends Fragment implements View.OnClickListener {
                 return;
             }
 
-            if (responseResult.getResult() == 0){
+            if (responseResult.getResult() == 0) {
                 Toast toast = Toast.makeText(getActivity(), responseResult.getErrorInfo(), Toast.LENGTH_LONG);
                 toast.setGravity(Gravity.CENTER, 0, 0);
                 toast.show();
@@ -790,7 +876,7 @@ public class FlowItemFragment extends Fragment implements View.OnClickListener {
                 return;
             }
 
-            if (responseResult.getResult() == 0){
+            if (responseResult.getResult() == 0) {
                 Toast toast = Toast.makeText(getActivity(), responseResult.getErrorInfo(), Toast.LENGTH_LONG);
                 toast.setGravity(Gravity.CENTER, 0, 0);
                 toast.show();

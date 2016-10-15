@@ -26,7 +26,7 @@ public abstract class BaseActivity extends AppCompatActivity {
                     .commit();
         }
 
-//        checkUpdate();
+        checkUpdate();
     }
 
     private void checkUpdate() {
