@@ -19,19 +19,19 @@ import static android.app.Activity.RESULT_OK;
 
 public class FlowApprovalFragment extends DialogFragment {
     private static final String TAG = "FlowApprovalFragment";
-    private static final String ARG_RESULT = "result";
+    private static final String ARG_TITLE = "result";
     public static final String EXTRA_RESULT =
             "com.pekingopera.oa.result";
 
 
     private EditText mEditText;
 
-    private String mResult;
+    private String mTitle;
 
 
-    public static FlowApprovalFragment newInstance(String result) {
+    public static FlowApprovalFragment newInstance(String title) {
         Bundle args = new Bundle();
-        args.putString(ARG_RESULT, result);
+        args.putString(ARG_TITLE, title);
 
         FlowApprovalFragment fragment = new FlowApprovalFragment();
         fragment.setArguments(args);
@@ -42,39 +42,23 @@ public class FlowApprovalFragment extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        mResult = getArguments().getString(ARG_RESULT);
+        mTitle = getArguments().getString(ARG_TITLE);
 
         View v = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_approval_words, null);
 
         mEditText = (EditText) v.findViewById(R.id.dialog_approval_words);
 
-        if (mResult.isEmpty()) {
-            return new AlertDialog.Builder(getActivity())
-                    .setView(v)
-                    .setTitle("审批意见")
-                    .setPositiveButton("确认", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            sendResult(RESULT_OK, mEditText.getText().toString());
-                        }
-                    })
-                    .setNegativeButton("取消", null)
-                    .create();
-        }
-        else {
-            return new AlertDialog.Builder(getActivity())
-                    .setView(v)
-                    .setTitle("审批结果：" + mResult)
-                    .setMessage("您确认吗？")
-                    .setPositiveButton("确认", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            sendResult(RESULT_OK, mEditText.getText().toString());
-                        }
-                    })
-                    .setNegativeButton("取消", null)
-                    .create();
-        }
+        return new AlertDialog.Builder(getActivity())
+                .setView(v)
+                .setTitle(mTitle)
+                .setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        sendResult(RESULT_OK, mEditText.getText().toString());
+                    }
+                })
+                .setNegativeButton("取消", null)
+                .create();
     }
 
     private void sendResult(int resultCode, String words) {

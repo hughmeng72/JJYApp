@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -50,9 +51,9 @@ public class GovItemFragment extends Fragment implements View.OnClickListener {
     private static final String TAG = "GovItemFragment";
     private static final String ARG_GOV = "gov_id";
     private static final String DIALOG_APPROVAL = "DialogConfirm";
+    public static final String MODEL_NOTICE_LETTER = "普发件";
 
     private static final int REQUEST_AGREED = 0;
-    private static final int REQUEST_DISAGREED = 1;
     private static final int REQUEST_FINALIZED = 2;
 
     private MaterialSheetFab materialSheetFab;
@@ -70,6 +71,8 @@ public class GovItemFragment extends Fragment implements View.OnClickListener {
     private FlowStepAdapter mFlowStepAdapter;
     private AttachmentAdapter mAttachmentAdapter;
     private Fab mFab;
+    private TextView mFinalizeActionTextView;
+    private TextView mSubmitTextView;
 
     private int mGovId;
     private Gov mGov;
@@ -127,13 +130,27 @@ public class GovItemFragment extends Fragment implements View.OnClickListener {
 
         if (mGov.isApprovalAuthorized()) {
             mFab.setVisibility(View.VISIBLE);
+
+            if (mGov.getModelName().equals(MODEL_NOTICE_LETTER)) {
+                mSubmitTextView.setText("签收");
+            }
+            else {
+                mSubmitTextView.setText("提交");
+                mFinalizeActionTextView.setVisibility(View.VISIBLE);
+            }
         }
 
         mFlowNameTextView.setText(mGov.getFlowName());
         mDepartmentTextView.setText(mGov.getDepName());
         mRequestorTextView.setText(mGov.getCreator());
         mRequestTimeTextView.setText(mGov.getCreateTime());
-        mRemarkTextView.setText(mGov.getRemark());
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            mRemarkTextView.setText(Html.fromHtml(mGov.getRemark(), Html.FROM_HTML_MODE_LEGACY));
+        }
+        else {
+            mRemarkTextView.setText(Html.fromHtml(mGov.getRemark()));
+        }
 
         if (mStepRecyclerView != null) {
             if (mFlowStepAdapter == null) {
@@ -185,8 +202,11 @@ public class GovItemFragment extends Fragment implements View.OnClickListener {
         });
 
         // Set material sheet item click listeners
-        v.findViewById(R.id.fab_sheet_item_gov_agree).setOnClickListener(this);
-        v.findViewById(R.id.fab_sheet_item_gov_finalize).setOnClickListener(this);
+        mFinalizeActionTextView = (TextView) v.findViewById(R.id.fab_sheet_item_gov_finalize);
+        mSubmitTextView = (TextView) v.findViewById(R.id.fab_sheet_item_gov_agree);
+
+        mFinalizeActionTextView.setOnClickListener(this);
+        mSubmitTextView.setOnClickListener(this);
     }
 
     private int getStatusBarColor() {
@@ -210,12 +230,17 @@ public class GovItemFragment extends Fragment implements View.OnClickListener {
 
         switch (v.getTag().toString()) {
             case "agree":
-                dialog = FlowApprovalFragment.newInstance("");
+                if (mGov.getModelName().equals(MODEL_NOTICE_LETTER)) {
+                    dialog = FlowApprovalFragment.newInstance("签收");
+                }
+                else {
+                    dialog = FlowApprovalFragment.newInstance("审批结果（同意）");
+                }
                 dialog.setTargetFragment(GovItemFragment.this, REQUEST_AGREED);
                 dialog.show(getFragmentManager(), DIALOG_APPROVAL);
                 break;
             case "finalize":
-                dialog = FlowApprovalFragment.newInstance("");
+                dialog = FlowApprovalFragment.newInstance("审批结果（办结）");
                 dialog.setTargetFragment(GovItemFragment.this, REQUEST_FINALIZED);
                 dialog.show(getFragmentManager(), DIALOG_APPROVAL);
                 break;

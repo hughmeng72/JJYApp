@@ -10,6 +10,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.pekingopera.oa.R;
 import com.pekingopera.oa.model.ResponseResult;
+import com.pekingopera.oa.model.User;
 import com.pekingopera.oa.model.Version;
 
 import java.lang.reflect.Type;
@@ -19,17 +20,19 @@ import java.lang.reflect.Type;
  */
 
 public class UpdateConfig {
-//    private static String checkUrl = "WebService/Pages/Update.aspx"; // For JJY production server
-    private static String checkUrl = "WebUI/WebService/Pages/Update.aspx"; // For debug in pc
+    private static String checkUrl = "WebService/Pages/Update.aspx";
+//    private static String checkUrl = "WebUI/WebService/Pages/Update.aspx"; // For debug in pc
 
     /**
      * Update check via Http Get
      */
     public static void initGet(Context context) {
         UpdateHelper.init(context);
+
+        String url = String.format("%1$s%2$s", SoapHelper.getWsNamespace(), checkUrl);
         UpdateHelper.getInstance()
                 .setMethod(RequestType.get)
-                .setCheckUrl(SoapHelper.getWsNamespace() + checkUrl)
+                .setCheckUrl(url)
                 .setDialogLayout(R.layout.dialog_update)
                 .setCheckJsonParser(new ParseData() {
                     @Override

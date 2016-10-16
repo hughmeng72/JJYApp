@@ -265,17 +265,17 @@ public class FlowItemFragment extends Fragment implements View.OnClickListener {
 
         switch (v.getTag().toString()) {
             case "agree":
-                dialog = FlowApprovalFragment.newInstance("同意");
+                dialog = FlowApprovalFragment.newInstance("审批结果（同意）");
                 dialog.setTargetFragment(FlowItemFragment.this, REQUEST_AGREED);
                 dialog.show(getFragmentManager(), DIALOG_APPROVAL);
                 break;
             case "disagree":
-                dialog = FlowApprovalFragment.newInstance("不同意");
+                dialog = FlowApprovalFragment.newInstance("审批结果（不同意）");
                 dialog.setTargetFragment(FlowItemFragment.this, REQUEST_DISAGREED);
                 dialog.show(getFragmentManager(), DIALOG_APPROVAL);
                 break;
             case "finalize":
-                dialog = FlowApprovalFragment.newInstance("完结");
+                dialog = FlowApprovalFragment.newInstance("审批结果（办结）");
                 dialog.setTargetFragment(FlowItemFragment.this, REQUEST_FINALIZED);
                 dialog.show(getFragmentManager(), DIALOG_APPROVAL);
                 break;

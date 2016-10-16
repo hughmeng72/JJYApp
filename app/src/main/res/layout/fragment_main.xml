@@ -13,7 +13,7 @@
         android:layout_marginTop="64dp"
         android:background="@null"
         android:scaleType="fitCenter"
-        android:src="@drawable/ic_calendar"
+        android:src="@drawable/ic_flow2_inquiry"
         android:tag="flow2Inquiry" />
 
     <TextView
@@ -60,7 +60,7 @@
         android:layout_marginRight="40dp"
         android:background="@null"
         android:scaleType="fitCenter"
-        android:src="@drawable/ic_calendar"
+        android:src="@drawable/ic_flow2_inquiry"
         android:tag="flowInquiry" />
 
     <TextView
@@ -128,7 +128,7 @@
         android:layout_alignTop="@id/main_docImageButton"
         android:background="@null"
         android:scaleType="fitCenter"
-        android:src="@drawable/ic_flow2_inquiry"
+        android:src="@drawable/ic_calendar"
         android:tag="calendar"/>
 
     <TextView

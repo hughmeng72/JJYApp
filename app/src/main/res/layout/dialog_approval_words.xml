@@ -11,5 +11,5 @@
         android:inputType="textMultiLine"
         android:ems="10"
         android:minLines="3"
-        android:hint="发表审批意见"/>
+        android:hint="发表审批或签收意见"/>
 </LinearLayout>
