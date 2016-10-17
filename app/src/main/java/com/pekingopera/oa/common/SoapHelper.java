@@ -84,4 +84,12 @@ public class SoapHelper {
     public static String getWsMethodOfFlowFinalizeRequest() {
         return "FinalizeFlowRequest";
     }
+
+    public static String getWsMethodOfMissedReviwer() {
+        return "GetMissedReviwer";
+    }
+
+    public static String getWsMethodOfUpdateFlowReviewer() {
+        return "UpdateFlowReviewer";
+    }
 }

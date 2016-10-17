@@ -16,10 +16,12 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.dou361.update.UpdateHelper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -28,6 +30,7 @@ import com.gordonwong.materialsheetfab.MaterialSheetFabEventListener;
 import com.koushikdutta.async.future.Future;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
+import com.pekingopera.oa.common.Employee;
 import com.pekingopera.oa.common.Fab;
 import com.pekingopera.oa.common.FileHelper;
 import com.pekingopera.oa.common.PagerItemLab;
@@ -59,11 +62,14 @@ import static android.app.Activity.RESULT_OK;
 public class FlowItemFragment extends Fragment implements View.OnClickListener {
     private static final String TAG = "afItemFragment";
     private static final String ARG_FLOW = "flow_id";
+
     private static final String DIALOG_APPROVAL = "DialogConfirm";
+    private static final String DIALOG_REVIEWER = "DialogReviewer";
 
     private static final int REQUEST_AGREED = 0;
     private static final int REQUEST_DISAGREED = 1;
     private static final int REQUEST_FINALIZED = 2;
+    private static final int REQUEST_REVIEWER = 3;
 
     private MaterialSheetFab materialSheetFab;
     private int statusBarColor;
@@ -92,10 +98,12 @@ public class FlowItemFragment extends Fragment implements View.OnClickListener {
 
     private FlowStepAdapter mFlowStepAdapter;
     private FlowAttachmentAdapter mFlowAttachmentAdapter;
+
     private Fab mFab;
 
     private int mFlowId;
     private Flow mFlow;
+    private List<Employee> mEmployees = null;
 
     public static Fragment newInstance(int flowId) {
         Bundle args = new Bundle();
@@ -261,23 +269,16 @@ public class FlowItemFragment extends Fragment implements View.OnClickListener {
     public void onClick(View v) {
         materialSheetFab.hideSheet();
 
-        FlowApprovalFragment dialog;
-
         switch (v.getTag().toString()) {
             case "agree":
-                dialog = FlowApprovalFragment.newInstance("审批结果（同意）");
-                dialog.setTargetFragment(FlowItemFragment.this, REQUEST_AGREED);
-                dialog.show(getFragmentManager(), DIALOG_APPROVAL);
+                CheckReviwerTask task = new CheckReviwerTask();
+                task.execute(User.get().getToken(), String.valueOf(mFlowId));
                 break;
             case "disagree":
-                dialog = FlowApprovalFragment.newInstance("审批结果（不同意）");
-                dialog.setTargetFragment(FlowItemFragment.this, REQUEST_DISAGREED);
-                dialog.show(getFragmentManager(), DIALOG_APPROVAL);
+                showDisagreeDialog();
                 break;
             case "finalize":
-                dialog = FlowApprovalFragment.newInstance("审批结果（办结）");
-                dialog.setTargetFragment(FlowItemFragment.this, REQUEST_FINALIZED);
-                dialog.show(getFragmentManager(), DIALOG_APPROVAL);
+                showEndDialog();
                 break;
             default:
                 Toast.makeText(getActivity(), v.getTag() + " Item pressed", Toast.LENGTH_SHORT).show();
@@ -290,34 +291,67 @@ public class FlowItemFragment extends Fragment implements View.OnClickListener {
             return;
         }
 
-        String words = data.getStringExtra(FlowApprovalFragment.EXTRA_RESULT);
+        String words;
+        switch (requestCode) {
+            case REQUEST_AGREED:
+                words = data.getStringExtra(FlowApprovalFragment.EXTRA_RESULT);
+                mFlow.setReviewWords(words);
 
-        if (requestCode == REQUEST_AGREED) {
-            mFlow.setReviewWords(words);
+                SubmitTask task1 = new SubmitTask();
+                task1.execute(User.get().getToken());
 
-            SubmitTask task = new SubmitTask();
-            task.execute(User.get().getToken());
+                break;
+            case REQUEST_DISAGREED:
+                words = data.getStringExtra(FlowApprovalFragment.EXTRA_RESULT);
+                mFlow.setReviewWords(words);
 
-            return;
+                RejectTask task2 = new RejectTask();
+                task2.execute(User.get().getToken());
+                break;
+            case REQUEST_FINALIZED:
+                words = data.getStringExtra(FlowApprovalFragment.EXTRA_RESULT);
+                mFlow.setReviewWords(words);
+
+                FinalizeTask task3 = new FinalizeTask();
+                task3.execute(User.get().getToken());
+
+                break;
+            case REQUEST_REVIEWER:
+                int reviewerId = data.getIntExtra(FlowSelectReviewerFragment.EXTRA_RESULT, -1);
+
+                if (reviewerId != -1) {
+                    UpdateReviewerTask task4 = new UpdateReviewerTask();
+                    task4.execute(User.get().getToken(), String.valueOf(mFlowId), String.valueOf(reviewerId));
+                }
         }
+    }
 
-        if (requestCode == REQUEST_DISAGREED) {
-            mFlow.setReviewWords(words);
+    private void showReviewerDialog() {
+        FlowSelectReviewerFragment dialog;
+        dialog = FlowSelectReviewerFragment.newInstance(mEmployees);
+        dialog.setTargetFragment(FlowItemFragment.this, REQUEST_REVIEWER);
+        dialog.show(getFragmentManager(), DIALOG_REVIEWER);
+    }
 
-            RejectTask task = new RejectTask();
-            task.execute(User.get().getToken());
+    private void showEndDialog() {
+        FlowApprovalFragment dialog;
+        dialog = FlowApprovalFragment.newInstance("审批结果（办结）");
+        dialog.setTargetFragment(FlowItemFragment.this, REQUEST_FINALIZED);
+        dialog.show(getFragmentManager(), DIALOG_APPROVAL);
+    }
 
-            return;
-        }
+    private void showDisagreeDialog() {
+        FlowApprovalFragment dialog;
+        dialog = FlowApprovalFragment.newInstance("审批结果（不同意）");
+        dialog.setTargetFragment(FlowItemFragment.this, REQUEST_DISAGREED);
+        dialog.show(getFragmentManager(), DIALOG_APPROVAL);
+    }
 
-        if (requestCode == REQUEST_FINALIZED) {
-            mFlow.setReviewWords(words);
-
-            FinalizeTask task = new FinalizeTask();
-            task.execute(User.get().getToken());
-
-            return;
-        }
+    private void showAgreeDialog() {
+        FlowApprovalFragment dialog;
+        dialog = FlowApprovalFragment.newInstance("审批结果（同意）");
+        dialog.setTargetFragment(FlowItemFragment.this, REQUEST_AGREED);
+        dialog.show(getFragmentManager(), DIALOG_APPROVAL);
     }
 
     private class FlowStepHolder extends RecyclerView.ViewHolder {
@@ -889,4 +923,206 @@ public class FlowItemFragment extends Fragment implements View.OnClickListener {
             getActivity().finish();
         }
     }
+
+    // AsynTask class to handle Load Web Service call as separate UI Thread
+    private class CheckReviwerTask extends AsyncTask<String, Void, String> {
+        @Override
+        protected String doInBackground(String... params) {
+            Log.i(TAG, "doInBackground: " + params.toString());
+
+            // Invoke web service
+            return performLoadTask(params[0], Integer.valueOf(params[1]));
+        }
+
+        // Method which invoke web method
+        private String performLoadTask(String token, int flowId) {
+            // Create request
+            SoapObject request = new SoapObject(SoapHelper.getWsNamespace(), SoapHelper.getWsMethodOfMissedReviwer());
+
+            request.addProperty(Utils.newPropertyInstance("token", token, String.class));
+            request.addProperty(Utils.newPropertyInstance("flowId", flowId, int.class));
+
+            // Create envelope
+            SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+            envelope.dotNet = true;
+
+            // Set output SOAP object
+            envelope.setOutputSoapObject(request);
+
+            // Create HTTP call object
+            HttpTransportSE androidHttpTransport = new HttpTransportSE(SoapHelper.getWsUrl());
+
+            String responseJSON = null;
+
+            try {
+                // Invoke web service
+                androidHttpTransport.call(SoapHelper.getWsSoapAction() + SoapHelper.getWsMethodOfMissedReviwer(), envelope);
+
+                // Get the response
+                SoapPrimitive response = (SoapPrimitive) envelope.getResponse();
+
+                responseJSON = response.toString();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            return responseJSON;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            Log.i(TAG, "onPostExecute: ");
+
+//            getActivity().setProgressBarIndeterminateVisibility(false);
+
+            if (result == null || result.isEmpty()) {
+                Toast.makeText(getActivity(), R.string.prompt_system_error, Toast.LENGTH_SHORT).show();
+
+                return;
+            }
+
+            ResponseResults<Employee> responseResults;
+
+            try {
+                GsonBuilder gson = new GsonBuilder();
+                Type resultType = new TypeToken<ResponseResults<Employee>>() {}.getType();
+
+                responseResults = gson.create().fromJson(result, resultType);
+            } catch (Exception e) {
+                e.printStackTrace();
+                return;
+            }
+
+            if (responseResults == null || responseResults.getError() == null) {
+                Toast toast = Toast.makeText(getActivity(), R.string.prompt_system_error, Toast.LENGTH_LONG);
+                toast.setGravity(Gravity.CENTER, 0, 0);
+                toast.show();
+
+                return;
+            }
+
+            if (responseResults.getError().getResult() == 0){
+                Toast toast = Toast.makeText(getActivity(), responseResults.getError().getErrorInfo(), Toast.LENGTH_LONG);
+                toast.setGravity(Gravity.CENTER, 0, 0);
+                toast.show();
+
+                return;
+            }
+
+            mEmployees = responseResults.getList();
+
+            if (mEmployees == null) {
+                Toast toast = Toast.makeText(getActivity(), R.string.prompt_system_error, Toast.LENGTH_LONG);
+                toast.setGravity(Gravity.CENTER, 0, 0);
+                toast.show();
+
+                return;
+            }
+
+            if (mEmployees.size() == 0) {
+                showAgreeDialog();
+            }
+            else {
+                showReviewerDialog();
+            }
+        }
+
+        @Override
+        protected void onPreExecute() {
+            // Log.i(TAG, "onPreExecute");
+        }
+
+        @Override
+        protected void onProgressUpdate(Void... values) {
+        }
+    }
+
+    private class UpdateReviewerTask extends AsyncTask<String, Void, String> {
+
+        @Override
+        protected String doInBackground(String... params) {
+            Log.i(TAG, "doInBackground: " + params.toString());
+
+            // Invoke web service
+            return performLoadTask(params[0], Integer.valueOf(params[1]), Integer.valueOf(params[2]));
+        }
+
+        // Method which invoke web method
+        private String performLoadTask(String token, int flowId, int staffId) {
+            // Create request
+            SoapObject request = new SoapObject(SoapHelper.getWsNamespace(), SoapHelper.getWsMethodOfUpdateFlowReviewer());
+
+            request.addProperty(Utils.newPropertyInstance("token", token, String.class));
+            request.addProperty(Utils.newPropertyInstance("flowId", flowId, int.class));
+            request.addProperty(Utils.newPropertyInstance("staffId", staffId, int.class));
+
+            // Create envelope
+            SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+            envelope.dotNet = true;
+
+            envelope.addMapping(SoapHelper.getWsNamespace(), "gov", Gov.class);
+
+            // Set output SOAP object
+            envelope.setOutputSoapObject(request);
+
+            // Create HTTP call object
+            HttpTransportSE androidHttpTransport = new HttpTransportSE(SoapHelper.getWsUrl());
+
+            String responseJSON = null;
+
+            try {
+                // Invoke web service
+                androidHttpTransport.call(SoapHelper.getWsSoapAction() + SoapHelper.getWsMethodOfUpdateFlowReviewer(), envelope);
+
+                // Get the response
+                SoapPrimitive response = (SoapPrimitive) envelope.getResponse();
+
+                responseJSON = response.toString();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            return responseJSON;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            Log.i(TAG, "onPostExecute: ");
+
+            if (result == null || result.isEmpty()) {
+                Toast.makeText(getActivity(), R.string.prompt_system_error, Toast.LENGTH_SHORT).show();
+
+                return;
+            }
+
+            ResponseBase responseResult;
+
+            try {
+                responseResult = new Gson().fromJson(result, ResponseBase.class);
+            } catch (Exception e) {
+                e.printStackTrace();
+                return;
+            }
+
+            if (responseResult == null) {
+                Toast toast = Toast.makeText(getActivity(), R.string.prompt_system_error, Toast.LENGTH_LONG);
+                toast.setGravity(Gravity.CENTER, 0, 0);
+                toast.show();
+
+                return;
+            }
+
+            if (responseResult.getResult() == 0) {
+                Toast toast = Toast.makeText(getActivity(), responseResult.getErrorInfo(), Toast.LENGTH_LONG);
+                toast.setGravity(Gravity.CENTER, 0, 0);
+                toast.show();
+
+                return;
+            }
+
+            showAgreeDialog();
+        }
+    }
+
+
 }

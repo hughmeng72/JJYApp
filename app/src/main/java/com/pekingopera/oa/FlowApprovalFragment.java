@@ -20,8 +20,7 @@ import static android.app.Activity.RESULT_OK;
 public class FlowApprovalFragment extends DialogFragment {
     private static final String TAG = "FlowApprovalFragment";
     private static final String ARG_TITLE = "result";
-    public static final String EXTRA_RESULT =
-            "com.pekingopera.oa.result";
+    public static final String EXTRA_RESULT = "com.pekingopera.oa.result";
 
 
     private EditText mEditText;
