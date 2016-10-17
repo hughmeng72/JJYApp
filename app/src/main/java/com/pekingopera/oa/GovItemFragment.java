@@ -22,6 +22,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.gordonwong.materialsheetfab.MaterialSheetFab;
 import com.gordonwong.materialsheetfab.MaterialSheetFabEventListener;
+import com.pekingopera.oa.common.Employee;
 import com.pekingopera.oa.common.Fab;
 import com.pekingopera.oa.common.PagerItemLab;
 import com.pekingopera.oa.common.SoapHelper;
@@ -50,11 +51,15 @@ import static android.app.Activity.RESULT_OK;
 public class GovItemFragment extends Fragment implements View.OnClickListener {
     private static final String TAG = "GovItemFragment";
     private static final String ARG_GOV = "gov_id";
+
     private static final String DIALOG_APPROVAL = "DialogConfirm";
-    public static final String MODEL_NOTICE_LETTER = "普发件";
+    private static final String DIALOG_REVIEWER = "DialogReviewer";
 
     private static final int REQUEST_AGREED = 0;
-    private static final int REQUEST_FINALIZED = 2;
+    private static final int REQUEST_FINALIZED = 1;
+    private static final int REQUEST_REVIEWER = 2;
+
+    public static final String MODEL_NOTICE_LETTER = "普发件";
 
     private MaterialSheetFab materialSheetFab;
     private int statusBarColor;
@@ -226,23 +231,20 @@ public class GovItemFragment extends Fragment implements View.OnClickListener {
     public void onClick(View v) {
         materialSheetFab.hideSheet();
 
-        FlowApprovalFragment dialog;
-
         switch (v.getTag().toString()) {
             case "agree":
                 if (mGov.getModelName().equals(MODEL_NOTICE_LETTER)) {
-                    dialog = FlowApprovalFragment.newInstance("签收");
+                    showSignDialog();
                 }
                 else {
-                    dialog = FlowApprovalFragment.newInstance("审批结果（同意）");
+                    CheckReviwerTask task = new CheckReviwerTask();
+                    task.execute(User.get().getToken(), String.valueOf(mGovId));
                 }
-                dialog.setTargetFragment(GovItemFragment.this, REQUEST_AGREED);
-                dialog.show(getFragmentManager(), DIALOG_APPROVAL);
+
                 break;
             case "finalize":
-                dialog = FlowApprovalFragment.newInstance("审批结果（办结）");
-                dialog.setTargetFragment(GovItemFragment.this, REQUEST_FINALIZED);
-                dialog.show(getFragmentManager(), DIALOG_APPROVAL);
+                showEndDialog();
+
                 break;
             default:
                 Toast.makeText(getActivity(), v.getTag() + " Item pressed", Toast.LENGTH_SHORT).show();
@@ -255,27 +257,63 @@ public class GovItemFragment extends Fragment implements View.OnClickListener {
             return;
         }
 
-        String words = data.getStringExtra(FlowApprovalFragment.EXTRA_RESULT);
+        String words;
+        switch (requestCode) {
+            case REQUEST_AGREED:
+                words = data.getStringExtra(FlowApprovalFragment.EXTRA_RESULT);
+                mGov.setReviewWords(words);
 
-        if (requestCode == REQUEST_AGREED) {
-            mGov.setReviewWords(words);
+                SubmitTask task1 = new SubmitTask();
+                task1.execute(User.get().getToken());
 
-            SubmitTask task = new SubmitTask();
-            task.execute(User.get().getToken());
+                break;
+            case REQUEST_FINALIZED:
+                words = data.getStringExtra(FlowApprovalFragment.EXTRA_RESULT);
+                mGov.setReviewWords(words);
 
-            return;
-        }
+                FinalizeTask task2 = new FinalizeTask();
+                task2.execute(User.get().getToken());
 
-        if (requestCode == REQUEST_FINALIZED) {
-            mGov.setReviewWords(words);
+                break;
+            case REQUEST_REVIEWER:
+                int reviewerId = data.getIntExtra(FlowSelectReviewerFragment.EXTRA_RESULT, -1);
 
-            FinalizeTask task = new FinalizeTask();
-            task.execute(User.get().getToken());
-
-            return;
+                if (reviewerId != -1) {
+                    UpdateReviewerTask task3 = new UpdateReviewerTask();
+                    task3.execute(User.get().getToken(), String.valueOf(mGovId), String.valueOf(reviewerId));
+                }
         }
     }
 
+    private void showReviewerDialog(List<Employee> employees) {
+        FlowSelectReviewerFragment dialog;
+        dialog = FlowSelectReviewerFragment.newInstance(employees);
+        dialog.setTargetFragment(GovItemFragment.this, REQUEST_REVIEWER);
+        dialog.show(getFragmentManager(), DIALOG_REVIEWER);
+    }
+
+    private void showSignDialog() {
+        FlowApprovalFragment dialog;
+
+        dialog = FlowApprovalFragment.newInstance("签收");
+        dialog.setTargetFragment(GovItemFragment.this, REQUEST_AGREED);
+        dialog.show(getFragmentManager(), DIALOG_APPROVAL);
+    }
+
+    private void showAgreeDialog() {
+        FlowApprovalFragment dialog;
+        dialog = FlowApprovalFragment.newInstance("审批结果（同意）");
+        dialog.setTargetFragment(GovItemFragment.this, REQUEST_AGREED);
+        dialog.show(getFragmentManager(), DIALOG_APPROVAL);
+    }
+
+    private void showEndDialog() {
+        FlowApprovalFragment dialog;
+
+        dialog = FlowApprovalFragment.newInstance("审批结果（办结）");
+        dialog.setTargetFragment(GovItemFragment.this, REQUEST_FINALIZED);
+        dialog.show(getFragmentManager(), DIALOG_APPROVAL);
+    }
 
     private class StepHolder extends RecyclerView.ViewHolder {
         private FlowStep mStep;
@@ -674,4 +712,203 @@ public class GovItemFragment extends Fragment implements View.OnClickListener {
             getActivity().finish();
         }
     }
+
+    private class CheckReviwerTask extends AsyncTask<String, Void, String> {
+        @Override
+        protected String doInBackground(String... params) {
+            Log.i(TAG, "doInBackground...");
+
+            // Invoke web service
+            return performLoadTask(params[0], Integer.valueOf(params[1]));
+        }
+
+        // Method which invoke web method
+        private String performLoadTask(String token, int flowId) {
+            // Create request
+            SoapObject request = new SoapObject(SoapHelper.getWsNamespace(), SoapHelper.getWsMethodOfMissedGovReviwer());
+
+            request.addProperty(Utils.newPropertyInstance("token", token, String.class));
+            request.addProperty(Utils.newPropertyInstance("flowId", flowId, int.class));
+
+            // Create envelope
+            SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+            envelope.dotNet = true;
+
+            // Set output SOAP object
+            envelope.setOutputSoapObject(request);
+
+            // Create HTTP call object
+            HttpTransportSE androidHttpTransport = new HttpTransportSE(SoapHelper.getWsUrl());
+
+            String responseJSON = null;
+
+            try {
+                // Invoke web service
+                androidHttpTransport.call(SoapHelper.getWsSoapAction() + SoapHelper.getWsMethodOfMissedGovReviwer(), envelope);
+
+                // Get the response
+                SoapPrimitive response = (SoapPrimitive) envelope.getResponse();
+
+                responseJSON = response.toString();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            return responseJSON;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            Log.i(TAG, "onPostExecute: ");
+
+//            getActivity().setProgressBarIndeterminateVisibility(false);
+
+            if (result == null || result.isEmpty()) {
+                Toast.makeText(getActivity(), R.string.prompt_system_error, Toast.LENGTH_SHORT).show();
+
+                return;
+            }
+
+            ResponseResults<Employee> responseResults;
+
+            try {
+                GsonBuilder gson = new GsonBuilder();
+                Type resultType = new TypeToken<ResponseResults<Employee>>() {}.getType();
+
+                responseResults = gson.create().fromJson(result, resultType);
+            } catch (Exception e) {
+                e.printStackTrace();
+                return;
+            }
+
+            if (responseResults == null || responseResults.getError() == null) {
+                Toast toast = Toast.makeText(getActivity(), R.string.prompt_system_error, Toast.LENGTH_LONG);
+                toast.setGravity(Gravity.CENTER, 0, 0);
+                toast.show();
+
+                return;
+            }
+
+            if (responseResults.getError().getResult() == 0){
+                Toast toast = Toast.makeText(getActivity(), responseResults.getError().getErrorInfo(), Toast.LENGTH_LONG);
+                toast.setGravity(Gravity.CENTER, 0, 0);
+                toast.show();
+
+                return;
+            }
+
+            List<Employee> employees = responseResults.getList();
+
+            if (employees == null) {
+                Toast toast = Toast.makeText(getActivity(), R.string.prompt_system_error, Toast.LENGTH_LONG);
+                toast.setGravity(Gravity.CENTER, 0, 0);
+                toast.show();
+
+                return;
+            }
+
+            if (employees.size() == 0) {
+                showAgreeDialog();
+            }
+            else {
+                showReviewerDialog(employees);
+            }
+        }
+
+        @Override
+        protected void onPreExecute() {
+            // Log.i(TAG, "onPreExecute");
+        }
+
+        @Override
+        protected void onProgressUpdate(Void... values) {
+        }
+    }
+
+    private class UpdateReviewerTask extends AsyncTask<String, Void, String> {
+        @Override
+        protected String doInBackground(String... params) {
+            Log.i(TAG, "doInBackground...");
+
+            // Invoke web service
+            return performLoadTask(params[0], Integer.valueOf(params[1]), Integer.valueOf(params[2]));
+        }
+
+        // Method which invoke web method
+        private String performLoadTask(String token, int flowId, int staffId) {
+            // Create request
+            SoapObject request = new SoapObject(SoapHelper.getWsNamespace(), SoapHelper.getWsMethodOfUpdateGovReviewer());
+
+            request.addProperty(Utils.newPropertyInstance("token", token, String.class));
+            request.addProperty(Utils.newPropertyInstance("flowId", flowId, int.class));
+            request.addProperty(Utils.newPropertyInstance("staffId", staffId, int.class));
+
+            // Create envelope
+            SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+            envelope.dotNet = true;
+
+            envelope.addMapping(SoapHelper.getWsNamespace(), "gov", Gov.class);
+
+            // Set output SOAP object
+            envelope.setOutputSoapObject(request);
+
+            // Create HTTP call object
+            HttpTransportSE androidHttpTransport = new HttpTransportSE(SoapHelper.getWsUrl());
+
+            String responseJSON = null;
+
+            try {
+                // Invoke web service
+                androidHttpTransport.call(SoapHelper.getWsSoapAction() + SoapHelper.getWsMethodOfUpdateGovReviewer(), envelope);
+
+                // Get the response
+                SoapPrimitive response = (SoapPrimitive) envelope.getResponse();
+
+                responseJSON = response.toString();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            return responseJSON;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            Log.i(TAG, "onPostExecute: ");
+
+            if (result == null || result.isEmpty()) {
+                Toast.makeText(getActivity(), R.string.prompt_system_error, Toast.LENGTH_SHORT).show();
+
+                return;
+            }
+
+            ResponseBase responseResult;
+
+            try {
+                responseResult = new Gson().fromJson(result, ResponseBase.class);
+            } catch (Exception e) {
+                e.printStackTrace();
+                return;
+            }
+
+            if (responseResult == null) {
+                Toast toast = Toast.makeText(getActivity(), R.string.prompt_system_error, Toast.LENGTH_LONG);
+                toast.setGravity(Gravity.CENTER, 0, 0);
+                toast.show();
+
+                return;
+            }
+
+            if (responseResult.getResult() == 0) {
+                Toast toast = Toast.makeText(getActivity(), responseResult.getErrorInfo(), Toast.LENGTH_LONG);
+                toast.setGravity(Gravity.CENTER, 0, 0);
+                toast.show();
+
+                return;
+            }
+
+            showAgreeDialog();
+        }
+    }
+
 }

@@ -16,12 +16,10 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.dou361.update.UpdateHelper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -103,7 +101,6 @@ public class FlowItemFragment extends Fragment implements View.OnClickListener {
 
     private int mFlowId;
     private Flow mFlow;
-    private List<Employee> mEmployees = null;
 
     public static Fragment newInstance(int flowId) {
         Bundle args = new Bundle();
@@ -124,7 +121,7 @@ public class FlowItemFragment extends Fragment implements View.OnClickListener {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_approval_flow, container, false);
+        View v = inflater.inflate(R.layout.fragment_flow, container, false);
 
         setupFab(v);
 
@@ -326,9 +323,9 @@ public class FlowItemFragment extends Fragment implements View.OnClickListener {
         }
     }
 
-    private void showReviewerDialog() {
+    private void showReviewerDialog(List<Employee> employees) {
         FlowSelectReviewerFragment dialog;
-        dialog = FlowSelectReviewerFragment.newInstance(mEmployees);
+        dialog = FlowSelectReviewerFragment.newInstance(employees);
         dialog.setTargetFragment(FlowItemFragment.this, REQUEST_REVIEWER);
         dialog.show(getFragmentManager(), DIALOG_REVIEWER);
     }
@@ -924,7 +921,6 @@ public class FlowItemFragment extends Fragment implements View.OnClickListener {
         }
     }
 
-    // AsynTask class to handle Load Web Service call as separate UI Thread
     private class CheckReviwerTask extends AsyncTask<String, Void, String> {
         @Override
         protected String doInBackground(String... params) {
@@ -937,7 +933,7 @@ public class FlowItemFragment extends Fragment implements View.OnClickListener {
         // Method which invoke web method
         private String performLoadTask(String token, int flowId) {
             // Create request
-            SoapObject request = new SoapObject(SoapHelper.getWsNamespace(), SoapHelper.getWsMethodOfMissedReviwer());
+            SoapObject request = new SoapObject(SoapHelper.getWsNamespace(), SoapHelper.getWsMethodOfMissedFlowReviwer());
 
             request.addProperty(Utils.newPropertyInstance("token", token, String.class));
             request.addProperty(Utils.newPropertyInstance("flowId", flowId, int.class));
@@ -956,7 +952,7 @@ public class FlowItemFragment extends Fragment implements View.OnClickListener {
 
             try {
                 // Invoke web service
-                androidHttpTransport.call(SoapHelper.getWsSoapAction() + SoapHelper.getWsMethodOfMissedReviwer(), envelope);
+                androidHttpTransport.call(SoapHelper.getWsSoapAction() + SoapHelper.getWsMethodOfMissedFlowReviwer(), envelope);
 
                 // Get the response
                 SoapPrimitive response = (SoapPrimitive) envelope.getResponse();
@@ -1009,9 +1005,9 @@ public class FlowItemFragment extends Fragment implements View.OnClickListener {
                 return;
             }
 
-            mEmployees = responseResults.getList();
+            List<Employee> employees = responseResults.getList();
 
-            if (mEmployees == null) {
+            if (employees == null) {
                 Toast toast = Toast.makeText(getActivity(), R.string.prompt_system_error, Toast.LENGTH_LONG);
                 toast.setGravity(Gravity.CENTER, 0, 0);
                 toast.show();
@@ -1019,11 +1015,11 @@ public class FlowItemFragment extends Fragment implements View.OnClickListener {
                 return;
             }
 
-            if (mEmployees.size() == 0) {
+            if (employees.size() == 0) {
                 showAgreeDialog();
             }
             else {
-                showReviewerDialog();
+                showReviewerDialog(employees);
             }
         }
 
@@ -1123,6 +1119,5 @@ public class FlowItemFragment extends Fragment implements View.OnClickListener {
             showAgreeDialog();
         }
     }
-
 
 }
