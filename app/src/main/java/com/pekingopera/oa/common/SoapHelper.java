@@ -6,15 +6,15 @@ package com.pekingopera.oa.common;
 
 public class SoapHelper {
     public static String getWsNamespace() {
-//        return "http://192.168.8.101/"; // For JJY Debug
-        return "http://192.168.9.31/"; // For Home CS
+//        return "http://192.168.9.31/"; // For Home CS
 //        return "http://192.168.1.2/"; // For Home XB
-//        return "http://www.jjyoa.com:8000/";
+//        return "http://192.168.8.101/"; // For JJY Debug
+        return "http://www.jjyoa.com:8000/";
     }
 
     public static String getWsUrl() {
-//        return getWsNamespace() + "WebService/Perkingopera.asmx";
-        return getWsNamespace() + "WebUI/WebService/Perkingopera.asmx"; // For debug
+//        return getWsNamespace() + "WebUI/WebService/Perkingopera.asmx"; // For debug
+        return getWsNamespace() + "WebService/Perkingopera.asmx";
     }
 
     public static String getWsSoapAction() {
