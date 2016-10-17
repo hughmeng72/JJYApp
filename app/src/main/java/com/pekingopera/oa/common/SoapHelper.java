@@ -85,8 +85,8 @@ public class SoapHelper {
         return "FinalizeFlowRequest";
     }
 
-    public static String getWsMethodOfMissedReviwer() {
-        return "GetMissedReviwer";
+    public static String getWsMethodOfMissedFlowReviwer() {
+        return "GetMissedFlowReviwer";
     }
 
     public static String getWsMethodOfUpdateFlowReviewer() {
