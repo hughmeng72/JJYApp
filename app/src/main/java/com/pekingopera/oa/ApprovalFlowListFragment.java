@@ -90,12 +90,14 @@ public class ApprovalFlowListFragment extends Fragment {
         private TextView mCreatorTextView;
         private TextView mAmountTextView;
         private TextView mDateTextView;
+        private TextView mModelNameTextView;
 
         public FlowHolder(View itemView) {
             super(itemView);
             itemView.setOnClickListener(this);
 
             mFlowNameTextView = (TextView) itemView.findViewById(R.id.item_approval_flow_name);
+            mModelNameTextView = (TextView) itemView.findViewById(R.id.item_approval_model_name);
             mCreatorTextView = (TextView) itemView.findViewById(R.id.item_approval_flow_creator);
             mAmountTextView = (TextView) itemView.findViewById(R.id.item_approval_flow_amount);
             mDateTextView = (TextView) itemView.findViewById(R.id.item_approval_flow_time);
@@ -105,6 +107,7 @@ public class ApprovalFlowListFragment extends Fragment {
             mFlow = flow;
 
             mFlowNameTextView.setText(mFlow.getFlowName());
+            mModelNameTextView.setText(mFlow.getModelName());
             mCreatorTextView.setText(mFlow.getCreator());
             if (mFlow.getAmount() == 0) {
                 mAmountTextView.setText("");

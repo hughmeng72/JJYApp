@@ -80,6 +80,7 @@ public class GeneralFlowListFragment extends Fragment {
         private Flow mFlow;
 
         private TextView mFlowNameTextView;
+        private TextView mModelNameTextView;
         private TextView mCreatorTextView;
         private TextView mAmountTextView;
         private TextView mDateTextView;
@@ -89,6 +90,7 @@ public class GeneralFlowListFragment extends Fragment {
             itemView.setOnClickListener(this);
 
             mFlowNameTextView = (TextView) itemView.findViewById(R.id.item_finance_flow_name);
+            mModelNameTextView = (TextView) itemView.findViewById(R.id.item_finance_flow_model_name);
             mCreatorTextView = (TextView) itemView.findViewById(R.id.item_finance_flow_creator);
             mAmountTextView = (TextView) itemView.findViewById(R.id.item_finance_flow_amount);
             mDateTextView = (TextView) itemView.findViewById(R.id.item_finance_flow_time);
@@ -98,6 +100,7 @@ public class GeneralFlowListFragment extends Fragment {
             mFlow = flow;
 
             mFlowNameTextView.setText(mFlow.getFlowName());
+            mModelNameTextView.setText(mFlow.getModelName());
 
             if (mFlow.getCreatorId() ==User.get().getUserId()) {
                 mCreatorTextView.setText(mFlow.getCurrentStepName());

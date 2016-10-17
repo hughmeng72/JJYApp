@@ -84,6 +84,7 @@ public class GovListFragment extends Fragment {
         private Gov mGov;
 
         private TextView mGovNameTextView;
+        private TextView mGovModelNameTextView;
         private TextView mCreatorTextView;
         private TextView mCategoryTextView;
         private TextView mDateTextView;
@@ -93,6 +94,7 @@ public class GovListFragment extends Fragment {
             itemView.setOnClickListener(this);
 
             mGovNameTextView = (TextView) itemView.findViewById(R.id.item_gov_name);
+            mGovModelNameTextView = (TextView) itemView.findViewById(R.id.item_gov_model_name);
             mCreatorTextView = (TextView) itemView.findViewById(R.id.item_gov_creator_step_name);
             mCategoryTextView = (TextView) itemView.findViewById(R.id.item_gov_category_status);
             mDateTextView = (TextView) itemView.findViewById(R.id.item_gov_time);
@@ -102,6 +104,7 @@ public class GovListFragment extends Fragment {
             mGov = gov;
 
             mGovNameTextView.setText(mGov.getFlowName());
+            mGovModelNameTextView.setText(mGov.getModelName());
             mDateTextView.setText(mGov.getCreateTime());
 
             if (mGov.getCreatorId() == User.get().getUserId()) {

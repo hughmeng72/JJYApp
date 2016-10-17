@@ -15,11 +15,21 @@
         tools:text="Flow Name"/>
 
     <TextView
-        android:id="@+id/item_finance_flow_creator"
+        android:id="@+id/item_finance_flow_model_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@id/item_finance_flow_name"
         android:layout_below="@id/item_finance_flow_name"
+        android:padding="4dp"
+        tools:ignore="RtlHardcoded"
+        tools:text="Model Name"/>
+
+    <TextView
+        android:id="@+id/item_finance_flow_creator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/item_finance_flow_model_name"
+        android:layout_below="@id/item_finance_flow_model_name"
         android:padding="4dp"
         tools:ignore="RtlHardcoded"
         tools:text="Creator"/>
@@ -28,7 +38,7 @@
         android:id="@+id/item_finance_flow_amount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/item_finance_flow_name"
+        android:layout_below="@id/item_finance_flow_model_name"
         android:layout_centerHorizontal="true"
         android:padding="4dp"
         tools:text="Amount"/>
@@ -38,7 +48,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignRight="@id/item_finance_flow_name"
-        android:layout_below="@id/item_finance_flow_name"
+        android:layout_below="@id/item_finance_flow_model_name"
         android:padding="4dp"
         tools:ignore="RtlHardcoded"
         tools:text="Create Time"/>

@@ -7,10 +7,10 @@
 
     <ImageButton
         android:id="@+id/main_flow2InquiryImageButton"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="64dp"
+        android:layout_marginTop="48dp"
         android:background="@null"
         android:scaleType="fitCenter"
         android:src="@drawable/ic_flow2_inquiry"
@@ -30,8 +30,8 @@
 
     <ImageButton
         android:id="@+id/main_flowImageButton"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
         android:layout_alignParentLeft="true"
         android:layout_alignTop="@id/main_flow2InquiryImageButton"
         android:layout_marginLeft="40dp"
@@ -53,8 +53,8 @@
 
     <ImageButton
         android:id="@+id/main_flowInquiryImageButton"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
         android:layout_alignParentRight="true"
         android:layout_alignTop="@id/main_flow2InquiryImageButton"
         android:layout_marginRight="40dp"
@@ -76,8 +76,8 @@
 
     <ImageButton
         android:id="@+id/main_docImageButton"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
         android:layout_alignLeft="@id/main_flowImageButton"
         android:layout_below="@id/main_flowImageButton"
         android:layout_marginTop="96dp"
@@ -100,8 +100,8 @@
 
     <ImageButton
         android:id="@+id/main_docInquiryImageButton"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
         android:layout_alignLeft="@id/main_flow2InquiryTextView"
         android:layout_alignTop="@id/main_docImageButton"
         android:background="@null"
@@ -122,8 +122,8 @@
 
     <ImageButton
         android:id="@+id/main_calendarImageButton"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
         android:layout_alignLeft="@id/main_flowInquiryImageButton"
         android:layout_alignTop="@id/main_docImageButton"
         android:background="@null"
@@ -144,8 +144,8 @@
 
     <ImageButton
         android:id="@+id/main_noticeImageButton"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
         android:layout_alignLeft="@id/main_docTextView"
         android:layout_below="@id/main_docImageButton"
         android:layout_marginTop="96dp"
@@ -168,8 +168,8 @@
 
     <ImageButton
         android:id="@+id/main_mailImageButton"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
         android:layout_alignLeft="@id/main_docInquiryImageButton"
         android:layout_alignTop="@id/main_noticeImageButton"
         android:background="@null"
@@ -190,8 +190,8 @@
 
     <ImageButton
         android:id="@+id/main_setupImageButton"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
         android:layout_alignLeft="@id/main_calendarImageButton"
         android:layout_alignTop="@id/main_noticeImageButton"
         android:background="@null"
