@@ -60,7 +60,7 @@
         android:layout_marginRight="40dp"
         android:background="@null"
         android:scaleType="fitCenter"
-        android:src="@drawable/ic_flow2_inquiry"
+        android:src="@drawable/ic_flow_inquiry"
         android:tag="flowInquiry" />
 
     <TextView
@@ -83,7 +83,7 @@
         android:layout_marginTop="96dp"
         android:background="@null"
         android:scaleType="fitCenter"
-        android:src="@drawable/ic_flow_inquiry"
+        android:src="@drawable/ic_gov_inquiry"
         android:tag="doc"/>
 
     <TextView
@@ -106,7 +106,7 @@
         android:layout_alignTop="@id/main_docImageButton"
         android:background="@null"
         android:scaleType="fitCenter"
-        android:src="@drawable/ic_flow2_inquiry"
+        android:src="@drawable/ic_doc_inquiry"
         android:tag="docInquiry"/>
 
     <TextView
@@ -174,7 +174,7 @@
         android:layout_alignTop="@id/main_noticeImageButton"
         android:background="@null"
         android:scaleType="fitCenter"
-        android:src="@drawable/ic_setup"
+        android:src="@drawable/ic_mail"
         android:tag="mail" />
 
     <TextView

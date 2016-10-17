@@ -394,8 +394,8 @@
                     <TextView
                         android:id="@+id/fab_sheet_item_reminder"
                         style="@style/TextAppearance.MaterialSheetFab.Sheet.Item"
-                        android:drawableLeft="@drawable/ic_access_alarms_grey600_24dp"
-                        android:drawableStart="@drawable/ic_access_alarms_grey600_24dp"
+                        android:drawableLeft="@drawable/ic_disagree"
+                        android:drawableStart="@drawable/ic_disagree"
                         android:text="不同意"
                         android:tag="disagree" />
 
@@ -415,8 +415,8 @@
                         <TextView
                             android:id="@+id/fab_sheet_item_note"
                             style="@style/TextAppearance.MaterialSheetFab.Sheet.Item"
-                            android:drawableLeft="@drawable/ic_create_grey600_24dp"
-                            android:drawableStart="@drawable/ic_create_grey600_24dp"
+                            android:drawableLeft="@drawable/ic_agree"
+                            android:drawableStart="@drawable/ic_agree"
                             android:text="同意"
                             android:tag="agree" />
                     </LinearLayout>
