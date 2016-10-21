@@ -1,4 +1,4 @@
-package com.pekingopera.oa.common;
+package com.pekingopera.oa.model;
 
 import com.google.gson.annotations.SerializedName;
 

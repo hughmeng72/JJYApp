@@ -25,7 +25,8 @@ android {
                     newApkName = newApkName + ".apk"
                     output.outputFile = new File(output.outputFile.parent, newApkName)
                 }
-            }        }
+            }
+        }
     }
 }
 

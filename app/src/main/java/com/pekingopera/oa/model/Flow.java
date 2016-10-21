@@ -3,6 +3,7 @@ package com.pekingopera.oa.model;
 import android.net.Uri;
 import android.widget.Switch;
 
+import com.google.gson.annotations.SerializedName;
 import com.pekingopera.oa.common.IPager;
 
 import java.util.List;
@@ -44,7 +45,7 @@ public class Flow implements IPager {
 
     private List<FlowStep> Steps;
     private List<FlowDoc> Attachments;
-    private int mFlowNo;
+    private List<FlowProcurement> Procurements;
 
     @Override
     public Uri getUri() {
@@ -100,14 +101,6 @@ public class Flow implements IPager {
 
     public String getRemark() {
         return Remark;
-    }
-
-    public List<FlowStep> getSteps() {
-        return Steps;
-    }
-
-    public List<FlowDoc> getAttachments() {
-        return Attachments;
     }
 
     public String getFlowNo() {
@@ -181,4 +174,17 @@ public class Flow implements IPager {
     public String getDocBody() {
         return DocBody;
     }
+
+    public List<FlowStep> getSteps() {
+        return Steps;
+    }
+
+    public List<FlowDoc> getAttachments() {
+        return Attachments;
+    }
+
+    public List<FlowProcurement> getProcurements() {
+        return Procurements;
+    }
+
 }

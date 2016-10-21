@@ -28,7 +28,7 @@ import com.gordonwong.materialsheetfab.MaterialSheetFabEventListener;
 import com.koushikdutta.async.future.Future;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
-import com.pekingopera.oa.common.Employee;
+import com.pekingopera.oa.model.Employee;
 import com.pekingopera.oa.common.Fab;
 import com.pekingopera.oa.common.FileHelper;
 import com.pekingopera.oa.common.PagerItemLab;
@@ -36,6 +36,7 @@ import com.pekingopera.oa.common.SoapHelper;
 import com.pekingopera.oa.common.Utils;
 import com.pekingopera.oa.model.Flow;
 import com.pekingopera.oa.model.FlowDoc;
+import com.pekingopera.oa.model.FlowProcurement;
 import com.pekingopera.oa.model.FlowStep;
 import com.pekingopera.oa.model.Gov;
 import com.pekingopera.oa.model.ResponseBase;
@@ -79,8 +80,6 @@ public class FlowItemFragment extends Fragment implements View.OnClickListener {
     private TextView mRequestTimeTextView;
     private TextView mRemarkTextView;
     private TextView mAmountTextView;
-    private LinearLayout mAmountLinearLayout;
-    private LinearLayout mBudgetLinearLayout;
 
     private TextView mBudgetItemNameTextView;
     private TextView mBudgetProjectNameTextView;
@@ -91,11 +90,17 @@ public class FlowItemFragment extends Fragment implements View.OnClickListener {
     private TextView mBudgetAmountPaidToBeReimbursementTextView;
     private TextView mBudgetAmountPaidReimbursementTextView;
 
+    private LinearLayout mAmountLinearLayout;
+    private LinearLayout mBudgetLinearLayout;
+    private LinearLayout mProcurementLinearLayout;
+
     private RecyclerView mFlowStepRecyclerView;
     private RecyclerView mFlowAttachmentRecyclerView;
+    private RecyclerView mFlowProcurementRecyclerView;
 
     private FlowStepAdapter mFlowStepAdapter;
     private FlowAttachmentAdapter mFlowAttachmentAdapter;
+    private FlowProcurementAdapter mFlowProcurementAdapter;
 
     private Fab mFab;
 
@@ -135,6 +140,7 @@ public class FlowItemFragment extends Fragment implements View.OnClickListener {
 
         mAmountLinearLayout = (LinearLayout) v.findViewById(R.id.approval_flow_amount_container);
         mBudgetLinearLayout = (LinearLayout) v.findViewById(R.id.approval_flow_budget_container);
+        mProcurementLinearLayout = (LinearLayout) v.findViewById(R.id.approval_flow_procurement_container);
 
         mBudgetItemNameTextView = (TextView) v.findViewById(R.id.approval_flow_budget_item_name);
         mBudgetProjectNameTextView = (TextView) v.findViewById(R.id.approval_flow_budget_project_name);
@@ -147,6 +153,9 @@ public class FlowItemFragment extends Fragment implements View.OnClickListener {
 
         mFlowStepRecyclerView = (RecyclerView) v.findViewById(R.id.approval_flow_steps);
         mFlowStepRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        mFlowProcurementRecyclerView = (RecyclerView) v.findViewById(R.id.approval_flow_procuments);
+        mFlowProcurementRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         mFlowAttachmentRecyclerView = (RecyclerView) v.findViewById(R.id.approval_flow_attachments);
         mFlowAttachmentRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -183,7 +192,7 @@ public class FlowItemFragment extends Fragment implements View.OnClickListener {
             mAmountTextView.setText(String.format("%.2f", mFlow.getAmount()));
         }
 
-        if (mFlow.isBudgetInvolved() && mFlow.isBudgetAuthorized()) {
+        if (mFlow.isBudgetInvolved() && mFlow.isBudgetAuthorized() && !mFlow.getModelName().equals("采购申请")) {
             mBudgetLinearLayout.setVisibility(View.VISIBLE);
 
             mBudgetItemNameTextView.setText(mFlow.getItemName());
@@ -213,6 +222,19 @@ public class FlowItemFragment extends Fragment implements View.OnClickListener {
                 mFlowAttachmentAdapter.notifyDataSetChanged();
             }
         }
+
+        if (mFlow.getModelName().equals("采购申请") && mFlowProcurementRecyclerView != null) {
+            mProcurementLinearLayout.setVisibility(View.VISIBLE);
+
+            if (mFlowProcurementAdapter == null) {
+                mFlowProcurementAdapter = new FlowProcurementAdapter(mFlow.getProcurements());
+                mFlowProcurementRecyclerView.setAdapter(mFlowProcurementAdapter);
+            }
+            else {
+                mFlowProcurementAdapter.notifyDataSetChanged();
+            }
+        }
+
     }
 
     private void setupFab(View v) {
@@ -521,6 +543,74 @@ public class FlowItemFragment extends Fragment implements View.OnClickListener {
         @Override
         public int getItemCount() {
             return mFlowDocs.size();
+        }
+    }
+
+    private class FlowProcurementHolder extends RecyclerView.ViewHolder {
+        private FlowProcurement mFlowProcurement;
+
+        private TextView mProcurementProductNameTextView;
+        private TextView mProcurementProductSpecTextView;
+        private TextView mProcurementProductQuantityTextView;
+        private TextView mProcurementAmountTextView;
+        private TextView mProcurementProjectNameTextView;
+        private TextView mProcurementItemNameTextView;
+        private TextView mProcurementTotalAmountTextView;
+        private TextView mProcurementAmountLeftTextView;
+
+
+
+        public FlowProcurementHolder(View itemView) {
+            super(itemView);
+
+            mProcurementProductNameTextView = (TextView) itemView.findViewById(R.id.item_flow_procurement_product_name);
+            mProcurementProductSpecTextView = (TextView) itemView.findViewById(R.id.item_flow_procurement_product_desc);
+            mProcurementProductQuantityTextView = (TextView) itemView.findViewById(R.id.flow_procurement_product_quantity);
+            mProcurementAmountTextView = (TextView) itemView.findViewById(R.id.flow_procurement_amount_estimate);
+            mProcurementProjectNameTextView = (TextView) itemView.findViewById(R.id.item_flow_procurement_project_name);
+            mProcurementItemNameTextView = (TextView) itemView.findViewById(R.id.item_flow_procurement_item_name);
+            mProcurementTotalAmountTextView = (TextView) itemView.findViewById(R.id.item_flow_procurement_amount_total);
+            mProcurementAmountLeftTextView = (TextView) itemView.findViewById(R.id.item_flow_procurement_amount_left);
+        }
+
+        public void bindItemView(FlowProcurement procurement) {
+            mFlowProcurement = procurement;
+
+            mProcurementProductNameTextView.setText(mFlowProcurement.getProductName());
+            mProcurementProductSpecTextView.setText(mFlowProcurement.getProductSpec());
+            mProcurementProductQuantityTextView.setText(String.valueOf(mFlowProcurement.getProductQuantity()));
+            mProcurementAmountTextView.setText(String.format("%.2f", mFlowProcurement.getAmount()));
+            mProcurementProjectNameTextView.setText(mFlowProcurement.getProjectName());
+            mProcurementItemNameTextView.setText(mFlowProcurement.getItemName());
+            mProcurementTotalAmountTextView.setText(String.format("%.2f", mFlowProcurement.getTotalAmount()));
+            mProcurementAmountLeftTextView.setText(String.format("%1$.2f(%2$.1f%%)", mFlowProcurement.getAmountLeft(), 100.0 * mFlowProcurement.getAmountLeft() /mFlowProcurement.getTotalAmount()));
+        }
+    }
+
+    private class FlowProcurementAdapter extends RecyclerView.Adapter<FlowProcurementHolder> {
+        private List<FlowProcurement> mFlowProcurements;
+
+        public FlowProcurementAdapter(List<FlowProcurement> procurements) {
+            mFlowProcurements = procurements;
+        }
+
+        @Override
+        public FlowProcurementHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
+            View view = layoutInflater.inflate(R.layout.list_item_flow_procurement, parent, false);
+
+            return new FlowProcurementHolder(view);
+        }
+
+        @Override
+        public void onBindViewHolder(FlowProcurementHolder holder, int position) {
+            FlowProcurement procurement = mFlowProcurements.get(position);
+            holder.bindItemView(procurement);
+        }
+
+        @Override
+        public int getItemCount() {
+            return mFlowProcurements.size();
         }
     }
 

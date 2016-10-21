@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 采购 -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              style="?android:listSeparatorTextViewStyle"
+              android:padding="2dp"
+              android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:text="列支科目："
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/item_flow_procurement_item_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="办公费" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:text="列支项目："
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/item_flow_procurement_project_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="综合办公室" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:text="商品名称："
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/item_flow_procurement_product_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="DMX512信号放大器" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:text="商品规格："
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/item_flow_procurement_product_desc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="路由器，网线，6孔插座" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:text="商品数量"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/flow_procurement_product_quantity"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="6" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:text="预估金额："
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/flow_procurement_amount_estimate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="131,774.40" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:text="预算总额："
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/item_flow_procurement_amount_total"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="240,000.00" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:text="剩余金额（占比）："
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/item_flow_procurement_amount_left"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="104,225.60 (43%)" />
+    </LinearLayout>
+
+</LinearLayout>

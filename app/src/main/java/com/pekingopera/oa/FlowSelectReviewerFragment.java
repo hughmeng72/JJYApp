@@ -16,7 +16,7 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.pekingopera.oa.common.Employee;
+import com.pekingopera.oa.model.Employee;
 
 import java.io.Serializable;
 import java.util.List;
