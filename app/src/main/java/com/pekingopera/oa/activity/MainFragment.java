@@ -1,4 +1,4 @@
-package com.pekingopera.oa;
+package com.pekingopera.oa.activity;
 
 import android.content.Context;
 import android.media.Image;
@@ -8,6 +8,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+
+import com.pekingopera.oa.R;
 
 /**
  * Created by wayne on 9/24/2016.

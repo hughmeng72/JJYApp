@@ -1,4 +1,4 @@
-package com.pekingopera.oa;
+package com.pekingopera.oa.fragment;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -11,12 +11,12 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Html;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,13 +28,16 @@ import com.gordonwong.materialsheetfab.MaterialSheetFabEventListener;
 import com.koushikdutta.async.future.Future;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
+import com.pekingopera.oa.R;
 import com.pekingopera.oa.model.Employee;
 import com.pekingopera.oa.common.Fab;
 import com.pekingopera.oa.common.FileHelper;
 import com.pekingopera.oa.common.PagerItemLab;
 import com.pekingopera.oa.common.SoapHelper;
 import com.pekingopera.oa.common.Utils;
+import com.pekingopera.oa.model.Flow;
 import com.pekingopera.oa.model.FlowDoc;
+import com.pekingopera.oa.model.FlowProcurement;
 import com.pekingopera.oa.model.FlowStep;
 import com.pekingopera.oa.model.Gov;
 import com.pekingopera.oa.model.ResponseBase;
@@ -56,45 +59,60 @@ import static android.app.Activity.RESULT_OK;
 /**
  * Created by wayne on 10/5/2016.
  */
-public class GovItemFragment extends Fragment implements View.OnClickListener {
-    private static final String TAG = "GovItemFragment";
-    private static final String ARG_GOV = "gov_id";
+public class FlowItemFragment extends Fragment implements View.OnClickListener {
+    private static final String TAG = "afItemFragment";
+    private static final String ARG_FLOW = "flow_id";
 
     private static final String DIALOG_APPROVAL = "DialogConfirm";
     private static final String DIALOG_REVIEWER = "DialogReviewer";
 
     private static final int REQUEST_AGREED = 0;
-    private static final int REQUEST_FINALIZED = 1;
-    private static final int REQUEST_REVIEWER = 2;
-
-    public static final String MODEL_NOTICE_LETTER = "普发件";
+    private static final int REQUEST_DISAGREED = 1;
+    private static final int REQUEST_FINALIZED = 2;
+    private static final int REQUEST_REVIEWER = 3;
 
     private MaterialSheetFab materialSheetFab;
     private int statusBarColor;
 
     private TextView mFlowNameTextView;
+    private TextView mFlowNoTextView;
     private TextView mDepartmentTextView;
     private TextView mRequestorTextView;
     private TextView mRequestTimeTextView;
     private TextView mRemarkTextView;
+    private TextView mAmountTextView;
 
-    private RecyclerView mStepRecyclerView;
-    private RecyclerView mAttachmentRecyclerView;
+    private TextView mBudgetItemNameTextView;
+    private TextView mBudgetProjectNameTextView;
+    private TextView mBudgetAmountTotalTextView;
+    private TextView mBudgetAmountLeftTextView;
+    private TextView mBudgetAmountToBePaidProcurementTextView;
+    private TextView mBudgetAmountPaidProcurementTextView;
+    private TextView mBudgetAmountPaidToBeReimbursementTextView;
+    private TextView mBudgetAmountPaidReimbursementTextView;
+
+    private LinearLayout mAmountLinearLayout;
+    private LinearLayout mBudgetLinearLayout;
+    private LinearLayout mProcurementLinearLayout;
+
+    private RecyclerView mFlowStepRecyclerView;
+    private RecyclerView mFlowAttachmentRecyclerView;
+    private RecyclerView mFlowProcurementRecyclerView;
 
     private FlowStepAdapter mFlowStepAdapter;
-    private AttachmentAdapter mAttachmentAdapter;
+    private FlowAttachmentAdapter mFlowAttachmentAdapter;
+    private FlowProcurementAdapter mFlowProcurementAdapter;
+
     private Fab mFab;
-    private TextView mFinalizeActionTextView;
-    private TextView mSubmitTextView;
 
-    private int mGovId;
-    private Gov mGov;
+    private int mFlowId;
+    private Flow mFlow;
 
-    public static Fragment newInstance(int govId) {
+    public static Fragment newInstance(int flowId) {
         Bundle args = new Bundle();
-        args.putInt(ARG_GOV, govId);
+        args.putInt(ARG_FLOW, flowId);
 
-        GovItemFragment fragment = new GovItemFragment();
+        FlowItemFragment fragment = new FlowItemFragment();
         fragment.setArguments(args);
         return fragment;
     }
@@ -103,33 +121,50 @@ public class GovItemFragment extends Fragment implements View.OnClickListener {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mGovId = getArguments().getInt(ARG_GOV);
+        mFlowId = getArguments().getInt(ARG_FLOW);
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_gov, container, false);
+        View v = inflater.inflate(R.layout.fragment_flow, container, false);
 
         setupFab(v);
 
-        mFlowNameTextView = (TextView) v.findViewById(R.id.gov_name);
-        mDepartmentTextView = (TextView) v.findViewById(R.id.gov_department);
-        mRequestorTextView = (TextView) v.findViewById(R.id.gov_requestor);
-        mRequestTimeTextView = (TextView) v.findViewById(R.id.gov_time);
-        mRemarkTextView = (TextView) v.findViewById(R.id.gov_remark);
+        mFlowNameTextView = (TextView) v.findViewById(R.id.approval_flow_name);
+        mFlowNoTextView = (TextView) v.findViewById(R.id.approval_flow_no);
+        mDepartmentTextView = (TextView) v.findViewById(R.id.approval_flow_department);
+        mRequestorTextView = (TextView) v.findViewById(R.id.approval_flow_requestor);
+        mRequestTimeTextView = (TextView) v.findViewById(R.id.approval_flow_time);
+        mRemarkTextView = (TextView) v.findViewById(R.id.approval_flow_remark);
+        mAmountTextView = (TextView) v.findViewById(R.id.approval_flow_amount);
 
-        mStepRecyclerView = (RecyclerView) v.findViewById(R.id.gov_steps);
-        mStepRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mAmountLinearLayout = (LinearLayout) v.findViewById(R.id.approval_flow_amount_container);
+        mBudgetLinearLayout = (LinearLayout) v.findViewById(R.id.approval_flow_budget_container);
+        mProcurementLinearLayout = (LinearLayout) v.findViewById(R.id.approval_flow_procurement_container);
 
-        mAttachmentRecyclerView = (RecyclerView) v.findViewById(R.id.gov_attachments);
-        mAttachmentRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mBudgetItemNameTextView = (TextView) v.findViewById(R.id.approval_flow_budget_item_name);
+        mBudgetProjectNameTextView = (TextView) v.findViewById(R.id.approval_flow_budget_project_name);
+        mBudgetAmountTotalTextView = (TextView) v.findViewById(R.id.approval_flow_budget_amount_total);
+        mBudgetAmountLeftTextView = (TextView) v.findViewById(R.id.approval_flow_budget_amount_left);
+        mBudgetAmountToBePaidProcurementTextView = (TextView) v.findViewById(R.id.approval_flow_budget_amount_paying_procument);
+        mBudgetAmountPaidProcurementTextView = (TextView) v.findViewById(R.id.approval_flow_budget_amount_paid_procument);
+        mBudgetAmountPaidToBeReimbursementTextView = (TextView) v.findViewById(R.id.approval_flow_budget_amount_paying_reimbursement);
+        mBudgetAmountPaidReimbursementTextView = (TextView) v.findViewById(R.id.approval_flow_budget_amount_paid_reimbursement);
+
+        mFlowStepRecyclerView = (RecyclerView) v.findViewById(R.id.approval_flow_steps);
+        mFlowStepRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        mFlowProcurementRecyclerView = (RecyclerView) v.findViewById(R.id.approval_flow_procuments);
+        mFlowProcurementRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        mFlowAttachmentRecyclerView = (RecyclerView) v.findViewById(R.id.approval_flow_attachments);
+        mFlowAttachmentRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         if (Utils.isNetworkConnected(getActivity())) {
             LoadTask task = new LoadTask();
             task.execute(User.get().getToken());
-        }
-        else {
+        } else {
             Toast.makeText(getActivity(), R.string.prompt_internet_connection_broken, Toast.LENGTH_SHORT).show();
         }
 
@@ -137,53 +172,70 @@ public class GovItemFragment extends Fragment implements View.OnClickListener {
     }
 
     private void updateUI() {
-        if (mGov == null) {
+        if (mFlow == null) {
             return;
         }
 
-        if (mGov.isApprovalAuthorized()) {
+        if (mFlow.isApprovalAuthorized()) {
             mFab.setVisibility(View.VISIBLE);
-
-            if (mGov.getModelName().equals(MODEL_NOTICE_LETTER)) {
-                mSubmitTextView.setText("签收");
-            }
-            else {
-                mSubmitTextView.setText("提交");
-                mFinalizeActionTextView.setVisibility(View.VISIBLE);
-            }
         }
 
-        mFlowNameTextView.setText(mGov.getFlowName());
-        mDepartmentTextView.setText(mGov.getDepName());
-        mRequestorTextView.setText(mGov.getCreator());
-        mRequestTimeTextView.setText(mGov.getCreateTime());
+        mFlowNameTextView.setText(mFlow.getFlowName());
+        mFlowNoTextView.setText(mFlow.getFlowNo());
+        mDepartmentTextView.setText(mFlow.getDepName());
+        mRequestorTextView.setText(mFlow.getCreator());
+        mRequestTimeTextView.setText(mFlow.getCreateTime());
+        mRemarkTextView.setText(mFlow.getRemark());
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            mRemarkTextView.setText(Html.fromHtml(mGov.getRemark(), Html.FROM_HTML_MODE_LEGACY));
-        }
-        else {
-            mRemarkTextView.setText(Html.fromHtml(mGov.getRemark()));
+        if (mFlow.getAmount() != 0) {
+            mAmountLinearLayout.setVisibility(View.VISIBLE);
+
+            mAmountTextView.setText(String.format("%.2f", mFlow.getAmount()));
         }
 
-        if (mStepRecyclerView != null) {
+        if (mFlow.isBudgetInvolved() && mFlow.isBudgetAuthorized() && !mFlow.getModelName().equals("采购申请")) {
+            mBudgetLinearLayout.setVisibility(View.VISIBLE);
+
+            mBudgetItemNameTextView.setText(mFlow.getItemName());
+            mBudgetProjectNameTextView.setText(mFlow.getProjectName());
+            mBudgetAmountTotalTextView.setText(String.format("%.2f", mFlow.getTotalAmount()));
+            mBudgetAmountLeftTextView.setText(String.format("%1$.2f (%2$.0f%%)", mFlow.getAmountLeft(), 100 * mFlow.getAmountLeft() / mFlow.getTotalAmount()));
+            mBudgetAmountToBePaidProcurementTextView.setText(String.format("%.2f", mFlow.getAmountToBePaidProcurement()));
+            mBudgetAmountPaidProcurementTextView.setText(String.format("%.2f", mFlow.getAmountPaidProcurement()));
+            mBudgetAmountPaidToBeReimbursementTextView.setText(String.format("%.2f", mFlow.getAmountToBePaidReimbursement()));
+            mBudgetAmountPaidReimbursementTextView.setText(String.format("%.2f", mFlow.getAmountPaidReimbursement()));
+        }
+
+        if (mFlowStepRecyclerView != null) {
             if (mFlowStepAdapter == null) {
-                mFlowStepAdapter = new FlowStepAdapter(mGov.getSteps());
-                mStepRecyclerView.setAdapter(mFlowStepAdapter);
-            }
-            else {
+                mFlowStepAdapter = new FlowStepAdapter(mFlow.getSteps());
+                mFlowStepRecyclerView.setAdapter(mFlowStepAdapter);
+            } else {
                 mFlowStepAdapter.notifyDataSetChanged();
             }
         }
 
-        if (mAttachmentRecyclerView != null) {
-            if (mAttachmentAdapter == null) {
-                mAttachmentAdapter = new AttachmentAdapter(mGov.getAttachments());
-                mAttachmentRecyclerView.setAdapter(mAttachmentAdapter);
-            }
-            else {
-                mAttachmentAdapter.notifyDataSetChanged();
+        if (mFlowAttachmentRecyclerView != null) {
+            if (mFlowAttachmentAdapter == null) {
+                mFlowAttachmentAdapter = new FlowAttachmentAdapter(mFlow.getAttachments());
+                mFlowAttachmentRecyclerView.setAdapter(mFlowAttachmentAdapter);
+            } else {
+                mFlowAttachmentAdapter.notifyDataSetChanged();
             }
         }
+
+        if (mFlow.getModelName().equals("采购申请") && mFlowProcurementRecyclerView != null) {
+            mProcurementLinearLayout.setVisibility(View.VISIBLE);
+
+            if (mFlowProcurementAdapter == null) {
+                mFlowProcurementAdapter = new FlowProcurementAdapter(mFlow.getProcurements());
+                mFlowProcurementRecyclerView.setAdapter(mFlowProcurementAdapter);
+            }
+            else {
+                mFlowProcurementAdapter.notifyDataSetChanged();
+            }
+        }
+
     }
 
     private void setupFab(View v) {
@@ -215,11 +267,9 @@ public class GovItemFragment extends Fragment implements View.OnClickListener {
         });
 
         // Set material sheet item click listeners
-        mFinalizeActionTextView = (TextView) v.findViewById(R.id.fab_sheet_item_gov_finalize);
-        mSubmitTextView = (TextView) v.findViewById(R.id.fab_sheet_item_gov_agree);
-
-        mFinalizeActionTextView.setOnClickListener(this);
-        mSubmitTextView.setOnClickListener(this);
+        v.findViewById(R.id.fab_sheet_item_reminder).setOnClickListener(this);
+        v.findViewById(R.id.fab_sheet_item_photo).setOnClickListener(this);
+        v.findViewById(R.id.fab_sheet_item_note).setOnClickListener(this);
     }
 
     private int getStatusBarColor() {
@@ -241,18 +291,14 @@ public class GovItemFragment extends Fragment implements View.OnClickListener {
 
         switch (v.getTag().toString()) {
             case "agree":
-                if (mGov.getModelName().equals(MODEL_NOTICE_LETTER)) {
-                    showSignDialog();
-                }
-                else {
-                    CheckReviwerTask task = new CheckReviwerTask();
-                    task.execute(User.get().getToken(), String.valueOf(mGovId));
-                }
-
+                CheckReviwerTask task = new CheckReviwerTask();
+                task.execute(User.get().getToken(), String.valueOf(mFlowId));
+                break;
+            case "disagree":
+                showDisagreeDialog();
                 break;
             case "finalize":
                 showEndDialog();
-
                 break;
             default:
                 Toast.makeText(getActivity(), v.getTag() + " Item pressed", Toast.LENGTH_SHORT).show();
@@ -269,26 +315,33 @@ public class GovItemFragment extends Fragment implements View.OnClickListener {
         switch (requestCode) {
             case REQUEST_AGREED:
                 words = data.getStringExtra(FlowApprovalFragment.EXTRA_RESULT);
-                mGov.setReviewWords(words);
+                mFlow.setReviewWords(words);
 
                 SubmitTask task1 = new SubmitTask();
                 task1.execute(User.get().getToken());
 
                 break;
+            case REQUEST_DISAGREED:
+                words = data.getStringExtra(FlowApprovalFragment.EXTRA_RESULT);
+                mFlow.setReviewWords(words);
+
+                RejectTask task2 = new RejectTask();
+                task2.execute(User.get().getToken());
+                break;
             case REQUEST_FINALIZED:
                 words = data.getStringExtra(FlowApprovalFragment.EXTRA_RESULT);
-                mGov.setReviewWords(words);
+                mFlow.setReviewWords(words);
 
-                FinalizeTask task2 = new FinalizeTask();
-                task2.execute(User.get().getToken());
+                FinalizeTask task3 = new FinalizeTask();
+                task3.execute(User.get().getToken());
 
                 break;
             case REQUEST_REVIEWER:
                 int reviewerId = data.getIntExtra(FlowSelectReviewerFragment.EXTRA_RESULT, -1);
 
                 if (reviewerId != -1) {
-                    UpdateReviewerTask task3 = new UpdateReviewerTask();
-                    task3.execute(User.get().getToken(), String.valueOf(mGovId), String.valueOf(reviewerId));
+                    UpdateReviewerTask task4 = new UpdateReviewerTask();
+                    task4.execute(User.get().getToken(), String.valueOf(mFlowId), String.valueOf(reviewerId));
                 }
         }
     }
@@ -296,90 +349,86 @@ public class GovItemFragment extends Fragment implements View.OnClickListener {
     private void showReviewerDialog(List<Employee> employees) {
         FlowSelectReviewerFragment dialog;
         dialog = FlowSelectReviewerFragment.newInstance(employees);
-        dialog.setTargetFragment(GovItemFragment.this, REQUEST_REVIEWER);
+        dialog.setTargetFragment(FlowItemFragment.this, REQUEST_REVIEWER);
         dialog.show(getFragmentManager(), DIALOG_REVIEWER);
     }
 
-    private void showSignDialog() {
+    private void showEndDialog() {
         FlowApprovalFragment dialog;
+        dialog = FlowApprovalFragment.newInstance("审批结果（办结）");
+        dialog.setTargetFragment(FlowItemFragment.this, REQUEST_FINALIZED);
+        dialog.show(getFragmentManager(), DIALOG_APPROVAL);
+    }
 
-        dialog = FlowApprovalFragment.newInstance("签收");
-        dialog.setTargetFragment(GovItemFragment.this, REQUEST_AGREED);
+    private void showDisagreeDialog() {
+        FlowApprovalFragment dialog;
+        dialog = FlowApprovalFragment.newInstance("审批结果（不同意）");
+        dialog.setTargetFragment(FlowItemFragment.this, REQUEST_DISAGREED);
         dialog.show(getFragmentManager(), DIALOG_APPROVAL);
     }
 
     private void showAgreeDialog() {
         FlowApprovalFragment dialog;
         dialog = FlowApprovalFragment.newInstance("审批结果（同意）");
-        dialog.setTargetFragment(GovItemFragment.this, REQUEST_AGREED);
+        dialog.setTargetFragment(FlowItemFragment.this, REQUEST_AGREED);
         dialog.show(getFragmentManager(), DIALOG_APPROVAL);
     }
 
-    private void showEndDialog() {
-        FlowApprovalFragment dialog;
-
-        dialog = FlowApprovalFragment.newInstance("审批结果（办结）");
-        dialog.setTargetFragment(GovItemFragment.this, REQUEST_FINALIZED);
-        dialog.show(getFragmentManager(), DIALOG_APPROVAL);
-    }
-
-    private class StepHolder extends RecyclerView.ViewHolder {
-        private FlowStep mStep;
+    private class FlowStepHolder extends RecyclerView.ViewHolder {
+        private FlowStep mFlowStep;
 
         private TextView mStepNameTextView;
         private TextView mStepDescTextView;
 
-        public StepHolder(View itemView) {
+        public FlowStepHolder(View itemView) {
             super(itemView);
 
             mStepNameTextView = (TextView) itemView.findViewById(R.id.item_flow_step_name);
             mStepDescTextView = (TextView) itemView.findViewById(R.id.item_flow_step_desc);
         }
 
-        public void bindItemView(FlowStep step) {
-            mStep = step;
+        public void bindItemView(FlowStep flowStep) {
+            mFlowStep = flowStep;
 
-            mStepNameTextView.setText(mStep.getStepName());
-            mStepDescTextView.setText(mStep.getDescription());
+            mStepNameTextView.setText(mFlowStep.getStepName());
+            mStepDescTextView.setText(mFlowStep.getDescription());
         }
     }
 
+    private class FlowStepAdapter extends RecyclerView.Adapter<FlowStepHolder> {
+        private List<FlowStep> mFlowSteps;
 
-    private class FlowStepAdapter extends RecyclerView.Adapter<StepHolder> {
-        private List<FlowStep> mSteps;
-
-        public FlowStepAdapter(List<FlowStep> steps) {
-            mSteps = steps;
+        public FlowStepAdapter(List<FlowStep> flowSteps) {
+            mFlowSteps = flowSteps;
         }
 
         @Override
-        public StepHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public FlowStepHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
             View view = layoutInflater.inflate(R.layout.list_item_flow_step, parent, false);
 
-            return new StepHolder(view);
+            return new FlowStepHolder(view);
         }
 
         @Override
-        public void onBindViewHolder(StepHolder holder, int position) {
-            FlowStep flowStep = mSteps.get(position);
+        public void onBindViewHolder(FlowStepHolder holder, int position) {
+            FlowStep flowStep = mFlowSteps.get(position);
             holder.bindItemView(flowStep);
         }
 
         @Override
         public int getItemCount() {
-            return mSteps.size();
+            return mFlowSteps.size();
         }
     }
 
-
-    private class AttachmentHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        private FlowDoc mDoc;
+    private class FlowAttachmentHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        private FlowDoc mFlowDoc;
         private TextView mFileNameTextView;
 
         private Future<File> downloading;
 
-        public AttachmentHolder(View itemView) {
+        public FlowAttachmentHolder(View itemView) {
             super(itemView);
 
             itemView.setOnClickListener(this);
@@ -387,15 +436,15 @@ public class GovItemFragment extends Fragment implements View.OnClickListener {
             mFileNameTextView = (TextView) itemView.findViewById(R.id.item_flow_attachment_name);
         }
 
-        public void bindItemView(FlowDoc doc) {
-            mDoc = doc;
+        public void bindItemView(FlowDoc flowDoc) {
+            mFlowDoc = flowDoc;
 
-            mFileNameTextView.setText(mDoc.getFileName());
+            mFileNameTextView.setText(mFlowDoc.getFileName());
         }
 
         @Override
         public void onClick(View v) {
-            if (mDoc.getUri().isEmpty()) {
+            if (mFlowDoc.getUri().isEmpty()) {
                 Toast.makeText(getActivity(), "没有附件可以显示", Toast.LENGTH_SHORT).show();
                 return;
             }
@@ -426,7 +475,7 @@ public class GovItemFragment extends Fragment implements View.OnClickListener {
                 Toast.makeText(getActivity(), "设备没有创建公共文档的权限。", Toast.LENGTH_SHORT).show();
                 return;
             }
-            File newFile = new File(docDir, mDoc.getFileName());
+            File newFile = new File(docDir, mFlowDoc.getFileName());
 
             final String mimeType = FileHelper.getMineType(getActivity(), Uri.fromFile(newFile));
             if (mimeType == null || mimeType.isEmpty()) {
@@ -435,7 +484,7 @@ public class GovItemFragment extends Fragment implements View.OnClickListener {
             }
 
             downloading = Ion.with(getActivity())
-                    .load(mDoc.getUri())
+                    .load(mFlowDoc.getUri())
                     .progressDialog(dlg)
                     .setLogging(TAG, Log.DEBUG)
                     .write(newFile)
@@ -471,33 +520,100 @@ public class GovItemFragment extends Fragment implements View.OnClickListener {
         }
     }
 
-    private class AttachmentAdapter extends RecyclerView.Adapter<AttachmentHolder> {
-        private List<FlowDoc> mDocs;
+    private class FlowAttachmentAdapter extends RecyclerView.Adapter<FlowAttachmentHolder> {
+        private List<FlowDoc> mFlowDocs;
 
-        public AttachmentAdapter(List<FlowDoc> docs) {
-            mDocs = docs;
+        public FlowAttachmentAdapter(List<FlowDoc> flowDocs) {
+            mFlowDocs = flowDocs;
         }
 
         @Override
-        public AttachmentHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public FlowAttachmentHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
             View view = layoutInflater.inflate(R.layout.list_item_flow_attachment, parent, false);
 
-            return new AttachmentHolder(view);
+            return new FlowAttachmentHolder(view);
         }
 
         @Override
-        public void onBindViewHolder(AttachmentHolder holder, int position) {
-            FlowDoc doc = mDocs.get(position);
-            holder.bindItemView(doc);
+        public void onBindViewHolder(FlowAttachmentHolder holder, int position) {
+            FlowDoc flowDoc = mFlowDocs.get(position);
+            holder.bindItemView(flowDoc);
         }
 
         @Override
         public int getItemCount() {
-            return mDocs.size();
+            return mFlowDocs.size();
         }
     }
 
+    private class FlowProcurementHolder extends RecyclerView.ViewHolder {
+        private FlowProcurement mFlowProcurement;
+
+        private TextView mProcurementProductNameTextView;
+        private TextView mProcurementProductSpecTextView;
+        private TextView mProcurementProductQuantityTextView;
+        private TextView mProcurementAmountTextView;
+        private TextView mProcurementProjectNameTextView;
+        private TextView mProcurementItemNameTextView;
+        private TextView mProcurementTotalAmountTextView;
+        private TextView mProcurementAmountLeftTextView;
+
+
+
+        public FlowProcurementHolder(View itemView) {
+            super(itemView);
+
+            mProcurementProductNameTextView = (TextView) itemView.findViewById(R.id.item_flow_procurement_product_name);
+            mProcurementProductSpecTextView = (TextView) itemView.findViewById(R.id.item_flow_procurement_product_desc);
+            mProcurementProductQuantityTextView = (TextView) itemView.findViewById(R.id.flow_procurement_product_quantity);
+            mProcurementAmountTextView = (TextView) itemView.findViewById(R.id.flow_procurement_amount_estimate);
+            mProcurementProjectNameTextView = (TextView) itemView.findViewById(R.id.item_flow_procurement_project_name);
+            mProcurementItemNameTextView = (TextView) itemView.findViewById(R.id.item_flow_procurement_item_name);
+            mProcurementTotalAmountTextView = (TextView) itemView.findViewById(R.id.item_flow_procurement_amount_total);
+            mProcurementAmountLeftTextView = (TextView) itemView.findViewById(R.id.item_flow_procurement_amount_left);
+        }
+
+        public void bindItemView(FlowProcurement procurement) {
+            mFlowProcurement = procurement;
+
+            mProcurementProductNameTextView.setText(mFlowProcurement.getProductName());
+            mProcurementProductSpecTextView.setText(mFlowProcurement.getProductSpec());
+            mProcurementProductQuantityTextView.setText(String.valueOf(mFlowProcurement.getProductQuantity()));
+            mProcurementAmountTextView.setText(String.format("%.2f", mFlowProcurement.getAmount()));
+            mProcurementProjectNameTextView.setText(mFlowProcurement.getProjectName());
+            mProcurementItemNameTextView.setText(mFlowProcurement.getItemName());
+            mProcurementTotalAmountTextView.setText(String.format("%.2f", mFlowProcurement.getTotalAmount()));
+            mProcurementAmountLeftTextView.setText(String.format("%1$.2f(%2$.1f%%)", mFlowProcurement.getAmountLeft(), 100.0 * mFlowProcurement.getAmountLeft() /mFlowProcurement.getTotalAmount()));
+        }
+    }
+
+    private class FlowProcurementAdapter extends RecyclerView.Adapter<FlowProcurementHolder> {
+        private List<FlowProcurement> mFlowProcurements;
+
+        public FlowProcurementAdapter(List<FlowProcurement> procurements) {
+            mFlowProcurements = procurements;
+        }
+
+        @Override
+        public FlowProcurementHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
+            View view = layoutInflater.inflate(R.layout.list_item_flow_procurement, parent, false);
+
+            return new FlowProcurementHolder(view);
+        }
+
+        @Override
+        public void onBindViewHolder(FlowProcurementHolder holder, int position) {
+            FlowProcurement procurement = mFlowProcurements.get(position);
+            holder.bindItemView(procurement);
+        }
+
+        @Override
+        public int getItemCount() {
+            return mFlowProcurements.size();
+        }
+    }
 
     // AsynTask class to handle Load Web Service call as separate UI Thread
     private class LoadTask extends AsyncTask<String, Void, String> {
@@ -507,41 +623,6 @@ public class GovItemFragment extends Fragment implements View.OnClickListener {
 
             // Invoke web service
             return performLoadTask(params[0]);
-        }
-
-        // Method which invoke web method
-        private String performLoadTask(String token) {
-            // Create request
-            SoapObject request = new SoapObject(SoapHelper.getWsNamespace(), SoapHelper.getWsMethodOfGovDetail());
-
-            request.addProperty(Utils.newPropertyInstance("token", token, String.class));
-            request.addProperty(Utils.newPropertyInstance("govId", mGovId, int.class));
-
-            // Create envelope
-            SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
-            envelope.dotNet = true;
-
-            // Set output SOAP object
-            envelope.setOutputSoapObject(request);
-
-            // Create HTTP call object
-            HttpTransportSE androidHttpTransport = new HttpTransportSE(SoapHelper.getWsUrl());
-
-            String responseJSON = null;
-
-            try {
-                // Invoke web service
-                androidHttpTransport.call(SoapHelper.getWsSoapAction() + SoapHelper.getWsMethodOfGovDetail(), envelope);
-
-                // Get the response
-                SoapPrimitive response = (SoapPrimitive) envelope.getResponse();
-
-                responseJSON = response.toString();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            return responseJSON;
         }
 
         @Override
@@ -556,11 +637,12 @@ public class GovItemFragment extends Fragment implements View.OnClickListener {
                 return;
             }
 
-            ResponseResults<Gov> responseResults;
+            ResponseResults<Flow> responseResults;
 
             try {
                 GsonBuilder gson = new GsonBuilder();
-                Type resultType = new TypeToken<ResponseResults<Gov>>() {}.getType();
+                Type resultType = new TypeToken<ResponseResults<Flow>>() {
+                }.getType();
 
                 responseResults = gson.create().fromJson(result, resultType);
             } catch (Exception e) {
@@ -576,7 +658,7 @@ public class GovItemFragment extends Fragment implements View.OnClickListener {
                 return;
             }
 
-            if (responseResults.getError().getResult() == 0){
+            if (responseResults.getError().getResult() == 0) {
                 Toast toast = Toast.makeText(getActivity(), responseResults.getError().getErrorInfo(), Toast.LENGTH_LONG);
                 toast.setGravity(Gravity.CENTER, 0, 0);
                 toast.show();
@@ -584,9 +666,9 @@ public class GovItemFragment extends Fragment implements View.OnClickListener {
                 return;
             }
 
-            List<Gov> govs = responseResults.getList();
+            List<Flow> flows = responseResults.getList();
 
-            if (govs == null) {
+            if (flows == null) {
                 Toast toast = Toast.makeText(getActivity(), R.string.prompt_system_error, Toast.LENGTH_LONG);
                 toast.setGravity(Gravity.CENTER, 0, 0);
                 toast.show();
@@ -594,7 +676,7 @@ public class GovItemFragment extends Fragment implements View.OnClickListener {
                 return;
             }
 
-            if (govs.size() != 1) {
+            if (flows.size() != 1) {
                 Toast toast = Toast.makeText(getActivity(), R.string.prompt_system_error, Toast.LENGTH_LONG);
                 toast.setGravity(Gravity.CENTER, 0, 0);
                 toast.show();
@@ -602,7 +684,7 @@ public class GovItemFragment extends Fragment implements View.OnClickListener {
                 return;
             }
 
-            mGov = govs.get(0);
+            mFlow = flows.get(0);
 
             updateUI();
         }
@@ -614,6 +696,41 @@ public class GovItemFragment extends Fragment implements View.OnClickListener {
 
         @Override
         protected void onProgressUpdate(Void... values) {
+        }
+
+        // Method which invoke web method
+        private String performLoadTask(String token) {
+            // Create request
+            SoapObject request = new SoapObject(SoapHelper.getWsNamespace(), SoapHelper.getWsMethodOfFlowDetail());
+
+            request.addProperty(Utils.newPropertyInstance("token", token, String.class));
+            request.addProperty(Utils.newPropertyInstance("flowId", mFlowId, int.class));
+
+            // Create envelope
+            SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+            envelope.dotNet = true;
+
+            // Set output SOAP object
+            envelope.setOutputSoapObject(request);
+
+            // Create HTTP call object
+            HttpTransportSE androidHttpTransport = new HttpTransportSE(SoapHelper.getWsUrl());
+
+            String responseJSON = null;
+
+            try {
+                // Invoke web service
+                androidHttpTransport.call(SoapHelper.getWsSoapAction() + SoapHelper.getWsMethodOfFlowDetail(), envelope);
+
+                // Get the response
+                SoapPrimitive response = (SoapPrimitive) envelope.getResponse();
+
+                responseJSON = response.toString();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            return responseJSON;
         }
     }
 
@@ -630,14 +747,15 @@ public class GovItemFragment extends Fragment implements View.OnClickListener {
         // Method which invoke web method
         private String performLoadTask(String token) {
             // Create request
-            SoapObject request = new SoapObject(SoapHelper.getWsNamespace(), SoapHelper.getWsMethodOfGovRequest());
+            SoapObject request = new SoapObject(SoapHelper.getWsNamespace(), SoapHelper.getWsMethodOfFlowRequest());
 
             request.addProperty(Utils.newPropertyInstance("token", token, String.class));
-            request.addProperty(Utils.newPropertyInstance("id", mGov.getId(), int.class));
-            request.addProperty(Utils.newPropertyInstance("words", mGov.getReviewWords(), String.class));
-            request.addProperty(Utils.newPropertyInstance("depName", mGov.getDepName(), String.class));
-            request.addProperty(Utils.newPropertyInstance("currentDocPath", mGov.getCurrentDocPath(), String.class));
-            request.addProperty(Utils.newPropertyInstance("flowFiles", mGov.getFlowFiles(), String.class));
+            request.addProperty(Utils.newPropertyInstance("id", mFlow.getId(), int.class));
+            request.addProperty(Utils.newPropertyInstance("words", mFlow.getReviewWords(), String.class));
+            request.addProperty(Utils.newPropertyInstance("depName", mFlow.getDepName(), String.class));
+            request.addProperty(Utils.newPropertyInstance("docBody", mFlow.getDocBody(), String.class));
+            request.addProperty(Utils.newPropertyInstance("currentDocPath", mFlow.getCurrentDocPath(), String.class));
+            request.addProperty(Utils.newPropertyInstance("flowFiles", mFlow.getFlowFiles(), String.class));
 
             // Create envelope
             SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
@@ -655,7 +773,7 @@ public class GovItemFragment extends Fragment implements View.OnClickListener {
 
             try {
                 // Invoke web service
-                androidHttpTransport.call(SoapHelper.getWsSoapAction() + SoapHelper.getWsMethodOfGovRequest(), envelope);
+                androidHttpTransport.call(SoapHelper.getWsSoapAction() + SoapHelper.getWsMethodOfFlowRequest(), envelope);
 
                 // Get the response
                 SoapPrimitive response = (SoapPrimitive) envelope.getResponse();
@@ -695,7 +813,7 @@ public class GovItemFragment extends Fragment implements View.OnClickListener {
                 return;
             }
 
-            if (responseResult.getResult() == 0){
+            if (responseResult.getResult() == 0) {
                 Toast toast = Toast.makeText(getActivity(), responseResult.getErrorInfo(), Toast.LENGTH_LONG);
                 toast.setGravity(Gravity.CENTER, 0, 0);
                 toast.show();
@@ -703,7 +821,99 @@ public class GovItemFragment extends Fragment implements View.OnClickListener {
                 return;
             }
 
-            PagerItemLab.get(getActivity()).Remove(mGov.getId());
+            PagerItemLab.get(getActivity()).Remove(mFlow.getId());
+
+            getActivity().finish();
+        }
+    }
+
+    private class RejectTask extends AsyncTask<String, Void, String> {
+        @Override
+        protected String doInBackground(String... params) {
+            Log.i(TAG, "doInBackground: " + params.toString());
+
+            // Invoke web service
+            return performLoadTask(params[0]);
+        }
+
+        // Method which invoke web method
+        private String performLoadTask(String token) {
+            // Create request
+            SoapObject request = new SoapObject(SoapHelper.getWsNamespace(), SoapHelper.getWsMethodOfFlowRejectRequest());
+
+            request.addProperty(Utils.newPropertyInstance("token", token, String.class));
+            request.addProperty(Utils.newPropertyInstance("id", mFlow.getId(), int.class));
+            request.addProperty(Utils.newPropertyInstance("words", mFlow.getReviewWords(), String.class));
+            request.addProperty(Utils.newPropertyInstance("depName", mFlow.getDepName(), String.class));
+            request.addProperty(Utils.newPropertyInstance("docBody", mFlow.getDocBody(), String.class));
+            request.addProperty(Utils.newPropertyInstance("currentDocPath", mFlow.getCurrentDocPath(), String.class));
+            request.addProperty(Utils.newPropertyInstance("flowFiles", mFlow.getFlowFiles(), String.class));
+
+            // Create envelope
+            SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+            envelope.dotNet = true;
+
+            envelope.addMapping(SoapHelper.getWsNamespace(), "gov", Gov.class);
+
+            // Set output SOAP object
+            envelope.setOutputSoapObject(request);
+
+            // Create HTTP call object
+            HttpTransportSE androidHttpTransport = new HttpTransportSE(SoapHelper.getWsUrl());
+
+            String responseJSON = null;
+
+            try {
+                // Invoke web service
+                androidHttpTransport.call(SoapHelper.getWsSoapAction() + SoapHelper.getWsMethodOfFlowRejectRequest(), envelope);
+
+                // Get the response
+                SoapPrimitive response = (SoapPrimitive) envelope.getResponse();
+
+                responseJSON = response.toString();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            return responseJSON;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            Log.i(TAG, "onPostExecute: ");
+
+            if (result == null || result.isEmpty()) {
+                Toast.makeText(getActivity(), R.string.prompt_system_error, Toast.LENGTH_SHORT).show();
+
+                return;
+            }
+
+            ResponseBase responseResult;
+
+            try {
+                responseResult = new Gson().fromJson(result, ResponseBase.class);
+            } catch (Exception e) {
+                e.printStackTrace();
+                return;
+            }
+
+            if (responseResult == null) {
+                Toast toast = Toast.makeText(getActivity(), R.string.prompt_system_error, Toast.LENGTH_LONG);
+                toast.setGravity(Gravity.CENTER, 0, 0);
+                toast.show();
+
+                return;
+            }
+
+            if (responseResult.getResult() == 0) {
+                Toast toast = Toast.makeText(getActivity(), responseResult.getErrorInfo(), Toast.LENGTH_LONG);
+                toast.setGravity(Gravity.CENTER, 0, 0);
+                toast.show();
+
+                return;
+            }
+
+            PagerItemLab.get(getActivity()).Remove(mFlow.getId());
 
             getActivity().finish();
         }
@@ -722,13 +932,15 @@ public class GovItemFragment extends Fragment implements View.OnClickListener {
         // Method which invoke web method
         private String performLoadTask(String token) {
             // Create request
-            SoapObject request = new SoapObject(SoapHelper.getWsNamespace(), SoapHelper.getWsMethodOfGovFinalizeRequest());
+            SoapObject request = new SoapObject(SoapHelper.getWsNamespace(), SoapHelper.getWsMethodOfFlowFinalizeRequest());
 
             request.addProperty(Utils.newPropertyInstance("token", token, String.class));
-            request.addProperty(Utils.newPropertyInstance("id", mGov.getId(), int.class));
-            request.addProperty(Utils.newPropertyInstance("words", mGov.getReviewWords(), String.class));
-            request.addProperty(Utils.newPropertyInstance("depName", mGov.getDepName(), String.class));
-            request.addProperty(Utils.newPropertyInstance("currentDocPath", mGov.getCurrentDocPath(), String.class));
+            request.addProperty(Utils.newPropertyInstance("id", mFlow.getId(), int.class));
+            request.addProperty(Utils.newPropertyInstance("words", mFlow.getReviewWords(), String.class));
+            request.addProperty(Utils.newPropertyInstance("depName", mFlow.getDepName(), String.class));
+            request.addProperty(Utils.newPropertyInstance("docBody", mFlow.getDocBody(), String.class));
+            request.addProperty(Utils.newPropertyInstance("currentDocPath", mFlow.getCurrentDocPath(), String.class));
+            request.addProperty(Utils.newPropertyInstance("flowFiles", mFlow.getFlowFiles(), String.class));
 
             // Create envelope
             SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
@@ -746,7 +958,7 @@ public class GovItemFragment extends Fragment implements View.OnClickListener {
 
             try {
                 // Invoke web service
-                androidHttpTransport.call(SoapHelper.getWsSoapAction() + SoapHelper.getWsMethodOfGovFinalizeRequest(), envelope);
+                androidHttpTransport.call(SoapHelper.getWsSoapAction() + SoapHelper.getWsMethodOfFlowFinalizeRequest(), envelope);
 
                 // Get the response
                 SoapPrimitive response = (SoapPrimitive) envelope.getResponse();
@@ -786,7 +998,7 @@ public class GovItemFragment extends Fragment implements View.OnClickListener {
                 return;
             }
 
-            if (responseResult.getResult() == 0){
+            if (responseResult.getResult() == 0) {
                 Toast toast = Toast.makeText(getActivity(), responseResult.getErrorInfo(), Toast.LENGTH_LONG);
                 toast.setGravity(Gravity.CENTER, 0, 0);
                 toast.show();
@@ -794,7 +1006,7 @@ public class GovItemFragment extends Fragment implements View.OnClickListener {
                 return;
             }
 
-            PagerItemLab.get(getActivity()).Remove(mGov.getId());
+            PagerItemLab.get(getActivity()).Remove(mFlow.getId());
 
             getActivity().finish();
         }
@@ -803,7 +1015,7 @@ public class GovItemFragment extends Fragment implements View.OnClickListener {
     private class CheckReviwerTask extends AsyncTask<String, Void, String> {
         @Override
         protected String doInBackground(String... params) {
-            Log.i(TAG, "doInBackground...");
+            Log.i(TAG, "doInBackground: " + params.toString());
 
             // Invoke web service
             return performLoadTask(params[0], Integer.valueOf(params[1]));
@@ -812,7 +1024,7 @@ public class GovItemFragment extends Fragment implements View.OnClickListener {
         // Method which invoke web method
         private String performLoadTask(String token, int flowId) {
             // Create request
-            SoapObject request = new SoapObject(SoapHelper.getWsNamespace(), SoapHelper.getWsMethodOfMissedGovReviwer());
+            SoapObject request = new SoapObject(SoapHelper.getWsNamespace(), SoapHelper.getWsMethodOfMissedFlowReviwer());
 
             request.addProperty(Utils.newPropertyInstance("token", token, String.class));
             request.addProperty(Utils.newPropertyInstance("flowId", flowId, int.class));
@@ -831,7 +1043,7 @@ public class GovItemFragment extends Fragment implements View.OnClickListener {
 
             try {
                 // Invoke web service
-                androidHttpTransport.call(SoapHelper.getWsSoapAction() + SoapHelper.getWsMethodOfMissedGovReviwer(), envelope);
+                androidHttpTransport.call(SoapHelper.getWsSoapAction() + SoapHelper.getWsMethodOfMissedFlowReviwer(), envelope);
 
                 // Get the response
                 SoapPrimitive response = (SoapPrimitive) envelope.getResponse();
@@ -913,9 +1125,10 @@ public class GovItemFragment extends Fragment implements View.OnClickListener {
     }
 
     private class UpdateReviewerTask extends AsyncTask<String, Void, String> {
+
         @Override
         protected String doInBackground(String... params) {
-            Log.i(TAG, "doInBackground...");
+            Log.i(TAG, "doInBackground: " + params.toString());
 
             // Invoke web service
             return performLoadTask(params[0], Integer.valueOf(params[1]), Integer.valueOf(params[2]));
@@ -924,7 +1137,7 @@ public class GovItemFragment extends Fragment implements View.OnClickListener {
         // Method which invoke web method
         private String performLoadTask(String token, int flowId, int staffId) {
             // Create request
-            SoapObject request = new SoapObject(SoapHelper.getWsNamespace(), SoapHelper.getWsMethodOfUpdateGovReviewer());
+            SoapObject request = new SoapObject(SoapHelper.getWsNamespace(), SoapHelper.getWsMethodOfUpdateFlowReviewer());
 
             request.addProperty(Utils.newPropertyInstance("token", token, String.class));
             request.addProperty(Utils.newPropertyInstance("flowId", flowId, int.class));
@@ -946,7 +1159,7 @@ public class GovItemFragment extends Fragment implements View.OnClickListener {
 
             try {
                 // Invoke web service
-                androidHttpTransport.call(SoapHelper.getWsSoapAction() + SoapHelper.getWsMethodOfUpdateGovReviewer(), envelope);
+                androidHttpTransport.call(SoapHelper.getWsSoapAction() + SoapHelper.getWsMethodOfUpdateFlowReviewer(), envelope);
 
                 // Get the response
                 SoapPrimitive response = (SoapPrimitive) envelope.getResponse();

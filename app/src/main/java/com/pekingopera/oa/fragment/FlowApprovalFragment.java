@@ -1,4 +1,4 @@
-package com.pekingopera.oa;
+package com.pekingopera.oa.fragment;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -10,6 +10,8 @@ import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
+
+import com.pekingopera.oa.R;
 
 import static android.app.Activity.RESULT_OK;
 

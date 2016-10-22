@@ -1,4 +1,4 @@
-package com.pekingopera.oa;
+package com.pekingopera.oa.fragment;
 
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -16,10 +16,12 @@ import android.widget.Toast;
 
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import com.pekingopera.oa.R;
+import com.pekingopera.oa.activity.WebPagerActivity;
 import com.pekingopera.oa.common.PagerItemLab;
 import com.pekingopera.oa.common.SoapHelper;
 import com.pekingopera.oa.common.Utils;
-import com.pekingopera.oa.model.Flow;
+import com.pekingopera.oa.model.Mail;
 import com.pekingopera.oa.model.ResponseResults;
 import com.pekingopera.oa.model.User;
 
@@ -32,16 +34,18 @@ import org.ksoap2.transport.HttpTransportSE;
 import java.lang.reflect.Type;
 import java.util.List;
 
-/**
- * Created by wayne on 10/7/2016.
- */
-public class GeneralFlowListFragment extends Fragment {
-    private static final String TAG = "GFListFragment";
+
+public class MailListFragment extends Fragment {
+    private static final String TAG = "MailListFragment";
 
     private RecyclerView mRecyclerView;
-    private FlowAdapter mAdapter;
+    private MailAdapter mAdapter;
 
-    private List<Flow> mFlows = null;
+    private List<Mail> mMails = null;
+
+
+    public MailListFragment() {
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -63,12 +67,12 @@ public class GeneralFlowListFragment extends Fragment {
     }
 
     private void updateUI() {
-        if (mFlows == null || mRecyclerView == null) {
+        if (mMails == null || mRecyclerView == null) {
             return;
         }
 
         if (mAdapter == null) {
-            mAdapter = new FlowAdapter(mFlows);
+            mAdapter = new MailAdapter(mMails);
             mRecyclerView.setAdapter(mAdapter);
         }
         else {
@@ -76,80 +80,65 @@ public class GeneralFlowListFragment extends Fragment {
         }
     }
 
-    private class FlowHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        private Flow mFlow;
 
-        private TextView mFlowNameTextView;
-        private TextView mModelNameTextView;
-        private TextView mCreatorTextView;
-        private TextView mAmountTextView;
+    private class MailHoder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        private Mail mMail;
+
+        private TextView mSubjectTextView;
+        private TextView mSenderTextView;
         private TextView mDateTextView;
 
-        public FlowHolder(View itemView) {
+        public MailHoder(View itemView) {
             super(itemView);
             itemView.setOnClickListener(this);
 
-            mFlowNameTextView = (TextView) itemView.findViewById(R.id.item_finance_flow_name);
-            mModelNameTextView = (TextView) itemView.findViewById(R.id.item_finance_flow_model_name);
-            mCreatorTextView = (TextView) itemView.findViewById(R.id.item_finance_flow_creator);
-            mAmountTextView = (TextView) itemView.findViewById(R.id.item_finance_flow_amount);
-            mDateTextView = (TextView) itemView.findViewById(R.id.item_finance_flow_time);
+            mSubjectTextView = (TextView) itemView.findViewById(R.id.item_mail_subject);
+            mSenderTextView = (TextView) itemView.findViewById(R.id.item_mail_sender);
+            mDateTextView = (TextView) itemView.findViewById(R.id.item_mail_time);
         }
 
-        public void bindItemView(Flow flow) {
-            mFlow = flow;
+        public void bindMail(Mail mail) {
+            mMail = mail;
 
-            mFlowNameTextView.setText(mFlow.getFlowName());
-            mModelNameTextView.setText(mFlow.getModelName());
-
-            if (mFlow.getCreatorId() ==User.get().getUserId()) {
-                mCreatorTextView.setText(mFlow.getCurrentStepName());
-                mAmountTextView.setText(mFlow.getStatusDesc());
-            }
-            else {
-                mCreatorTextView.setText(mFlow.getCreator());
-                if (mFlow.getAmount() == 0) {
-                    mAmountTextView.setText("");
-                }
-                else {
-                    mAmountTextView.setText(String.format("%.2f", mFlow.getAmount()));
-                }
-            }
-
-            mDateTextView.setText(mFlow.getCreateTime());
+            mSubjectTextView.setText(mMail.getSubject());
+            mSenderTextView.setText(mMail.getCreator());
+            mDateTextView.setText(mMail.getSendTime());
         }
 
         @Override
         public void onClick(View v) {
-            Intent i = FlowItemActivity.newIntent(getActivity(), mFlow.getId());
+//            Intent i = WebPageActivity.newIntent(getActivity(), mMail.getUri());
+            Intent i = WebPagerActivity.newIntent(getActivity(), mMail.getId());
             startActivity(i);
         }
     }
 
-    private class FlowAdapter extends RecyclerView.Adapter<FlowHolder> {
-        private List<Flow> mFlows;
 
-        public FlowAdapter(List<Flow> flows) {
-            mFlows = flows;
+    private class MailAdapter extends RecyclerView.Adapter<MailHoder> {
+
+        private List<Mail> mMails;
+
+        public MailAdapter(List<Mail> mails) {
+            mMails = mails;
         }
 
         @Override
-        public FlowHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public MailHoder onCreateViewHolder(ViewGroup parent, int viewType) {
             LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
-            View view = layoutInflater.inflate(R.layout.list_item_finance_flow, parent, false);
+            View view = layoutInflater.inflate(R.layout.list_item_mail, parent, false);
 
-            return new FlowHolder(view);
+            return new MailHoder(view);
         }
 
         @Override
-        public void onBindViewHolder(FlowHolder holder, int position) {
-            Flow flow = mFlows.get(position);
-            holder.bindItemView(flow);
+        public void onBindViewHolder(MailHoder holder, int position) {
+            Mail mail = mMails.get(position);
+            holder.bindMail(mail);
         }
 
         @Override
         public int getItemCount() {
-            return mFlows.size();
+            return mMails.size();
         }
     }
 
@@ -175,11 +164,11 @@ public class GeneralFlowListFragment extends Fragment {
                 return;
             }
 
-            ResponseResults<Flow> responseResults;
+            ResponseResults<Mail> responseResults;
 
             try {
                 GsonBuilder gson = new GsonBuilder();
-                Type resultType = new TypeToken<ResponseResults<Flow>>() {}.getType();
+                Type resultType = new TypeToken<ResponseResults<Mail>>() {}.getType();
 
                 responseResults = gson.create().fromJson(result, resultType);
             } catch (Exception e) {
@@ -203,10 +192,10 @@ public class GeneralFlowListFragment extends Fragment {
                 return;
             }
 
-            mFlows = responseResults.getList();
-            PagerItemLab.get(getActivity()).setItems(mFlows);
+            mMails = responseResults.getList();
+            PagerItemLab.get(getActivity()).setItems(mMails);
 
-            if (mFlows == null) {
+            if (mMails == null) {
                 Toast toast = Toast.makeText(getActivity(), R.string.prompt_system_error, Toast.LENGTH_LONG);
                 toast.setGravity(Gravity.CENTER, 0, 0);
                 toast.show();
@@ -229,7 +218,7 @@ public class GeneralFlowListFragment extends Fragment {
         // Method which invoke web method
         private String performLoadTask(String token) {
             // Create request
-            SoapObject request = new SoapObject(SoapHelper.getWsNamespace(), SoapHelper.getWsMethodOfGeneralFlowList());
+            SoapObject request = new SoapObject(SoapHelper.getWsNamespace(), SoapHelper.getWsMethodOfMailList());
 
             request.addProperty(Utils.newPropertyInstance("token", token, String.class));
 
@@ -247,7 +236,7 @@ public class GeneralFlowListFragment extends Fragment {
 
             try {
                 // Invoke web service
-                androidHttpTransport.call(SoapHelper.getWsSoapAction() + SoapHelper.getWsMethodOfGeneralFlowList(), envelope);
+                androidHttpTransport.call(SoapHelper.getWsSoapAction() + SoapHelper.getWsMethodOfMailList(), envelope);
 
                 // Get the response
                 SoapPrimitive response = (SoapPrimitive) envelope.getResponse();
@@ -259,5 +248,6 @@ public class GeneralFlowListFragment extends Fragment {
 
             return responseJSON;
         }
+
     }
 }

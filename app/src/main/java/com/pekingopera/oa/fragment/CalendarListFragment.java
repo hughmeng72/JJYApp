@@ -1,4 +1,4 @@
-package com.pekingopera.oa;
+package com.pekingopera.oa.fragment;
 
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -16,10 +16,12 @@ import android.widget.Toast;
 
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import com.pekingopera.oa.R;
+import com.pekingopera.oa.activity.WebPagerActivity;
 import com.pekingopera.oa.common.PagerItemLab;
 import com.pekingopera.oa.common.SoapHelper;
 import com.pekingopera.oa.common.Utils;
-import com.pekingopera.oa.model.Flow;
+import com.pekingopera.oa.model.Calendar;
 import com.pekingopera.oa.model.ResponseResults;
 import com.pekingopera.oa.model.User;
 
@@ -33,15 +35,15 @@ import java.lang.reflect.Type;
 import java.util.List;
 
 /**
- * Created by wayne on 10/7/2016.
+ * Created by wayne on 10/3/2016.
  */
-public class FinancialFlowListFragment extends Fragment {
-    private static final String TAG = "FFListFragment";
+public class CalendarListFragment extends Fragment {
+    private static final String TAG = "CalendarListFragment";
 
     private RecyclerView mRecyclerView;
-    private FlowAdapter mAdapter;
+    private CalendarAdapter mAdapter;
 
-    private List<Flow> mFlows = null;
+    private List<Calendar> mCalendars = null;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -63,12 +65,12 @@ public class FinancialFlowListFragment extends Fragment {
     }
 
     private void updateUI() {
-        if (mFlows == null || mRecyclerView == null) {
+        if (mCalendars == null || mRecyclerView == null) {
             return;
         }
 
         if (mAdapter == null) {
-            mAdapter = new FlowAdapter(mFlows);
+            mAdapter = new CalendarAdapter(mCalendars);
             mRecyclerView.setAdapter(mAdapter);
         }
         else {
@@ -76,82 +78,67 @@ public class FinancialFlowListFragment extends Fragment {
         }
     }
 
-    private class FlowHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        private Flow mFlow;
+    private class CalendarHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        private Calendar mCalendar;
 
-        private TextView mFlowNameTextView;
-        private TextView mModelNameTextView;
-        private TextView mCreatorTextView;
-        private TextView mAmountTextView;
+        private TextView mTitleTextView;
+        private TextView mDepTextView;
         private TextView mDateTextView;
 
-        public FlowHolder(View itemView) {
+        public CalendarHolder(View itemView) {
             super(itemView);
             itemView.setOnClickListener(this);
 
-            mFlowNameTextView = (TextView) itemView.findViewById(R.id.item_finance_flow_name);
-            mModelNameTextView = (TextView) itemView.findViewById(R.id.item_finance_flow_model_name);
-            mCreatorTextView = (TextView) itemView.findViewById(R.id.item_finance_flow_creator);
-            mAmountTextView = (TextView) itemView.findViewById(R.id.item_finance_flow_amount);
-            mDateTextView = (TextView) itemView.findViewById(R.id.item_finance_flow_time);
+            mTitleTextView = (TextView) itemView.findViewById(R.id.item_calendar_title);
+            mDepTextView = (TextView) itemView.findViewById(R.id.item_calendar_dep);
+            mDateTextView = (TextView) itemView.findViewById(R.id.item_calendar_time);
         }
 
-        public void bindItemView(Flow flow) {
-            mFlow = flow;
+        public void bindCalendar(Calendar calendar) {
+            mCalendar = calendar;
 
-            mFlowNameTextView.setText(mFlow.getFlowName());
-            mModelNameTextView.setText(mFlow.getModelName());
-
-            if (mFlow.getCreatorId() ==User.get().getUserId()) {
-                mCreatorTextView.setText(mFlow.getCurrentStepName());
-                mAmountTextView.setText(mFlow.getStatusDesc());
-            }
-            else {
-                mCreatorTextView.setText(mFlow.getCreator());
-                if (mFlow.getAmount() == 0) {
-                    mAmountTextView.setText("");
-                }
-                else {
-                    mAmountTextView.setText(String.format("%.2f", mFlow.getAmount()));
-                }
-            }
-
-            mDateTextView.setText(mFlow.getCreateTime());
+            mTitleTextView.setText(mCalendar.getTitle());
+            mDepTextView.setText(mCalendar.getDepName());
+            mDateTextView.setText(mCalendar.getCreateTime());
         }
 
         @Override
         public void onClick(View v) {
-            Intent i = FlowItemActivity.newIntent(getActivity(), mFlow.getId());
+//            Intent i = WebPageActivity.newIntent(getActivity(), mCalendar.getUri());
+            Intent i = WebPagerActivity.newIntent(getActivity(), mCalendar.getId());
             startActivity(i);
         }
     }
 
-    private class FlowAdapter extends RecyclerView.Adapter<FlowHolder> {
-        private List<Flow> mFlows;
 
-        public FlowAdapter(List<Flow> flows) {
-            mFlows = flows;
+    private class CalendarAdapter extends RecyclerView.Adapter<CalendarHolder> {
+
+        private List<Calendar> mCalendars;
+
+        public CalendarAdapter(List<Calendar> calendars) {
+            mCalendars = calendars;
         }
 
         @Override
-        public FlowHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public CalendarHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
-            View view = layoutInflater.inflate(R.layout.list_item_finance_flow, parent, false);
+            View view = layoutInflater.inflate(R.layout.list_item_calendar, parent, false);
 
-            return new FlowHolder(view);
+            return new CalendarHolder(view);
         }
 
         @Override
-        public void onBindViewHolder(FlowHolder holder, int position) {
-            Flow flow = mFlows.get(position);
-            holder.bindItemView(flow);
+        public void onBindViewHolder(CalendarHolder holder, int position) {
+            Calendar calendar = mCalendars.get(position);
+            holder.bindCalendar(calendar);
         }
 
         @Override
         public int getItemCount() {
-            return mFlows.size();
+            return mCalendars.size();
         }
     }
+
 
     // AsynTask class to handle Load Web Service call as separate UI Thread
     private class LoadTask extends AsyncTask<String, Void, String> {
@@ -175,11 +162,11 @@ public class FinancialFlowListFragment extends Fragment {
                 return;
             }
 
-            ResponseResults<Flow> responseResults;
+            ResponseResults<Calendar> responseResults;
 
             try {
                 GsonBuilder gson = new GsonBuilder();
-                Type resultType = new TypeToken<ResponseResults<Flow>>() {}.getType();
+                Type resultType = new TypeToken<ResponseResults<Calendar>>() {}.getType();
 
                 responseResults = gson.create().fromJson(result, resultType);
             } catch (Exception e) {
@@ -203,10 +190,10 @@ public class FinancialFlowListFragment extends Fragment {
                 return;
             }
 
-            mFlows = responseResults.getList();
-            PagerItemLab.get(getActivity()).setItems(mFlows);
+            mCalendars = responseResults.getList();
+            PagerItemLab.get(getActivity()).setItems(mCalendars);
 
-            if (mFlows == null) {
+            if (mCalendars == null) {
                 Toast toast = Toast.makeText(getActivity(), R.string.prompt_system_error, Toast.LENGTH_LONG);
                 toast.setGravity(Gravity.CENTER, 0, 0);
                 toast.show();
@@ -229,7 +216,7 @@ public class FinancialFlowListFragment extends Fragment {
         // Method which invoke web method
         private String performLoadTask(String token) {
             // Create request
-            SoapObject request = new SoapObject(SoapHelper.getWsNamespace(), SoapHelper.getWsMethodOfFinancialFlowList());
+            SoapObject request = new SoapObject(SoapHelper.getWsNamespace(), SoapHelper.getWsMethodOfCalendarList());
 
             request.addProperty(Utils.newPropertyInstance("token", token, String.class));
 
@@ -247,7 +234,7 @@ public class FinancialFlowListFragment extends Fragment {
 
             try {
                 // Invoke web service
-                androidHttpTransport.call(SoapHelper.getWsSoapAction() + SoapHelper.getWsMethodOfFinancialFlowList(), envelope);
+                androidHttpTransport.call(SoapHelper.getWsSoapAction() + SoapHelper.getWsMethodOfCalendarList(), envelope);
 
                 // Get the response
                 SoapPrimitive response = (SoapPrimitive) envelope.getResponse();
@@ -259,5 +246,6 @@ public class FinancialFlowListFragment extends Fragment {
 
             return responseJSON;
         }
+
     }
 }

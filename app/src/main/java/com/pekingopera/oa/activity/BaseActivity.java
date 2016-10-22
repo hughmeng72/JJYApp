@@ -1,4 +1,4 @@
-package com.pekingopera.oa;
+package com.pekingopera.oa.activity;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.dou361.update.UpdateHelper;
 import com.dou361.update.listener.ForceListener;
+import com.pekingopera.oa.R;
 
 public abstract class BaseActivity extends AppCompatActivity {
     protected abstract Fragment createFragment();

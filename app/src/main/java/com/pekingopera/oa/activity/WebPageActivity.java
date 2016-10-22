@@ -1,9 +1,11 @@
-package com.pekingopera.oa;
+package com.pekingopera.oa.activity;
 
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
+
+import com.pekingopera.oa.fragment.WebPageFragment;
 
 /**
  * Created by wayne on 10/2/2016.

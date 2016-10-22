@@ -1,4 +1,4 @@
-package com.pekingopera.oa;
+package com.pekingopera.oa.fragment;
 
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -16,6 +16,8 @@ import android.widget.Toast;
 
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import com.pekingopera.oa.R;
+import com.pekingopera.oa.activity.GovItemActivity;
 import com.pekingopera.oa.common.PagerItemLab;
 import com.pekingopera.oa.common.SoapHelper;
 import com.pekingopera.oa.common.Utils;
@@ -35,8 +37,8 @@ import java.util.List;
 /**
  * Created by wayne on 10/7/2016.
  */
-public class ApprovalGovListFragment extends Fragment {
-    private static final String TAG = "aDocListFragment";
+public class GovListFragment extends Fragment {
+    private static final String TAG = "GovListFragment";
 
     private RecyclerView mRecyclerView;
     private GovAdapter mAdapter;
@@ -105,9 +107,16 @@ public class ApprovalGovListFragment extends Fragment {
 
             mGovNameTextView.setText(mGov.getFlowName());
             mGovModelNameTextView.setText(mGov.getModelName());
-            mCreatorTextView.setText(mGov.getCreator());
-            mCategoryTextView.setText(mGov.getModelName());
             mDateTextView.setText(mGov.getCreateTime());
+
+            if (mGov.getCreatorId() == User.get().getUserId()) {
+                mCreatorTextView.setText(mGov.getCurrentStepName());
+                mCategoryTextView.setText(mGov.getStatusDesc());
+            }
+            else {
+                mCreatorTextView.setText(mGov.getCreator());
+                mCategoryTextView.setText(mGov.getModelName());
+            }
         }
 
         @Override
@@ -157,7 +166,7 @@ public class ApprovalGovListFragment extends Fragment {
         // Method which invoke web method
         private String performLoadTask(String token) {
             // Create request
-            SoapObject request = new SoapObject(SoapHelper.getWsNamespace(), SoapHelper.getWsMethodOfApprovalGovList());
+            SoapObject request = new SoapObject(SoapHelper.getWsNamespace(), SoapHelper.getWsMethodOfGovList());
 
             request.addProperty(Utils.newPropertyInstance("token", token, String.class));
 
@@ -175,7 +184,7 @@ public class ApprovalGovListFragment extends Fragment {
 
             try {
                 // Invoke web service
-                androidHttpTransport.call(SoapHelper.getWsSoapAction() + SoapHelper.getWsMethodOfApprovalGovList(), envelope);
+                androidHttpTransport.call(SoapHelper.getWsSoapAction() + SoapHelper.getWsMethodOfGovList(), envelope);
 
                 // Get the response
                 SoapPrimitive response = (SoapPrimitive) envelope.getResponse();

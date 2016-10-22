@@ -14,4 +14,6 @@
     <dimen name="sheet_item_textsize">16sp</dimen>
     <dimen name="sheet_item_image_spacing">24dp</dimen>
 
+    <dimen name="toolbar_elevation">4dp</dimen>
+
 </resources>

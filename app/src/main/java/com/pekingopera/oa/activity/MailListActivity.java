@@ -1,6 +1,8 @@
-package com.pekingopera.oa;
+package com.pekingopera.oa.activity;
 
 import android.support.v4.app.Fragment;
+
+import com.pekingopera.oa.fragment.MailListFragment;
 
 /**
  * Created by wayne on 10/3/2016.

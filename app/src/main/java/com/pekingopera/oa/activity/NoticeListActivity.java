@@ -1,8 +1,8 @@
-package com.pekingopera.oa;
+package com.pekingopera.oa.activity;
 
 import android.support.v4.app.Fragment;
 
-import com.pekingopera.oa.BaseActivity;
+import com.pekingopera.oa.fragment.NoticeListFragment;
 
 /**
  * Created by wayne on 10/1/2016.

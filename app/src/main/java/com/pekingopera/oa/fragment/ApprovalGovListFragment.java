@@ -1,4 +1,4 @@
-package com.pekingopera.oa;
+package com.pekingopera.oa.fragment;
 
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -16,10 +16,12 @@ import android.widget.Toast;
 
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import com.pekingopera.oa.R;
+import com.pekingopera.oa.activity.GovItemActivity;
 import com.pekingopera.oa.common.PagerItemLab;
 import com.pekingopera.oa.common.SoapHelper;
 import com.pekingopera.oa.common.Utils;
-import com.pekingopera.oa.model.Mail;
+import com.pekingopera.oa.model.Gov;
 import com.pekingopera.oa.model.ResponseResults;
 import com.pekingopera.oa.model.User;
 
@@ -32,22 +34,19 @@ import org.ksoap2.transport.HttpTransportSE;
 import java.lang.reflect.Type;
 import java.util.List;
 
-
-public class MailListFragment extends Fragment {
-    private static final String TAG = "MailListFragment";
+/**
+ * Created by wayne on 10/7/2016.
+ */
+public class ApprovalGovListFragment extends Fragment {
+    private static final String TAG = "aDocListFragment";
 
     private RecyclerView mRecyclerView;
-    private MailAdapter mAdapter;
+    private GovAdapter mAdapter;
 
-    private List<Mail> mMails = null;
-
-
-    public MailListFragment() {
-    }
+    private List<Gov> mGovs = null;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_recycler_list, container, false);
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.fragment_recycler_view);
@@ -56,87 +55,94 @@ public class MailListFragment extends Fragment {
         if (Utils.isNetworkConnected(getActivity())) {
             LoadTask task = new LoadTask();
             task.execute(User.get().getToken());
-        }
-        else {
+        } else {
             Toast.makeText(getActivity(), R.string.prompt_internet_connection_broken, Toast.LENGTH_SHORT).show();
         }
 
         return view;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        updateUI();
+    }
+
     private void updateUI() {
-        if (mMails == null || mRecyclerView == null) {
+        if (mGovs == null || mRecyclerView == null) {
             return;
         }
 
         if (mAdapter == null) {
-            mAdapter = new MailAdapter(mMails);
+            mAdapter = new GovAdapter(mGovs);
             mRecyclerView.setAdapter(mAdapter);
-        }
-        else {
+        } else {
             mAdapter.notifyDataSetChanged();
         }
     }
 
+    private class GovHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        private Gov mGov;
 
-    private class MailHoder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        private Mail mMail;
-
-        private TextView mSubjectTextView;
-        private TextView mSenderTextView;
+        private TextView mGovNameTextView;
+        private TextView mGovModelNameTextView;
+        private TextView mCreatorTextView;
+        private TextView mCategoryTextView;
         private TextView mDateTextView;
 
-        public MailHoder(View itemView) {
+        public GovHolder(View itemView) {
             super(itemView);
             itemView.setOnClickListener(this);
 
-            mSubjectTextView = (TextView) itemView.findViewById(R.id.item_mail_subject);
-            mSenderTextView = (TextView) itemView.findViewById(R.id.item_mail_sender);
-            mDateTextView = (TextView) itemView.findViewById(R.id.item_mail_time);
+            mGovNameTextView = (TextView) itemView.findViewById(R.id.item_gov_name);
+            mGovModelNameTextView = (TextView) itemView.findViewById(R.id.item_gov_model_name);
+            mCreatorTextView = (TextView) itemView.findViewById(R.id.item_gov_creator_step_name);
+            mCategoryTextView = (TextView) itemView.findViewById(R.id.item_gov_category_status);
+            mDateTextView = (TextView) itemView.findViewById(R.id.item_gov_time);
         }
 
-        public void bindMail(Mail mail) {
-            mMail = mail;
+        public void bindItemView(Gov gov) {
+            mGov = gov;
 
-            mSubjectTextView.setText(mMail.getSubject());
-            mSenderTextView.setText(mMail.getCreator());
-            mDateTextView.setText(mMail.getSendTime());
+            mGovNameTextView.setText(mGov.getFlowName());
+            mGovModelNameTextView.setText(mGov.getModelName());
+            mCreatorTextView.setText(mGov.getCreator());
+            mCategoryTextView.setText(mGov.getModelName());
+            mDateTextView.setText(mGov.getCreateTime());
         }
 
         @Override
         public void onClick(View v) {
-//            Intent i = WebPageActivity.newIntent(getActivity(), mMail.getUri());
-            Intent i = WebPagerActivity.newIntent(getActivity(), mMail.getId());
+            Intent i = GovItemActivity.newIntent(getActivity(), mGov.getId());
             startActivity(i);
         }
     }
 
+    private class GovAdapter extends RecyclerView.Adapter<GovHolder> {
+        private List<Gov> mGovs;
 
-    private class MailAdapter extends RecyclerView.Adapter<MailHoder> {
-
-        private List<Mail> mMails;
-
-        public MailAdapter(List<Mail> mails) {
-            mMails = mails;
+        public GovAdapter(List<Gov> govs) {
+            mGovs = govs;
         }
 
         @Override
-        public MailHoder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public GovHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
-            View view = layoutInflater.inflate(R.layout.list_item_mail, parent, false);
+            View view = layoutInflater.inflate(R.layout.list_item_gov, parent, false);
 
-            return new MailHoder(view);
+            return new GovHolder(view);
         }
 
         @Override
-        public void onBindViewHolder(MailHoder holder, int position) {
-            Mail mail = mMails.get(position);
-            holder.bindMail(mail);
+        public void onBindViewHolder(GovHolder holder, int position) {
+            Gov gov = mGovs.get(position);
+            holder.bindItemView(gov);
         }
 
         @Override
         public int getItemCount() {
-            return mMails.size();
+            return mGovs.size();
         }
     }
 
@@ -148,6 +154,40 @@ public class MailListFragment extends Fragment {
 
             // Invoke web service
             return performLoadTask(params[0]);
+        }
+
+        // Method which invoke web method
+        private String performLoadTask(String token) {
+            // Create request
+            SoapObject request = new SoapObject(SoapHelper.getWsNamespace(), SoapHelper.getWsMethodOfApprovalGovList());
+
+            request.addProperty(Utils.newPropertyInstance("token", token, String.class));
+
+            // Create envelope
+            SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+            envelope.dotNet = true;
+
+            // Set output SOAP object
+            envelope.setOutputSoapObject(request);
+
+            // Create HTTP call object
+            HttpTransportSE androidHttpTransport = new HttpTransportSE(SoapHelper.getWsUrl());
+
+            String responseJSON = null;
+
+            try {
+                // Invoke web service
+                androidHttpTransport.call(SoapHelper.getWsSoapAction() + SoapHelper.getWsMethodOfApprovalGovList(), envelope);
+
+                // Get the response
+                SoapPrimitive response = (SoapPrimitive) envelope.getResponse();
+
+                responseJSON = response.toString();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            return responseJSON;
         }
 
         @Override
@@ -162,11 +202,12 @@ public class MailListFragment extends Fragment {
                 return;
             }
 
-            ResponseResults<Mail> responseResults;
+            ResponseResults<Gov> responseResults;
 
             try {
                 GsonBuilder gson = new GsonBuilder();
-                Type resultType = new TypeToken<ResponseResults<Mail>>() {}.getType();
+                Type resultType = new TypeToken<ResponseResults<Gov>>() {
+                }.getType();
 
                 responseResults = gson.create().fromJson(result, resultType);
             } catch (Exception e) {
@@ -182,7 +223,7 @@ public class MailListFragment extends Fragment {
                 return;
             }
 
-            if (responseResults.getError().getResult() == 0){
+            if (responseResults.getError().getResult() == 0) {
                 Toast toast = Toast.makeText(getActivity(), responseResults.getError().getErrorInfo(), Toast.LENGTH_LONG);
                 toast.setGravity(Gravity.CENTER, 0, 0);
                 toast.show();
@@ -190,10 +231,10 @@ public class MailListFragment extends Fragment {
                 return;
             }
 
-            mMails = responseResults.getList();
-            PagerItemLab.get(getActivity()).setItems(mMails);
+            mGovs = responseResults.getList();
+            PagerItemLab.get(getActivity()).setItems(mGovs);
 
-            if (mMails == null) {
+            if (mGovs == null) {
                 Toast toast = Toast.makeText(getActivity(), R.string.prompt_system_error, Toast.LENGTH_LONG);
                 toast.setGravity(Gravity.CENTER, 0, 0);
                 toast.show();
@@ -212,40 +253,5 @@ public class MailListFragment extends Fragment {
         @Override
         protected void onProgressUpdate(Void... values) {
         }
-
-        // Method which invoke web method
-        private String performLoadTask(String token) {
-            // Create request
-            SoapObject request = new SoapObject(SoapHelper.getWsNamespace(), SoapHelper.getWsMethodOfMailList());
-
-            request.addProperty(Utils.newPropertyInstance("token", token, String.class));
-
-            // Create envelope
-            SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
-            envelope.dotNet = true;
-
-            // Set output SOAP object
-            envelope.setOutputSoapObject(request);
-
-            // Create HTTP call object
-            HttpTransportSE androidHttpTransport = new HttpTransportSE(SoapHelper.getWsUrl());
-
-            String responseJSON = null;
-
-            try {
-                // Invoke web service
-                androidHttpTransport.call(SoapHelper.getWsSoapAction() + SoapHelper.getWsMethodOfMailList(), envelope);
-
-                // Get the response
-                SoapPrimitive response = (SoapPrimitive) envelope.getResponse();
-
-                responseJSON = response.toString();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            return responseJSON;
-        }
-
     }
 }

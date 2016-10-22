@@ -1,4 +1,4 @@
-package com.pekingopera.oa;
+package com.pekingopera.oa.fragment;
 
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -16,10 +16,12 @@ import android.widget.Toast;
 
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import com.pekingopera.oa.R;
+import com.pekingopera.oa.activity.FlowItemActivity;
 import com.pekingopera.oa.common.PagerItemLab;
 import com.pekingopera.oa.common.SoapHelper;
 import com.pekingopera.oa.common.Utils;
-import com.pekingopera.oa.model.Gov;
+import com.pekingopera.oa.model.Flow;
 import com.pekingopera.oa.model.ResponseResults;
 import com.pekingopera.oa.model.User;
 
@@ -35,16 +37,17 @@ import java.util.List;
 /**
  * Created by wayne on 10/7/2016.
  */
-public class GovListFragment extends Fragment {
-    private static final String TAG = "GovListFragment";
+public class GeneralFlowListFragment extends Fragment {
+    private static final String TAG = "GFListFragment";
 
     private RecyclerView mRecyclerView;
-    private GovAdapter mAdapter;
+    private FlowAdapter mAdapter;
 
-    private List<Gov> mGovs = null;
+    private List<Flow> mFlows = null;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_recycler_list, container, false);
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.fragment_recycler_view);
@@ -53,101 +56,102 @@ public class GovListFragment extends Fragment {
         if (Utils.isNetworkConnected(getActivity())) {
             LoadTask task = new LoadTask();
             task.execute(User.get().getToken());
-        } else {
+        }
+        else {
             Toast.makeText(getActivity(), R.string.prompt_internet_connection_broken, Toast.LENGTH_SHORT).show();
         }
 
         return view;
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-
-        updateUI();
-    }
-
     private void updateUI() {
-        if (mGovs == null || mRecyclerView == null) {
+        if (mFlows == null || mRecyclerView == null) {
             return;
         }
 
         if (mAdapter == null) {
-            mAdapter = new GovAdapter(mGovs);
+            mAdapter = new FlowAdapter(mFlows);
             mRecyclerView.setAdapter(mAdapter);
-        } else {
+        }
+        else {
             mAdapter.notifyDataSetChanged();
         }
     }
 
-    private class GovHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        private Gov mGov;
+    private class FlowHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        private Flow mFlow;
 
-        private TextView mGovNameTextView;
-        private TextView mGovModelNameTextView;
+        private TextView mFlowNameTextView;
+        private TextView mModelNameTextView;
         private TextView mCreatorTextView;
-        private TextView mCategoryTextView;
+        private TextView mAmountTextView;
         private TextView mDateTextView;
 
-        public GovHolder(View itemView) {
+        public FlowHolder(View itemView) {
             super(itemView);
             itemView.setOnClickListener(this);
 
-            mGovNameTextView = (TextView) itemView.findViewById(R.id.item_gov_name);
-            mGovModelNameTextView = (TextView) itemView.findViewById(R.id.item_gov_model_name);
-            mCreatorTextView = (TextView) itemView.findViewById(R.id.item_gov_creator_step_name);
-            mCategoryTextView = (TextView) itemView.findViewById(R.id.item_gov_category_status);
-            mDateTextView = (TextView) itemView.findViewById(R.id.item_gov_time);
+            mFlowNameTextView = (TextView) itemView.findViewById(R.id.item_finance_flow_name);
+            mModelNameTextView = (TextView) itemView.findViewById(R.id.item_finance_flow_model_name);
+            mCreatorTextView = (TextView) itemView.findViewById(R.id.item_finance_flow_creator);
+            mAmountTextView = (TextView) itemView.findViewById(R.id.item_finance_flow_amount);
+            mDateTextView = (TextView) itemView.findViewById(R.id.item_finance_flow_time);
         }
 
-        public void bindItemView(Gov gov) {
-            mGov = gov;
+        public void bindItemView(Flow flow) {
+            mFlow = flow;
 
-            mGovNameTextView.setText(mGov.getFlowName());
-            mGovModelNameTextView.setText(mGov.getModelName());
-            mDateTextView.setText(mGov.getCreateTime());
+            mFlowNameTextView.setText(mFlow.getFlowName());
+            mModelNameTextView.setText(mFlow.getModelName());
 
-            if (mGov.getCreatorId() == User.get().getUserId()) {
-                mCreatorTextView.setText(mGov.getCurrentStepName());
-                mCategoryTextView.setText(mGov.getStatusDesc());
+            if (mFlow.getCreatorId() ==User.get().getUserId()) {
+                mCreatorTextView.setText(mFlow.getCurrentStepName());
+                mAmountTextView.setText(mFlow.getStatusDesc());
             }
             else {
-                mCreatorTextView.setText(mGov.getCreator());
-                mCategoryTextView.setText(mGov.getModelName());
+                mCreatorTextView.setText(mFlow.getCreator());
+                if (mFlow.getAmount() == 0) {
+                    mAmountTextView.setText("");
+                }
+                else {
+                    mAmountTextView.setText(String.format("%.2f", mFlow.getAmount()));
+                }
             }
+
+            mDateTextView.setText(mFlow.getCreateTime());
         }
 
         @Override
         public void onClick(View v) {
-            Intent i = GovItemActivity.newIntent(getActivity(), mGov.getId());
+            Intent i = FlowItemActivity.newIntent(getActivity(), mFlow.getId());
             startActivity(i);
         }
     }
 
-    private class GovAdapter extends RecyclerView.Adapter<GovHolder> {
-        private List<Gov> mGovs;
+    private class FlowAdapter extends RecyclerView.Adapter<FlowHolder> {
+        private List<Flow> mFlows;
 
-        public GovAdapter(List<Gov> govs) {
-            mGovs = govs;
+        public FlowAdapter(List<Flow> flows) {
+            mFlows = flows;
         }
 
         @Override
-        public GovHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public FlowHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
-            View view = layoutInflater.inflate(R.layout.list_item_gov, parent, false);
+            View view = layoutInflater.inflate(R.layout.list_item_finance_flow, parent, false);
 
-            return new GovHolder(view);
+            return new FlowHolder(view);
         }
 
         @Override
-        public void onBindViewHolder(GovHolder holder, int position) {
-            Gov gov = mGovs.get(position);
-            holder.bindItemView(gov);
+        public void onBindViewHolder(FlowHolder holder, int position) {
+            Flow flow = mFlows.get(position);
+            holder.bindItemView(flow);
         }
 
         @Override
         public int getItemCount() {
-            return mGovs.size();
+            return mFlows.size();
         }
     }
 
@@ -159,40 +163,6 @@ public class GovListFragment extends Fragment {
 
             // Invoke web service
             return performLoadTask(params[0]);
-        }
-
-        // Method which invoke web method
-        private String performLoadTask(String token) {
-            // Create request
-            SoapObject request = new SoapObject(SoapHelper.getWsNamespace(), SoapHelper.getWsMethodOfGovList());
-
-            request.addProperty(Utils.newPropertyInstance("token", token, String.class));
-
-            // Create envelope
-            SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
-            envelope.dotNet = true;
-
-            // Set output SOAP object
-            envelope.setOutputSoapObject(request);
-
-            // Create HTTP call object
-            HttpTransportSE androidHttpTransport = new HttpTransportSE(SoapHelper.getWsUrl());
-
-            String responseJSON = null;
-
-            try {
-                // Invoke web service
-                androidHttpTransport.call(SoapHelper.getWsSoapAction() + SoapHelper.getWsMethodOfGovList(), envelope);
-
-                // Get the response
-                SoapPrimitive response = (SoapPrimitive) envelope.getResponse();
-
-                responseJSON = response.toString();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            return responseJSON;
         }
 
         @Override
@@ -207,12 +177,11 @@ public class GovListFragment extends Fragment {
                 return;
             }
 
-            ResponseResults<Gov> responseResults;
+            ResponseResults<Flow> responseResults;
 
             try {
                 GsonBuilder gson = new GsonBuilder();
-                Type resultType = new TypeToken<ResponseResults<Gov>>() {
-                }.getType();
+                Type resultType = new TypeToken<ResponseResults<Flow>>() {}.getType();
 
                 responseResults = gson.create().fromJson(result, resultType);
             } catch (Exception e) {
@@ -228,7 +197,7 @@ public class GovListFragment extends Fragment {
                 return;
             }
 
-            if (responseResults.getError().getResult() == 0) {
+            if (responseResults.getError().getResult() == 0){
                 Toast toast = Toast.makeText(getActivity(), responseResults.getError().getErrorInfo(), Toast.LENGTH_LONG);
                 toast.setGravity(Gravity.CENTER, 0, 0);
                 toast.show();
@@ -236,10 +205,10 @@ public class GovListFragment extends Fragment {
                 return;
             }
 
-            mGovs = responseResults.getList();
-            PagerItemLab.get(getActivity()).setItems(mGovs);
+            mFlows = responseResults.getList();
+            PagerItemLab.get(getActivity()).setItems(mFlows);
 
-            if (mGovs == null) {
+            if (mFlows == null) {
                 Toast toast = Toast.makeText(getActivity(), R.string.prompt_system_error, Toast.LENGTH_LONG);
                 toast.setGravity(Gravity.CENTER, 0, 0);
                 toast.show();
@@ -257,6 +226,40 @@ public class GovListFragment extends Fragment {
 
         @Override
         protected void onProgressUpdate(Void... values) {
+        }
+
+        // Method which invoke web method
+        private String performLoadTask(String token) {
+            // Create request
+            SoapObject request = new SoapObject(SoapHelper.getWsNamespace(), SoapHelper.getWsMethodOfGeneralFlowList());
+
+            request.addProperty(Utils.newPropertyInstance("token", token, String.class));
+
+            // Create envelope
+            SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+            envelope.dotNet = true;
+
+            // Set output SOAP object
+            envelope.setOutputSoapObject(request);
+
+            // Create HTTP call object
+            HttpTransportSE androidHttpTransport = new HttpTransportSE(SoapHelper.getWsUrl());
+
+            String responseJSON = null;
+
+            try {
+                // Invoke web service
+                androidHttpTransport.call(SoapHelper.getWsSoapAction() + SoapHelper.getWsMethodOfGeneralFlowList(), envelope);
+
+                // Get the response
+                SoapPrimitive response = (SoapPrimitive) envelope.getResponse();
+
+                responseJSON = response.toString();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            return responseJSON;
         }
     }
 }

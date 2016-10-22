@@ -1,4 +1,4 @@
-package com.pekingopera.oa;
+package com.pekingopera.oa.fragment;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -16,6 +16,7 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.pekingopera.oa.R;
 import com.pekingopera.oa.model.Employee;
 
 import java.io.Serializable;

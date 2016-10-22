@@ -1,9 +1,8 @@
-package com.pekingopera.oa;
+package com.pekingopera.oa.fragment;
 
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -17,10 +16,12 @@ import android.widget.Toast;
 
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import com.pekingopera.oa.R;
+import com.pekingopera.oa.activity.FlowItemActivity;
 import com.pekingopera.oa.common.PagerItemLab;
 import com.pekingopera.oa.common.SoapHelper;
 import com.pekingopera.oa.common.Utils;
-import com.pekingopera.oa.model.Notice;
+import com.pekingopera.oa.model.Flow;
 import com.pekingopera.oa.model.ResponseResults;
 import com.pekingopera.oa.model.User;
 
@@ -33,18 +34,16 @@ import org.ksoap2.transport.HttpTransportSE;
 import java.lang.reflect.Type;
 import java.util.List;
 
-public class NoticeListFragment extends Fragment {
-    private static final String TAG = "NoticeListFragment";
+/**
+ * Created by wayne on 10/5/2016.
+ */
+public class ApprovalFlowListFragment extends Fragment {
+    private static final String TAG = "aplFlowListFragment";
 
     private RecyclerView mRecyclerView;
-    private NoticeAdapter mAdapter;
+    private FlowAdapter mAdapter;
 
-    private List<Notice> mNotices = null;
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
+    private List<Flow> mFlows = null;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -65,20 +64,20 @@ public class NoticeListFragment extends Fragment {
         return view;
     }
 
-//    @Override
-//    public void onResume() {
-//        super.onResume();
-//
-//        updateUI();
-//    }
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        updateUI();
+    }
 
     private void updateUI() {
-        if (mNotices == null || mRecyclerView == null) {
+        if (mFlows == null || mRecyclerView == null) {
             return;
         }
 
         if (mAdapter == null) {
-            mAdapter = new NoticeAdapter(mNotices);
+            mAdapter = new FlowAdapter(mFlows);
             mRecyclerView.setAdapter(mAdapter);
         }
         else {
@@ -86,65 +85,76 @@ public class NoticeListFragment extends Fragment {
         }
     }
 
-    private class NoticeHoder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        private Notice mNotice;
+    private class FlowHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        private Flow mFlow;
 
-        private TextView mTitleTextView;
-        private TextView mTypeTextView;
+        private TextView mFlowNameTextView;
+        private TextView mCreatorTextView;
+        private TextView mAmountTextView;
         private TextView mDateTextView;
+        private TextView mModelNameTextView;
 
-        public NoticeHoder(View itemView) {
+        public FlowHolder(View itemView) {
             super(itemView);
             itemView.setOnClickListener(this);
 
-            mTitleTextView = (TextView) itemView.findViewById(R.id.item_notice_title);
-            mTypeTextView = (TextView) itemView.findViewById(R.id.item_notice_type);
-            mDateTextView = (TextView) itemView.findViewById(R.id.item_notice_time);
+            mFlowNameTextView = (TextView) itemView.findViewById(R.id.item_approval_flow_name);
+            mModelNameTextView = (TextView) itemView.findViewById(R.id.item_approval_model_name);
+            mCreatorTextView = (TextView) itemView.findViewById(R.id.item_approval_flow_creator);
+            mAmountTextView = (TextView) itemView.findViewById(R.id.item_approval_flow_amount);
+            mDateTextView = (TextView) itemView.findViewById(R.id.item_approval_flow_time);
         }
 
-        public void bindNotice(Notice notice) {
-            mNotice = notice;
+        public void bindItemView(Flow flow) {
+            mFlow = flow;
 
-            mTitleTextView.setText(mNotice.getTitle());
-            mTypeTextView.setText(mNotice.getTypeName());
-            mDateTextView.setText(mNotice.getAddTime());
+            mFlowNameTextView.setText(mFlow.getFlowName());
+            mModelNameTextView.setText(mFlow.getModelName());
+            mCreatorTextView.setText(mFlow.getCreator());
+            if (mFlow.getAmount() == 0) {
+                mAmountTextView.setText("");
+            }
+            else {
+                mAmountTextView.setText(String.format("%.2f", mFlow.getAmount()));
+            }
+            mDateTextView.setText(mFlow.getCreateTime());
         }
 
         @Override
         public void onClick(View v) {
-//            Intent i = WebPageActivity.newIntent(getActivity(), mNotice.getUri());
-            Intent i = WebPagerActivity.newIntent(getActivity(), mNotice.getId());
+            Intent i = FlowItemActivity.newIntent(getActivity(), mFlow.getId());
             startActivity(i);
         }
     }
 
-    private class NoticeAdapter extends RecyclerView.Adapter<NoticeHoder> {
 
-        private List<Notice> mNotices;
+    private class FlowAdapter extends RecyclerView.Adapter<FlowHolder> {
+        private List<Flow> mFlows;
 
-        public NoticeAdapter(List<Notice> notices) {
-            mNotices = notices;
+        public FlowAdapter(List<Flow> flows) {
+            mFlows = flows;
         }
 
         @Override
-        public NoticeHoder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public FlowHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
-            View view = layoutInflater.inflate(R.layout.list_item_notice, parent, false);
+            View view = layoutInflater.inflate(R.layout.list_item_approval_flow, parent, false);
 
-            return new NoticeHoder(view);
+            return new FlowHolder(view);
         }
 
         @Override
-        public void onBindViewHolder(NoticeHoder holder, int position) {
-            Notice notice = mNotices.get(position);
-            holder.bindNotice(notice);
+        public void onBindViewHolder(FlowHolder holder, int position) {
+            Flow flow = mFlows.get(position);
+            holder.bindItemView(flow);
         }
 
         @Override
         public int getItemCount() {
-            return mNotices.size();
+            return mFlows.size();
         }
     }
+
 
     // AsynTask class to handle Load Web Service call as separate UI Thread
     private class LoadTask extends AsyncTask<String, Void, String> {
@@ -168,11 +178,11 @@ public class NoticeListFragment extends Fragment {
                 return;
             }
 
-            ResponseResults<Notice> responseResults;
+            ResponseResults<Flow> responseResults;
 
             try {
                 GsonBuilder gson = new GsonBuilder();
-                Type resultType = new TypeToken<ResponseResults<Notice>>() {}.getType();
+                Type resultType = new TypeToken<ResponseResults<Flow>>() {}.getType();
 
                 responseResults = gson.create().fromJson(result, resultType);
             } catch (Exception e) {
@@ -196,10 +206,10 @@ public class NoticeListFragment extends Fragment {
                 return;
             }
 
-            mNotices = responseResults.getList();
-            PagerItemLab.get(getActivity()).setItems(mNotices);
+            mFlows = responseResults.getList();
+            PagerItemLab.get(getActivity()).setItems(mFlows);
 
-            if (mNotices == null) {
+            if (mFlows == null) {
                 Toast toast = Toast.makeText(getActivity(), R.string.prompt_system_error, Toast.LENGTH_LONG);
                 toast.setGravity(Gravity.CENTER, 0, 0);
                 toast.show();
@@ -222,7 +232,7 @@ public class NoticeListFragment extends Fragment {
         // Method which invoke web method
         private String performLoadTask(String token) {
             // Create request
-            SoapObject request = new SoapObject(SoapHelper.getWsNamespace(), SoapHelper.getWsMethodOfNoticeList());
+            SoapObject request = new SoapObject(SoapHelper.getWsNamespace(), SoapHelper.getWsMethodOfApprovalFlowList());
 
             request.addProperty(Utils.newPropertyInstance("token", token, String.class));
 
@@ -240,7 +250,7 @@ public class NoticeListFragment extends Fragment {
 
             try {
                 // Invoke web service
-                androidHttpTransport.call(SoapHelper.getWsSoapAction() + SoapHelper.getWsMethodOfNoticeList(), envelope);
+                androidHttpTransport.call(SoapHelper.getWsSoapAction() + SoapHelper.getWsMethodOfApprovalFlowList(), envelope);
 
                 // Get the response
                 SoapPrimitive response = (SoapPrimitive) envelope.getResponse();
@@ -252,6 +262,5 @@ public class NoticeListFragment extends Fragment {
 
             return responseJSON;
         }
-
     }
 }

@@ -1,4 +1,4 @@
-package com.pekingopera.oa;
+package com.pekingopera.oa.activity;
 
 import android.content.Context;
 import android.content.Intent;
@@ -9,6 +9,8 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 
+import com.pekingopera.oa.R;
+import com.pekingopera.oa.fragment.WebPageFragment;
 import com.pekingopera.oa.common.IPager;
 import com.pekingopera.oa.common.PagerItemLab;
 
