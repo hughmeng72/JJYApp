@@ -5,9 +5,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 
-import com.dou361.update.UpdateHelper;
-import com.dou361.update.listener.ForceListener;
 import com.pekingopera.oa.R;
+import com.pekingopera.versionupdate.UpdateHelper;
+import com.pekingopera.versionupdate.listener.ForceListener;
 
 public abstract class BaseActivity extends AppCompatActivity {
     protected abstract Fragment createFragment();

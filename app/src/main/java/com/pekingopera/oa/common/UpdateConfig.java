@@ -2,16 +2,15 @@ package com.pekingopera.oa.common;
 
 import android.content.Context;
 
-import com.dou361.update.ParseData;
-import com.dou361.update.UpdateHelper;
-import com.dou361.update.bean.Update;
-import com.dou361.update.type.RequestType;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.pekingopera.oa.R;
 import com.pekingopera.oa.model.ResponseResult;
-import com.pekingopera.oa.model.User;
 import com.pekingopera.oa.model.Version;
+import com.pekingopera.versionupdate.ParseData;
+import com.pekingopera.versionupdate.UpdateHelper;
+import com.pekingopera.versionupdate.bean.Update;
+import com.pekingopera.versionupdate.type.RequestType;
 
 import java.lang.reflect.Type;
 
@@ -20,8 +19,9 @@ import java.lang.reflect.Type;
  */
 
 public class UpdateConfig {
-    private static String checkUrl = "WebService/Pages/Update.aspx";
-//    private static String checkUrl = "WebUI/WebService/Pages/Update.aspx"; // For debug in pc
+
+    private static String checkUrl = "WebUI/WebService/Pages/Update.aspx"; // For debug in pc
+//private static String checkUrl = "WebService/Pages/Update.aspx";
 
     /**
      * Update check via Http Get
