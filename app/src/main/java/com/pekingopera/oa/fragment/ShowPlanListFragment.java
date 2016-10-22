@@ -37,7 +37,7 @@ import java.util.List;
 /**
  * Created by wayne on 10/3/2016.
  */
-public class CalendarListFragment extends Fragment {
+public class ShowPlanListFragment extends Fragment {
     private static final String TAG = "CalendarListFragment";
 
     private RecyclerView mRecyclerView;
@@ -82,23 +82,20 @@ public class CalendarListFragment extends Fragment {
         private Calendar mCalendar;
 
         private TextView mTitleTextView;
-        private TextView mDepTextView;
         private TextView mDateTextView;
 
         public CalendarHolder(View itemView) {
             super(itemView);
             itemView.setOnClickListener(this);
 
-            mTitleTextView = (TextView) itemView.findViewById(R.id.item_calendar_title);
-            mDepTextView = (TextView) itemView.findViewById(R.id.item_calendar_dep);
-            mDateTextView = (TextView) itemView.findViewById(R.id.item_calendar_time);
+            mTitleTextView = (TextView) itemView.findViewById(R.id.item_show_plan_title);
+            mDateTextView = (TextView) itemView.findViewById(R.id.item_show_plan_time);
         }
 
         public void bindCalendar(Calendar calendar) {
             mCalendar = calendar;
 
             mTitleTextView.setText(mCalendar.getTitle());
-            mDepTextView.setText(mCalendar.getDepName());
             mDateTextView.setText(mCalendar.getCreateTime());
         }
 
@@ -122,7 +119,7 @@ public class CalendarListFragment extends Fragment {
         @Override
         public CalendarHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
-            View view = layoutInflater.inflate(R.layout.list_item_calendar, parent, false);
+            View view = layoutInflater.inflate(R.layout.list_item_show_plan, parent, false);
 
             return new CalendarHolder(view);
         }
@@ -219,7 +216,7 @@ public class CalendarListFragment extends Fragment {
             SoapObject request = new SoapObject(SoapHelper.getWsNamespace(), SoapHelper.getWsMethodOfCalendarList());
 
             request.addProperty(Utils.newPropertyInstance("token", token, String.class));
-            request.addProperty(Utils.newPropertyInstance("showPlan", false, boolean.class));
+            request.addProperty(Utils.newPropertyInstance("showPlan", true, boolean.class));
 
             // Create envelope
             SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);

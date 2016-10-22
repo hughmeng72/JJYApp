@@ -4,34 +4,58 @@
 
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
     <application
         android:name=".common.BaseApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
+
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity" android:screenOrientation="portrait">
+        android:theme="@style/Theme.MaterialSheetFab">
+        <activity
+            android:name=".MainActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".activity.ApprovalFlowListActivity" android:screenOrientation="portrait" />
-        <activity android:name=".activity.FinancialFlowListActivity" android:screenOrientation="portrait" />
-        <activity android:name=".activity.GeneralFlowListActivity" android:screenOrientation="portrait" />
-        <activity android:name=".activity.FlowItemActivity" android:screenOrientation="portrait" />
-        <activity android:name=".activity.ApprovalGovListActivity" android:screenOrientation="portrait" />
-        <activity android:name=".activity.GovListActivity" android:screenOrientation="portrait" />
-        <activity android:name=".activity.GovItemActivity" android:screenOrientation="portrait" />
-        <activity android:name=".activity.CalendarListActivity" android:screenOrientation="portrait" />
-        <activity android:name=".activity.NoticeListActivity" android:screenOrientation="portrait" />
-        <activity android:name=".activity.MailListActivity" android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.ApprovalFlowListActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.FinancialFlowListActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.GeneralFlowListActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.FlowItemActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.ApprovalGovListActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.GovListActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.GovItemActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.CalendarListActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.NoticeListActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.MailListActivity"
+            android:screenOrientation="portrait"/>
         <!--<activity android:name=".WebPageActivity" />-->
-        <activity android:name=".activity.WebPagerActivity" android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.WebPagerActivity"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>
