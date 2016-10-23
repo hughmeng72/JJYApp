@@ -30,8 +30,8 @@ public class CalendarListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_calendar);
         setTitle("上海京剧院");
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+//        setSupportActionBar(toolbar);
 
         viewPager = (ViewPager) findViewById(R.id.tab_viewpager);
         if (viewPager != null) {

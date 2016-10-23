@@ -55,7 +55,7 @@ public class GeneralFlowListFragment extends Fragment {
 
         if (Utils.isNetworkConnected(getActivity())) {
             LoadTask task = new LoadTask();
-            task.execute(User.get().getToken());
+            task.execute(User.get().getToken(), "");
         }
         else {
             Toast.makeText(getActivity(), R.string.prompt_internet_connection_broken, Toast.LENGTH_SHORT).show();
@@ -162,7 +162,7 @@ public class GeneralFlowListFragment extends Fragment {
             Log.i(TAG, "doInBackground: " + params.toString());
 
             // Invoke web service
-            return performLoadTask(params[0]);
+            return performLoadTask(params[0], params[1]);
         }
 
         @Override
@@ -229,11 +229,12 @@ public class GeneralFlowListFragment extends Fragment {
         }
 
         // Method which invoke web method
-        private String performLoadTask(String token) {
+        private String performLoadTask(String token, String criteria) {
             // Create request
             SoapObject request = new SoapObject(SoapHelper.getWsNamespace(), SoapHelper.getWsMethodOfGeneralFlowList());
 
             request.addProperty(Utils.newPropertyInstance("token", token, String.class));
+            request.addProperty(Utils.newPropertyInstance("criteria", criteria, String.class));
 
             // Create envelope
             SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);

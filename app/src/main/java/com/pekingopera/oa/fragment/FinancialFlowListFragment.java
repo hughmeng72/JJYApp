@@ -55,7 +55,7 @@ public class FinancialFlowListFragment extends Fragment {
 
         if (Utils.isNetworkConnected(getActivity())) {
             LoadTask task = new LoadTask();
-            task.execute(User.get().getToken());
+            task.execute(User.get().getToken(), "");
         }
         else {
             Toast.makeText(getActivity(), R.string.prompt_internet_connection_broken, Toast.LENGTH_SHORT).show();
@@ -162,7 +162,42 @@ public class FinancialFlowListFragment extends Fragment {
             Log.i(TAG, "doInBackground: " + params.toString());
 
             // Invoke web service
-            return performLoadTask(params[0]);
+            return performLoadTask(params[0], params[1]);
+        }
+
+        // Method which invoke web method
+        private String performLoadTask(String token, String criteria) {
+            // Create request
+            SoapObject request = new SoapObject(SoapHelper.getWsNamespace(), SoapHelper.getWsMethodOfFinancialFlowList());
+
+            request.addProperty(Utils.newPropertyInstance("token", token, String.class));
+            request.addProperty(Utils.newPropertyInstance("criteria", criteria, String.class));
+
+            // Create envelope
+            SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+            envelope.dotNet = true;
+
+            // Set output SOAP object
+            envelope.setOutputSoapObject(request);
+
+            // Create HTTP call object
+            HttpTransportSE androidHttpTransport = new HttpTransportSE(SoapHelper.getWsUrl());
+
+            String responseJSON = null;
+
+            try {
+                // Invoke web service
+                androidHttpTransport.call(SoapHelper.getWsSoapAction() + SoapHelper.getWsMethodOfFinancialFlowList(), envelope);
+
+                // Get the response
+                SoapPrimitive response = (SoapPrimitive) envelope.getResponse();
+
+                responseJSON = response.toString();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            return responseJSON;
         }
 
         @Override
@@ -226,40 +261,6 @@ public class FinancialFlowListFragment extends Fragment {
 
         @Override
         protected void onProgressUpdate(Void... values) {
-        }
-
-        // Method which invoke web method
-        private String performLoadTask(String token) {
-            // Create request
-            SoapObject request = new SoapObject(SoapHelper.getWsNamespace(), SoapHelper.getWsMethodOfFinancialFlowList());
-
-            request.addProperty(Utils.newPropertyInstance("token", token, String.class));
-
-            // Create envelope
-            SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
-            envelope.dotNet = true;
-
-            // Set output SOAP object
-            envelope.setOutputSoapObject(request);
-
-            // Create HTTP call object
-            HttpTransportSE androidHttpTransport = new HttpTransportSE(SoapHelper.getWsUrl());
-
-            String responseJSON = null;
-
-            try {
-                // Invoke web service
-                androidHttpTransport.call(SoapHelper.getWsSoapAction() + SoapHelper.getWsMethodOfFinancialFlowList(), envelope);
-
-                // Get the response
-                SoapPrimitive response = (SoapPrimitive) envelope.getResponse();
-
-                responseJSON = response.toString();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            return responseJSON;
         }
     }
 }
