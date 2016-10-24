@@ -20,16 +20,13 @@ import java.lang.reflect.Type;
 
 public class UpdateConfig {
 
-    private static String checkUrl = "WebUI/WebService/Pages/Update.aspx"; // For debug in pc
-//private static String checkUrl = "WebService/Pages/Update.aspx";
-
     /**
      * Update check via Http Get
      */
     public static void initGet(Context context) {
         UpdateHelper.init(context);
 
-        String url = String.format("%1$s%2$s", SoapHelper.getWsNamespace(), checkUrl);
+        String url = SoapHelper.getUpdateCheckUrl();
         UpdateHelper.getInstance()
                 .setMethod(RequestType.get)
                 .setCheckUrl(url)

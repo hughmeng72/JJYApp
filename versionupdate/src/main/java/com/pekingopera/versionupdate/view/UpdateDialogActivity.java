@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.LayoutRes;
 import android.text.TextUtils;
 import android.view.KeyEvent;
@@ -96,7 +97,13 @@ public class UpdateDialogActivity extends Activity implements View.OnClickListen
         }
         if (TextUtils.isEmpty(mPath)) {
             String url = mUpdate.getUpdateUrl();
-            mPath = DownloadManager.getInstance(mContext).getDownPath() + File.separator + url.substring(url.lastIndexOf("/") + 1, url.length());
+
+//            mPath = DownloadManager.getInstance(mContext).getDownPath() + File.separator + url.substring(url.lastIndexOf("/") + 1, url.length());
+
+            File docDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS);
+            docDir.mkdir();
+
+            mPath = docDir.getAbsolutePath() + File.separator + url.substring(url.lastIndexOf("/") + 1, url.length());
         }
         if (mAction == 0) {
             DownloadModel dd = DownloadManager.getInstance(mContext).getDownloadByUrl(mUpdate.getUpdateUrl());

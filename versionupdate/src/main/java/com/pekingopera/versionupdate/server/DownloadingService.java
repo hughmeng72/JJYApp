@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
@@ -19,7 +20,9 @@ import android.widget.RemoteViews;
 
 import com.dou361.download.DownloadManager;
 import com.dou361.download.ParamsManager;
+import com.pekingopera.versionupdate.UpdateHelper;
 import com.pekingopera.versionupdate.bean.Update;
+import com.pekingopera.versionupdate.type.UpdateType;
 import com.pekingopera.versionupdate.util.ResourceUtils;
 import com.pekingopera.versionupdate.util.UpdateConstants;
 import com.pekingopera.versionupdate.view.UpdateDialogActivity;
@@ -90,7 +93,13 @@ public class DownloadingService extends Service {
                         sendBroadcastType(current);
                         break;
                     case ParamsManager.State_FINISH:
-                        File fil = new File(manage.getDownPath(), url.substring(url.lastIndexOf("/") + 1, url.length()));
+//                        File fil = new File(manage.getDownPath(), url.substring(url.lastIndexOf("/") + 1, url.length()));
+
+                        File docDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS);
+                        docDir.mkdir();
+
+                        File fil = new File(docDir, url.substring(url.lastIndexOf("/") + 1, url.length()));
+
                         if (fil.exists() && fil.length() > 0) {
                             //下载完成
                             showInstallNotificationUI(fil);
@@ -137,6 +146,12 @@ public class DownloadingService extends Service {
         super.onCreate();
         this.mContext = this;
         manage = DownloadManager.getInstance(mContext);
+
+        File docDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS);
+        docDir.mkdir();
+
+        manage.setDownPath(docDir.getAbsolutePath());
+
         manage.setHandler(handler);
     }
 
