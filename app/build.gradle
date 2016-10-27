@@ -7,8 +7,8 @@ android {
         applicationId "com.pekingopera.oa"
         minSdkVersion 16
         targetSdkVersion 24
-        versionCode 2
-        versionName "1.1"
+        versionCode 3
+        versionName "1.2"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -30,6 +30,10 @@ android {
     }
 }
 
+android {
+    useLibrary 'org.apache.http.legacy'
+}
+
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
@@ -46,4 +50,7 @@ dependencies {
     compile 'com.android.support:cardview-v7:24.2.1'
     compile 'com.koushikdutta.ion:ion:2.+'
     compile project(':versionupdate')
+
+    compile 'org.apache.httpcomponents:httpcore:4.4.1'
+    compile 'org.apache.httpcomponents:httpclient:4.5'
 }

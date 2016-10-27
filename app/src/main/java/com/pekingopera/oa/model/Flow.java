@@ -16,8 +16,9 @@ public class Flow implements IPager {
     private int Id;
     private String FlowName;
     private String FlowNo;
-    private String ModelName;
+    private String ModelName = "报销申请";
     private double Amount;
+    private String PaymentTerm;
     private String CurrentStepName;
     private int Status;
     private String DepName;
@@ -40,12 +41,20 @@ public class Flow implements IPager {
     private double AmountToBePaidReimbursement;
     private double AmountLeft;
 
+    private String mPhotoName1;
+    private String mPhotoName2;
+    private String mPhotoName3;
+
+    private String mPhoto1FilePath;
+
     private boolean BudgetAuthorized;
     private boolean ApprovalAuthorized;
 
     private List<FlowStep> Steps;
     private List<FlowDoc> Attachments;
     private List<FlowProcurement> Procurements;
+    private String mPhoto2FilePath;
+    private String mPhoto3FilePath;
 
     @Override
     public Uri getUri() {
@@ -185,6 +194,98 @@ public class Flow implements IPager {
 
     public List<FlowProcurement> getProcurements() {
         return Procurements;
+    }
+
+    public String getPhotoName1() {
+        return mPhotoName1;
+    }
+
+    public String getPhotoName2() {
+        return mPhotoName2;
+    }
+
+    public String getPhotoName3() {
+        return mPhotoName3;
+    }
+
+    public String getPhoto1FilePath() {
+        return mPhoto1FilePath;
+    }
+
+    public void setPhoto1FilePath(String photo1FilePath) {
+        mPhoto1FilePath = photo1FilePath;
+
+        mPhotoName1 = null;
+
+        String subString[] = mPhoto1FilePath.split("/");
+
+        if (subString != null && subString.length > 0) {
+            mPhotoName1 = subString[subString.length - 1];
+        }
+    }
+
+    public String getPhoto2FilePath() {
+        return mPhoto2FilePath;
+    }
+
+    public void setPhoto2FilePath(String photo2FilePath) {
+        mPhoto2FilePath = photo2FilePath;
+
+        mPhotoName2 = null;
+
+        String subString[] = mPhoto2FilePath.split("/");
+
+        if (subString != null && subString.length > 0) {
+            mPhotoName2 = subString[subString.length - 1];
+        }
+    }
+
+    public String getPhoto3FilePath() {
+        return mPhoto3FilePath;
+    }
+
+    public void setPhoto3FilePath(String photo3FilePath) {
+        mPhoto3FilePath = photo3FilePath;
+
+        mPhotoName3 = null;
+
+        String subString[] = mPhoto3FilePath.split("/");
+
+        if (subString != null && subString.length > 0) {
+            mPhotoName3 = subString[subString.length - 1];
+        }
+    }
+
+    public String getPaymentTerm() {
+        return PaymentTerm;
+    }
+
+    public void setPaymentTerm(String paymentTerm) {
+        PaymentTerm = paymentTerm;
+    }
+
+    public void setFlowName(String flowName) {
+        FlowName = flowName;
+    }
+
+    public void setAmount(double amount) {
+        Amount = amount;
+    }
+
+    public void setRemark(String remark) {
+        Remark = remark;
+    }
+
+    public void setDocBody(String docBody) {
+        DocBody = docBody;
+    }
+
+    public void setItemName(String itemName) {
+        ItemName = itemName;
+    }
+
+    public void setFlowFiles(String flowFiles) {
+        FlowFiles = flowFiles;
     }
 
 }

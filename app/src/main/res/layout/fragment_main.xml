@@ -128,8 +128,8 @@
         android:layout_alignTop="@id/main_docImageButton"
         android:background="@null"
         android:scaleType="fitCenter"
-        android:src="@drawable/ic_calendar"
-        android:tag="calendar"/>
+        android:src="@drawable/ic_reimburse_request"
+        android:tag="fform_request"/>
 
     <TextView
         android:id="@+id/main_calendarTextView"
@@ -139,7 +139,7 @@
         android:layout_alignLeft="@id/main_calendarImageButton"
         android:layout_alignRight="@id/main_calendarImageButton"
         android:gravity="center_horizontal"
-        android:text="@string/main_calendar"
+        android:text="@string/main_form_request"
         android:textSize="16sp"/>
 
     <ImageButton
@@ -196,8 +196,8 @@
         android:layout_alignTop="@id/main_noticeImageButton"
         android:background="@null"
         android:scaleType="fitCenter"
-        android:src="@drawable/ic_setup"
-        android:tag="others"/>
+        android:src="@drawable/ic_calendar"
+        android:tag="calendar"/>
 
     <TextView
         android:id="@+id/main_setupTextView"
@@ -207,7 +207,7 @@
         android:layout_alignLeft="@id/main_setupImageButton"
         android:layout_alignRight="@id/main_setupImageButton"
         android:gravity="center_horizontal"
-        android:text="@string/main_others"
+        android:text="@string/main_calendar"
         android:textSize="16sp" />
 
 </RelativeLayout>

@@ -10,6 +10,7 @@ public class User {
     private int depId;
     private String userName;
     private String RealName;
+    public String DepName;
 
     public String getRealName() {
         return RealName;
@@ -47,8 +48,11 @@ public class User {
         return userName;
     }
 
-
     public int getDepId() {
         return depId;
+    }
+
+    public String getDepName() {
+        return DepName;
     }
 }

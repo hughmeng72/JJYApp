@@ -7,8 +7,7 @@ package com.pekingopera.oa.common;
 public class SoapHelper {
     public static String getWsNamespace() {
         return "http://192.168.9.31/"; // For Home CS
-//        return "http://192.168.1.2/"; // For Home XB
-//        return "http://192.168.8.101/"; // For JJY Debug
+//        return "http://192.168.1.3/"; // For Home XB
 //        return "http://www.jjyoa.com:8000/";
     }
 
@@ -21,6 +20,12 @@ public class SoapHelper {
         return getWsNamespace() + "WebUI/WebService/Pages/Update.aspx"; // For debug
 //        return getWsNamespace() + "WebService/Pages/Update.aspx";
     }
+
+    public static String getUploadUrl() {
+        return getWsNamespace() + "WebUI/WebService/Pages/SendPhoto.aspx"; // For debug
+//        return getWsNamespace() + "WebService/Pages/SendPhoto.aspx";
+    }
+
 
     public static String getWsSoapAction() {
         return getWsNamespace();
@@ -110,4 +115,7 @@ public class SoapHelper {
         return "GetBudgetList";
     }
 
+    public static String getWsMethodOfSaveFlow() {
+        return "SaveFlow";
+    }
 }

@@ -80,7 +80,7 @@ public class MainActivity extends BaseActivity implements LoginFragment.OnFragme
                 intent = new Intent(this, MailListActivity.class);
                 startActivity(intent);
                 break;
-            case "others":
+            case "fform_request":
                 intent = new Intent(this, FormRequestActivity.class);
                 startActivity(intent);
                 break;
