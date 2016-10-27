@@ -57,6 +57,9 @@
         <activity
             android:name=".activity.WebPagerActivity"
             android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.FormRequestActivity"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

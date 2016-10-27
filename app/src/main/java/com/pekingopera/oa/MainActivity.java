@@ -12,6 +12,7 @@ import com.pekingopera.oa.activity.ApprovalGovListActivity;
 import com.pekingopera.oa.activity.BaseActivity;
 import com.pekingopera.oa.activity.CalendarListActivity;
 import com.pekingopera.oa.activity.FinancialFlowListActivity;
+import com.pekingopera.oa.activity.FormRequestActivity;
 import com.pekingopera.oa.activity.GeneralFlowListActivity;
 import com.pekingopera.oa.activity.GovListActivity;
 import com.pekingopera.oa.activity.MailListActivity;
@@ -77,6 +78,10 @@ public class MainActivity extends BaseActivity implements LoginFragment.OnFragme
                 break;
             case "mail":
                 intent = new Intent(this, MailListActivity.class);
+                startActivity(intent);
+                break;
+            case "others":
+                intent = new Intent(this, FormRequestActivity.class);
                 startActivity(intent);
                 break;
             default:

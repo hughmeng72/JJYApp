@@ -7,6 +7,7 @@ public class User {
     private ResponseBase error;
     private String token = "";
     private int userId;
+    private int depId;
     private String userName;
     private String RealName;
 
@@ -44,5 +45,10 @@ public class User {
 
     public String getUserName() {
         return userName;
+    }
+
+
+    public int getDepId() {
+        return depId;
     }
 }

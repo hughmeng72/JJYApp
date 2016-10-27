@@ -16,5 +16,6 @@
     <string name="main_notice">资讯</string>
     <string name="main_mail">邮件</string>
     <string name="main_others">其它</string>
+    <string name="budget_item">报销项目</string>
 
 </resources>
