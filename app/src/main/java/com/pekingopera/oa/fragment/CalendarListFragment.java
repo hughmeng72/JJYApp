@@ -45,6 +45,11 @@ public class CalendarListFragment extends Fragment {
 
     private List<Calendar> mCalendars = null;
 
+    public List<Calendar> getCalendars() {
+        return mCalendars;
+    }
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -191,7 +196,6 @@ public class CalendarListFragment extends Fragment {
             }
 
             mCalendars = responseResults.getList();
-            PagerItemLab.get(getActivity()).setItems(mCalendars);
 
             if (mCalendars == null) {
                 Toast toast = Toast.makeText(getActivity(), R.string.prompt_system_error, Toast.LENGTH_LONG);

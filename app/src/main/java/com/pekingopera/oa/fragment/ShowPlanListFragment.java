@@ -1,5 +1,6 @@
 package com.pekingopera.oa.fragment;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -43,7 +44,13 @@ public class ShowPlanListFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private CalendarAdapter mAdapter;
 
+    private OnFragmentInteractionListener mListener;
+
     private List<Calendar> mCalendars = null;
+
+    public List<Calendar> getCalendars() {
+        return mCalendars;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -62,6 +69,18 @@ public class ShowPlanListFragment extends Fragment {
         }
 
         return view;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        if (context instanceof OnFragmentInteractionListener) {
+            mListener = (OnFragmentInteractionListener) context;
+        }
+        else {
+            throw new RuntimeException(context.toString() + " must implement OnFragmentInteractionListener");
+        }
     }
 
     private void updateUI() {
@@ -188,7 +207,6 @@ public class ShowPlanListFragment extends Fragment {
             }
 
             mCalendars = responseResults.getList();
-            PagerItemLab.get(getActivity()).setItems(mCalendars);
 
             if (mCalendars == null) {
                 Toast toast = Toast.makeText(getActivity(), R.string.prompt_system_error, Toast.LENGTH_LONG);
@@ -197,6 +215,8 @@ public class ShowPlanListFragment extends Fragment {
 
                 return;
             }
+
+            mListener.inAction();
 
             updateUI();
         }
@@ -244,6 +264,10 @@ public class ShowPlanListFragment extends Fragment {
 
             return responseJSON;
         }
-
     }
+
+    public interface OnFragmentInteractionListener {
+        void inAction();
+    }
+
 }

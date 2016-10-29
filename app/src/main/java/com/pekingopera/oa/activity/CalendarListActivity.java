@@ -9,8 +9,10 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 
 import com.pekingopera.oa.R;
+import com.pekingopera.oa.common.PagerItemLab;
 import com.pekingopera.oa.fragment.CalendarListFragment;
 import com.pekingopera.oa.fragment.NoticeListFragment;
 import com.pekingopera.oa.fragment.ShowPlanListFragment;
@@ -21,8 +23,10 @@ import java.util.List;
 /**
  * Created by wayne on 10/3/2016.
  */
-public class CalendarListActivity extends AppCompatActivity {
+public class CalendarListActivity extends AppCompatActivity implements ShowPlanListFragment.OnFragmentInteractionListener {
     private ViewPager viewPager;
+    private ShowPlanListFragment mPlanListFragment = new ShowPlanListFragment();
+    private CalendarListFragment mCalendarListFragment = new CalendarListFragment();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -45,6 +49,17 @@ public class CalendarListActivity extends AppCompatActivity {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 viewPager.setCurrentItem(tab.getPosition());
+
+                switch (tab.getPosition()) {
+                    case 0:
+                        PagerItemLab.get(CalendarListActivity.this).setItems(mPlanListFragment.getCalendars());
+                        break;
+                    case 1:
+                        PagerItemLab.get(CalendarListActivity.this).setItems(mCalendarListFragment.getCalendars());
+                        break;
+                    default:
+                        // Do nothing yet.
+                }
             }
 
             @Override
@@ -59,14 +74,22 @@ public class CalendarListActivity extends AppCompatActivity {
 
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFrag(new CalendarListFragment(), "日程表");
-        adapter.addFrag(new ShowPlanListFragment(), "演出计划");
+
+        adapter.addFrag(mPlanListFragment, "演出计划");
+        adapter.addFrag(mCalendarListFragment, "日程表");
+
+//        PagerItemLab.get(this).setItems(mCalendars);
 
         viewPager.setAdapter(adapter);
     }
 
     protected Fragment createFragment() {
         return new CalendarListFragment();
+    }
+
+    @Override
+    public void inAction() {
+        PagerItemLab.get(this).setItems(mPlanListFragment.getCalendars());
     }
 
     static class ViewPagerAdapter extends FragmentPagerAdapter {
@@ -97,6 +120,4 @@ public class CalendarListActivity extends AppCompatActivity {
             return mFragmentTitleList.get(position);
         }
     }
-
-
 }
