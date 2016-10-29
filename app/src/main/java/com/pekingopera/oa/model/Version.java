@@ -1,15 +1,28 @@
 package com.pekingopera.oa.model;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by wayne on 10/11/2016.
  */
 
 public class Version {
+    @SerializedName("UpdateUrl")
     private String updateUrl;
+
+    @SerializedName("VersionCode")
     private int versionCode;
+
+    @SerializedName("ApkSize")
     private long apkSize;
+
+    @SerializedName("VersionName")
     private String versionName;
+
+    @SerializedName("UpdateContent")
     private String updateContent;
+
+    @SerializedName("Force")
     private boolean force;
 
     public String getUpdateUrl() {
