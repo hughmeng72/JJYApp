@@ -23,7 +23,7 @@ public class SoapHelper {
 
     public static String getUploadUrl() {
 //        return getWsNamespace() + "WebUI/WebService/Pages/SendPhoto.aspx"; // For debug
-        return getWsNamespace() + "WebService/Pages/SendPhoto.aspx";
+        return getWsNamespace() + "WebService/Pages/UploadPhoto.aspx";
     }
 
 

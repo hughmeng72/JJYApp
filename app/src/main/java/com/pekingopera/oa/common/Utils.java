@@ -32,4 +32,8 @@ public class Utils {
         return para;
     }
 
+    public static boolean IsNullOrEmpty (String s) {
+        return (s == null || s.isEmpty());
+    }
+
 }

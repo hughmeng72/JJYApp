@@ -188,6 +188,20 @@ public class FormRequestFragment extends Fragment {
     }
 
     private void doUpdate() {
+
+        if (!passedValidation()) {
+            return;
+        }
+
+        mConfirmationButton.setEnabled(false);
+
+        updateModel();
+
+        UpdateTask task = new UpdateTask();
+        task.execute(User.get().getToken());
+    }
+
+    private void updateModel() {
         mFlow.setFlowName(mFormNameEditText.getText().toString());
         mFlow.setRemark(mRemarkEditText.getText().toString());
         mFlow.setPaymentTerm(mCashRadioButton.isChecked() ? mCashRadioButton.getText().toString()
@@ -207,9 +221,28 @@ public class FormRequestFragment extends Fragment {
         if (!(mFlow.getPhotoName3() == null || mFlow.getPhotoName3().isEmpty())) {
             mFlow.setFlowFiles(mFlow.getFlowFiles() + "~/Files/FlowFiles/Mobile/" + mFlow.getPhotoName3() + "|");
         }
+    }
 
-        UpdateTask task = new UpdateTask();
-        task.execute(User.get().getToken());
+    private boolean passedValidation() {
+        if (Utils.IsNullOrEmpty(mFormNameEditText.getText().toString())) {
+            Toast.makeText(getActivity(), "请输入名称", Toast.LENGTH_SHORT).show();
+            mFormNameEditText.requestFocus();
+            return false;
+        }
+
+        if (Utils.IsNullOrEmpty(mRemarkEditText.getText().toString())) {
+            Toast.makeText(getActivity(), "请输入摘要", Toast.LENGTH_SHORT).show();
+            mRemarkEditText.requestFocus();
+            return false;
+        }
+
+        if (Utils.IsNullOrEmpty(mAmountEditText.getText().toString())) {
+            Toast.makeText(getActivity(), "请输入金额", Toast.LENGTH_SHORT).show();
+            mAmountEditText.requestFocus();
+            return false;
+        }
+
+        return true;
     }
 
     @Override
@@ -363,6 +396,8 @@ public class FormRequestFragment extends Fragment {
             Log.i(TAG, "onPostExecute: ");
 
 //            getActivity().setProgressBarIndeterminateVisibility(false);
+
+            mConfirmationButton.setEnabled(true);
 
             if (result == null || result.isEmpty()) {
                 Toast.makeText(getActivity().getApplicationContext(), R.string.prompt_system_error, Toast.LENGTH_SHORT).show();

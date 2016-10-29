@@ -219,7 +219,7 @@ public class PictureUtil {
 
 		bmOptions.inJustDecodeBounds = false;
 		bmOptions.inSampleSize = scaleFactor;
-		bmOptions.inPurgeable = true;
+//		bmOptions.inPurgeable = true;
 
 		Bitmap bitmap = BitmapFactory.decodeFile(photoPath, bmOptions);
 

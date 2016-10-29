@@ -24,7 +24,7 @@ public class Flow implements IPager {
     private String DepName;
     private String Remark;
     private String CurrentDocPath;
-    private String FlowFiles;
+    private String FlowFiles = "";
     private String DocBody;
     private int CreatorId;
     private String Creator;

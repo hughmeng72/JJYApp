@@ -11,7 +11,8 @@
         android:layout_marginTop="8dp"
         android:hint="名称"
         android:imeOptions="actionNext"
-        android:inputType="text"/>
+        android:inputType="text"
+        android:maxLength="250"/>
 
     <EditText
         android:id="@+id/form_request_remarkEditText"
@@ -88,7 +89,8 @@
         android:layout_marginTop="8dp"
         android:hint="金额"
         android:imeOptions="actionNext"
-        android:inputType="numberDecimal"/>
+        android:inputType="numberDecimal"
+        android:maxLength="18"/>
 
     <EditText
         android:id="@+id/form_request_docBodyEditText"
