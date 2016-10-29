@@ -140,7 +140,7 @@ public class FormRequestFragment extends Fragment {
                     dispatchTakePictureIntent(ACTION_TAKE_PHOTO_1);
                 } else {
                     FragmentManager fm = getActivity().getFragmentManager();
-                    ImageFragment.newInstance(mFlow.getPhoto2FilePath()).show(fm, DIALOG_IMAGE);
+                    ImageFragment.newInstance(mFlow.getPhoto1FilePath()).show(fm, DIALOG_IMAGE);
                 }
             }
         });
@@ -217,51 +217,53 @@ public class FormRequestFragment extends Fragment {
         if (resultCode != RESULT_OK)
             return;
 
-        if (requestCode == ACTION_TAKE_PHOTO_1) {
-            mFlow.setPhoto1FilePath(mCurrentPhotoPath);
+        Log.d(TAG, "Got a picture: " + mCurrentPhotoPath);
 
-            if (mCurrentPhotoPath != null) {
-                Log.d(TAG, mCurrentPhotoPath);
+        switch (requestCode) {
+            case ACTION_TAKE_PHOTO_1:
+                mFlow.setPhoto1FilePath(mCurrentPhotoPath);
 
-                PictureUtil.showPic(mP1ImageButton, mCurrentPhotoPath);
-                mCurrentPhotoPath = null;
-            }
-        } else if (requestCode == ACTION_TAKE_PHOTO_2) {
-            mFlow.setPhoto2FilePath(mCurrentPhotoPath);
+                if (mCurrentPhotoPath != null) {
+                    PictureUtil.showPic(mP1ImageButton, mCurrentPhotoPath);
+                }
+                break;
+            case ACTION_TAKE_PHOTO_2:
+                mFlow.setPhoto2FilePath(mCurrentPhotoPath);
 
-            if (mCurrentPhotoPath != null) {
-                Log.d(TAG, mCurrentPhotoPath);
+                if (mCurrentPhotoPath != null) {
+                    PictureUtil.showPic(mP2ImageButton, mCurrentPhotoPath);
+                }
+                break;
+            case ACTION_TAKE_PHOTO_3:
+                mFlow.setPhoto3FilePath(mCurrentPhotoPath);
 
-                PictureUtil.showPic(mP2ImageButton, mCurrentPhotoPath);
-                mCurrentPhotoPath = null;
-            }
-        } else if (requestCode == ACTION_TAKE_PHOTO_3) {
-            mFlow.setPhoto3FilePath(mCurrentPhotoPath);
-
-            if (mCurrentPhotoPath != null) {
-                Log.d(TAG, mCurrentPhotoPath);
-
-                PictureUtil.showPic(mP3ImageButton, mCurrentPhotoPath);
-                mCurrentPhotoPath = null;
-            }
+                if (mCurrentPhotoPath != null) {
+                    PictureUtil.showPic(mP3ImageButton, mCurrentPhotoPath);
+                }
+                break;
         }
+
+        mCurrentPhotoPath = null;
     }
 
     private String mCurrentPhotoPath;
 
     private void dispatchTakePictureIntent(int actionCode) {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-
         File f = null;
 
         try {
             f = setupPhotoFile();
             mCurrentPhotoPath = f.getAbsolutePath();
+
             takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(f));
         } catch (IOException e) {
             e.printStackTrace();
+
             f = null;
             mCurrentPhotoPath = null;
+
+            return;
         }
 
         startActivityForResult(takePictureIntent, actionCode);
