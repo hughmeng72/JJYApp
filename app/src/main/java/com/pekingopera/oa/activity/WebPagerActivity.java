@@ -44,8 +44,8 @@ public class WebPagerActivity<T extends IPager> extends AppCompatActivity {
         mViewPager.setAdapter(new FragmentStatePagerAdapter(fragmentManager) {
             @Override
             public Fragment getItem(int position) {
-                T item = mItems.get(position);
-                return WebPageFragment.newInstance(item.getUri());
+//                T item = mItems.get(position);
+                return WebPageFragment.newInstance(position);
             }
 
             @Override

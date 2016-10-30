@@ -40,6 +40,11 @@ public class Gov implements IPager {
         return Id;
     }
 
+    @Override
+    public String getTitle() {
+        return FlowName;
+    }
+
     public String getFlowName() {
         return FlowName;
     }

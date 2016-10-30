@@ -9,11 +9,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <!--&lt;!&ndash; Toolbar &ndash;&gt;-->
-        <!--<android.support.v7.widget.Toolbar-->
-            <!--android:id="@+id/toolbar"-->
-            <!--style="@style/Widget.MaterialSheetFab.ToolBar" />-->
-
         <!-- Tabs -->
         <android.support.design.widget.TabLayout
             android:id="@+id/tabs"

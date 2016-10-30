@@ -4,6 +4,8 @@ import android.net.Uri;
 
 import com.pekingopera.oa.common.IPager;
 
+import java.util.List;
+
 /**
  * Created by wayne on 10/2/2016.
  */
@@ -17,10 +19,16 @@ public class Notice implements IPager {
     private String Creator;
     private String AddTime;
     private String url;
+    private List<FlowDoc> Attachments;
 
     @Override
     public int getId() {
         return id;
+    }
+
+    @Override
+    public List<FlowDoc> getAttachments() {
+        return Attachments;
     }
 
     public String getTypeName() {
@@ -51,4 +59,5 @@ public class Notice implements IPager {
     public Uri getUri() {
         return Uri.parse(url);
     }
+
 }

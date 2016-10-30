@@ -109,7 +109,6 @@ public class CalendarListFragment extends Fragment {
 
         @Override
         public void onClick(View v) {
-//            Intent i = WebPageActivity.newIntent(getActivity(), mCalendar.getUri());
             Intent i = WebPagerActivity.newIntent(getActivity(), mCalendar.getId());
             startActivity(i);
         }

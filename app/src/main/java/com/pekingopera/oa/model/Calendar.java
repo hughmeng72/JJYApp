@@ -4,6 +4,8 @@ import android.net.Uri;
 
 import com.pekingopera.oa.common.IPager;
 
+import java.util.List;
+
 /**
  * Created by wayne on 10/3/2016.
  */
@@ -14,6 +16,7 @@ public class Calendar implements IPager {
     private String DepName;
     private String CreateTime;
     private String Url;
+    private List<FlowDoc> Attachments;
 
     @Override
     public int getId() {
@@ -31,6 +34,10 @@ public class Calendar implements IPager {
 
     public String getDepName() {
         return DepName;
+    }
+
+    public List<FlowDoc> getAttachments() {
+        return Attachments;
     }
 
     public String getCreateTime() {
