@@ -8,22 +8,22 @@ public class SoapHelper {
     public static String getWsNamespace() {
 //        return "http://192.168.9.31/"; // For Home CS
 //        return "http://192.168.1.3/"; // For Home XB
-        return "http://www.jjyoa.com:8000/";
-//        return "http://test.freight-track.com/";
+        return "http://test.freight-track.com/";
+//        return "http://www.jjyoa.com:8000/";
     }
 
     public static String getWsUrl() {
-//        return getWsNamespace() + "WebUI/WebService/Perkingopera.asmx"; // For debug
+//        return getWsNamespace() + "WebUI/WebService/Perkingopera.asmx"; // For debug with local IIS
         return getWsNamespace() + "WebService/Perkingopera.asmx";
     }
 
     public static String getUpdateCheckUrl() {
-//        return getWsNamespace() + "WebUI/WebService/Pages/Update.aspx"; // For debug
+//        return getWsNamespace() + "WebUI/WebService/Pages/Update.aspx"; // For debug with local IIS
         return getWsNamespace() + "WebService/Pages/Update.aspx";
     }
 
     public static String getUploadUrl() {
-//        return getWsNamespace() + "WebUI/WebService/Pages/SendPhoto.aspx"; // For debug
+//        return getWsNamespace() + "WebUI/WebService/Pages/SendPhoto.aspx"; // For debug with local IIS
         return getWsNamespace() + "WebService/Pages/UploadPhoto.aspx";
     }
 

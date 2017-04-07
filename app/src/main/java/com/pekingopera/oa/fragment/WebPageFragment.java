@@ -28,6 +28,7 @@ import com.koushikdutta.async.future.Future;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 import com.pekingopera.oa.R;
+import com.pekingopera.oa.activity.FlowItemActivity;
 import com.pekingopera.oa.common.FileHelper;
 import com.pekingopera.oa.common.IPager;
 import com.pekingopera.oa.common.PagerItemLab;
@@ -125,17 +126,53 @@ public class WebPageFragment<T extends IPager> extends Fragment {
 //                Toast.makeText(getActivity(), title, Toast.LENGTH_SHORT).show();
             }
         });
+
         mWebView.setWebViewClient(new WebViewClient() {
             @SuppressWarnings("deprecation")
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                return false;
+                gotoFlow(Uri.parse(url));
+
+                return true;
             }
 
             @TargetApi(Build.VERSION_CODES.N)
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
-                return false;
+                gotoFlow(request.getUrl());
+
+                return true;
+            }
+
+            private void gotoFlow(Uri uri) {
+                if (uri != null) {
+                    String modelName = uri.getQueryParameter("modelname");
+                    int id = Integer.parseInt(uri.getQueryParameter("fid"));
+
+//                    if (modelName.equals("报销申请")) {
+//                        Intent i = FlowItemActivity.newIntent(getActivity(), id);
+//                        startActivity(i);
+//                    }
+
+                    switch (modelName) {
+                        case "合同审核申请":
+                        case "用印申请":
+                        case "公务出差":
+                        case "公务接待":
+                        case "公务用餐":
+                        case "机票申请":
+                        case "交款申请":
+                        case "演出票领用申请":
+                        case "用车申请":
+                        case "预算调整":
+                        case "专项报销申请":
+                        case "报销申请":
+                            Intent i = FlowItemActivity.newIntent(getActivity(), id);
+                            startActivity(i);
+
+                            break;
+                    }
+                }
             }
         });
 
