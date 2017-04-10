@@ -269,6 +269,10 @@ public class Flow implements IPager {
         PaymentTerm = paymentTerm;
     }
 
+    public void setModelName(String modelName) {
+        ModelName = modelName;
+    }
+
     public void setFlowName(String flowName) {
         FlowName = flowName;
     }

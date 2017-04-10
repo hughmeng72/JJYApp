@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="4dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="类型"
+            android:textSize="16sp"/>
+
+        <Spinner
+            android:id="@+id/gform_request_typeSpinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:prompt="@string/request_type"
+            android:spinnerMode="dialog"
+            />
+
+    </LinearLayout>
+
+    <EditText
+        android:id="@+id/gform_request_formNameEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:hint="名称"
+        android:imeOptions="actionNext"
+        android:inputType="text"
+        android:maxLength="250"/>
+
+    <EditText
+        android:id="@+id/gform_request_remarkEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:hint="摘要"
+        android:imeOptions="actionNext"
+        android:inputType="text"/>
+
+    <EditText
+        android:id="@+id/gform_request_amountEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:hint="金额"
+        android:imeOptions="actionNext"
+        android:inputType="numberDecimal"
+        android:maxLength="18"/>
+
+    <EditText
+        android:id="@+id/gform_request_docBodyEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:hint="备注"
+        android:inputType="textMultiLine"
+        android:lines="3"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8sp"
+        android:gravity="center"
+        android:padding="4dp"
+        android:text="拍照（将作为附件上传）"
+        android:textSize="16sp"
+        android:textStyle="bold"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:padding="4dp">
+
+        <ImageButton
+            android:id="@+id/gform_request_p1ImageButton"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginRight="2dp"
+            android:src="@android:drawable/ic_menu_camera"/>
+
+        <ImageButton
+            android:id="@+id/gform_request_p2ImageButton"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginRight="2dp"
+            android:src="@android:drawable/ic_menu_camera"/>
+
+        <ImageButton
+            android:id="@+id/gform_request_p3ImageButton"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:src="@android:drawable/ic_menu_camera"/>
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/gform_request_confirmationButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="12dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="8dp"
+        android:text="提交"/>
+
+</LinearLayout>
